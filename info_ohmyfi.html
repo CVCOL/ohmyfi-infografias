@@ -1,6 +1,9 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 16.8 (08/10/2025)
+- Inteligencia de Negocio Mejorada: Se enriqueció la cara reversa de todos los gráficos. Ahora incluyen un "Racional Funcional" en lenguaje de negocios para explicar el impacto de cada métrica, además de la "Memoria de Cálculo" con los valores de la simulación.
+
 Versión: 16.7 (08/10/2025)
 - Dashboard de KPIs Avanzado: Se expandió la sección de KPIs a 6 métricas clave (ROI, TCO, Payback, CAPEX, OPEX, Beneficio Neto), organizadas en una cuadrícula de 2x3.
 - Interactividad 3D Total: Se implementó efecto de giro 3D en todas las tarjetas de KPI (al pasar el mouse) y en todos los gráficos (al hacer clic en el ícono de info) para mostrar análisis contextuales.
@@ -9,9 +12,6 @@ Versión: 16.7 (08/10/2025)
 
 Versión: 16.6 (08/10/2025)
 - Corrección del Payback Financiado: Se ajustó el motor de cálculo del período de recuperación para que el desembolso inicial sea $0 al seleccionar una opción de financiamiento, replicando la lógica correcta de la v6 y asegurando la precisión del KPI.
-
-Versión: 16.5 (08/10/2025)
-- Lógica de Negocio Restaurada: Se revierte el motor de cálculo a los parámetros fijos de la v6 (25 leads/AP, 10% conversión) para asegurar consistencia con los informes previos. Se elimina el campo de entrada de "Leads" para simplificar la UX.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -108,7 +108,7 @@ Versión: 16.5 (08/10/2025)
             position: relative;
             width: 100%;
             height: 100%;
-            text-align: center;
+            text-align: left;
             transition: transform 0.8s;
             transform-style: preserve-3d;
         }
@@ -140,6 +140,7 @@ Versión: 16.5 (08/10/2025)
         }
         .flip-card-back {
             transform: rotateY(180deg);
+            align-items: flex-start;
         }
         .flip-trigger {
             position: absolute;
@@ -183,12 +184,12 @@ Versión: 16.5 (08/10/2025)
                 
                 <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
-                             <i data-lucide="wifi" class="w-12 h-12 mb-4 text-orange-500"></i>
+                        <div class="flip-card-front card text-center">
+                             <i data-lucide="wifi" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
                              <h3 class="font-bold text-lg mb-2">1. Conexión</h3>
                              <p class="text-sm text-slate-400">El cliente se conecta al Wi-Fi gratuito a través de un portal cautivo personalizado.</p>
                         </div>
-                        <div class="flip-card-back">
+                        <div class="flip-card-back text-center">
                              <h3 class="font-bold text-lg mb-2 text-orange-400">Portal de Marca</h3>
                              <p class="text-sm text-slate-300">El primer contacto es clave. Creamos un portal de acceso con su identidad de marca que ofrece una experiencia de conexión segura y profesional.</p>
                         </div>
@@ -196,12 +197,12 @@ Versión: 16.5 (08/10/2025)
                 </div>
                 <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
-                            <i data-lucide="database" class="w-12 h-12 mb-4 text-orange-500"></i>
+                        <div class="flip-card-front card text-center">
+                            <i data-lucide="database" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
                             <h3 class="font-bold text-lg mb-2">2. Captura</h3>
                             <p class="text-sm text-slate-400">Se capturan datos de primera mano (First-Party Data) con consentimiento explícito.</p>
                         </div>
-                        <div class="flip-card-back">
+                        <div class="flip-card-back text-center">
                             <h3 class="font-bold text-lg mb-2 text-orange-400">Activo de Datos</h3>
                             <p class="text-sm text-slate-300">Los "First-Party Data" son su activo más valioso: precisos, relevantes y obtenidos con consentimiento para una personalización efectiva y legal.</p>
                         </div>
@@ -209,12 +210,12 @@ Versión: 16.5 (08/10/2025)
                 </div>
                 <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
-                            <i data-lucide="users" class="w-12 h-12 mb-4 text-orange-500"></i>
+                        <div class="flip-card-front card text-center">
+                            <i data-lucide="users" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
                             <h3 class="font-bold text-lg mb-2">3. Perfilamiento</h3>
                             <p class="text-sm text-slate-400">El perfil del cliente se crea o actualiza automáticamente en Zoho CRM.</p>
                         </div>
-                         <div class="flip-card-back">
+                         <div class="flip-card-back text-center">
                             <h3 class="font-bold text-lg mb-2 text-orange-400">Inteligencia 360°</h3>
                             <p class="text-sm text-slate-300">La integración nativa con Zoho CRM enriquece el perfil del cliente, unificando su comportamiento online y offline para una visión completa.</p>
                         </div>
@@ -222,12 +223,12 @@ Versión: 16.5 (08/10/2025)
                 </div>
                  <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
-                            <i data-lucide="send" class="w-12 h-12 mb-4 text-orange-500"></i>
+                        <div class="flip-card-front card text-center">
+                            <i data-lucide="send" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
                             <h3 class="font-bold text-lg mb-2">4. Activación</h3>
                             <p class="text-sm text-slate-400">Se disparan campañas de marketing automatizadas y personalizadas.</p>
                         </div>
-                        <div class="flip-card-back">
+                        <div class="flip-card-back text-center">
                            <h3 class="font-bold text-lg mb-2 text-orange-400">Marketing de Precisión</h3>
                            <p class="text-sm text-slate-300">La automatización permite impactar al cliente correcto en el momento oportuno con ofertas relevantes que impulsan la conversión.</p>
                         </div>
@@ -235,12 +236,12 @@ Versión: 16.5 (08/10/2025)
                 </div>
                 <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
-                            <i data-lucide="bar-chart-2" class="w-12 h-12 mb-4 text-orange-500"></i>
+                        <div class="flip-card-front card text-center">
+                            <i data-lucide="bar-chart-2" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
                             <h3 class="font-bold text-lg mb-2">5. Medición</h3>
                             <p class="text-sm text-slate-400">Se mide el ROI, LTV y el impacto real de cada interacción en las ventas.</p>
                         </div>
-                        <div class="flip-card-back">
+                        <div class="flip-card-back text-center">
                             <h3 class="font-bold text-lg mb-2 text-orange-400">Cierre del Ciclo</h3>
                             <p class="text-sm text-slate-300">La solución permite atribuir ventas a las campañas de WiFi Marketing, demostrando el valor tangible y el ROI. Dejamos de adivinar y empezamos a medir.</p>
                         </div>
@@ -323,7 +324,7 @@ Versión: 16.5 (08/10/2025)
                 <!-- KPI Cards - Row 1 -->
                 <div class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                             <h3 class="text-lg font-semibold text-slate-400">Retorno de la Inversión (ROI)</h3>
                             <p id="roi-value" class="text-5xl font-extrabold text-green-400 my-2">0%</p>
                         </div>
@@ -335,7 +336,7 @@ Versión: 16.5 (08/10/2025)
                 </div>
                 <div class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                             <h3 class="text-lg font-semibold text-slate-400">Costo Total (TCO)</h3>
                             <p id="tco-value" class="text-4xl font-bold text-red-400 my-2">$0</p>
                         </div>
@@ -347,7 +348,7 @@ Versión: 16.5 (08/10/2025)
                 </div>
                 <div class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                              <h3 class="text-lg font-semibold text-slate-400">Período de Recuperación</h3>
                              <p id="payback-value" class="text-4xl font-bold text-blue-400 my-2">0 Meses</p>
                         </div>
@@ -361,7 +362,7 @@ Versión: 16.5 (08/10/2025)
                 <!-- KPI Cards - Row 2 -->
                 <div class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                             <h3 class="text-lg font-semibold text-slate-400">Inversión Inicial (CAPEX)</h3>
                             <p id="capex-value" class="text-4xl font-bold text-slate-300 my-2">$0</p>
                         </div>
@@ -373,7 +374,7 @@ Versión: 16.5 (08/10/2025)
                 </div>
                 <div class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                             <h3 class="text-lg font-semibold text-slate-400">Costos Operativos (OPEX)</h3>
                             <p id="opex-value" class="text-4xl font-bold text-slate-300 my-2">$0</p>
                         </div>
@@ -385,7 +386,7 @@ Versión: 16.5 (08/10/2025)
                 </div>
                 <div class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                              <h3 class="text-lg font-semibold text-slate-400">Beneficio Neto</h3>
                              <p id="net-benefit-value" class="text-4xl font-bold text-green-400 my-2">$0</p>
                         </div>
@@ -400,105 +401,105 @@ Versión: 16.5 (08/10/2025)
                 <!-- Chart Grid -->
                 <div class="flip-card chart-flip-card md:col-span-1">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                              <i data-lucide="info" class="flip-trigger"></i>
                             <h3 class="font-bold mb-2">Desglose TCO (CAPEX vs OPEX)</h3>
                             <canvas id="tcoBreakdownChart"></canvas>
                         </div>
                         <div class="flip-card-back">
-                            <h3 class="font-bold text-xl mb-4 text-orange-400">Entendiendo el TCO</h3>
-                            <p class="text-base text-slate-300 mb-6">Muestra la proporción de su inversión entre costos iniciales **(CAPEX)** y costos operativos **(OPEX)**. Clave para una planificación financiera precisa.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del Gráfico</h3>
+                             <p id="tcoBreakdown-text" class="text-sm text-slate-300"></p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
 
                  <div class="flip-card chart-flip-card md:col-span-2">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                              <i data-lucide="info" class="flip-trigger"></i>
                             <h3 class="font-bold mb-2">Desglose TCO (por Componente)</h3>
                             <canvas id="tcoComponentBreakdownChart"></canvas>
                         </div>
                         <div class="flip-card-back">
-                            <h3 class="font-bold text-xl mb-4 text-orange-400">¿En qué se invierte?</h3>
-                            <p class="text-base text-slate-300 mb-6">Este gráfico desglosa el costo total en sus componentes principales: **Hardware**, **Servicios de Implementación** y **Licenciamiento y Soporte** a lo largo de 3 años.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del Gráfico</h3>
+                            <p id="tcoComponent-text" class="text-sm text-slate-300"></p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
 
                  <div class="flip-card chart-flip-card md:col-span-2">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                              <i data-lucide="info" class="flip-trigger"></i>
                             <h3 class="font-bold mb-2">Evolución de Costos Mensuales</h3>
                             <canvas id="monthlyCostsChart"></canvas>
                         </div>
                         <div class="flip-card-back">
-                            <h3 class="font-bold text-xl mb-4 text-orange-400">Estructura de Costos</h3>
-                            <p class="text-base text-slate-300 mb-6">Desglosa la salida de caja mensual. Muestra la inversión inicial **(CAPEX)**, las **cuotas de financiamiento** y los **costos operativos** recurrentes.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del Gráfico</h3>
+                             <p id="monthlyCosts-text" class="text-sm text-slate-300"></p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="flip-card chart-flip-card md:col-span-1">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                              <i data-lucide="info" class="flip-trigger"></i>
                             <h3 class="font-bold mb-2">Flujo de Caja Acumulado</h3>
                             <canvas id="cumulativeCashflowChart"></canvas>
                         </div>
                         <div class="flip-card-back">
-                            <h3 class="font-bold text-xl mb-4 text-orange-400">Camino a la Rentabilidad</h3>
-                            <p class="text-base text-slate-300 mb-6">Muestra el balance neto mes a mes. Comienza con el desembolso inicial y crece hasta cruzar el cero en el mes del Payback, momento en que la inversión ha sido recuperada.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del Gráfico</h3>
+                             <p id="cumulativeCashflow-text" class="text-sm text-slate-300"></p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
                 
                 <div class="flip-card chart-flip-card md:col-span-3">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                              <i data-lucide="info" class="flip-trigger"></i>
-                            <h3 class="font-bold mb-2">Simulación Monte Carlo del ROI (Análisis de Riesgo)</h3>
+                            <h3 class="font-bold mb-2">Simulación Monte Carlo del ROI</h3>
                             <canvas id="monteCarloChart"></canvas>
                         </div>
                         <div class="flip-card-back">
-                            <h3 class="font-bold text-xl mb-4 text-orange-400">Análisis de Sensibilidad</h3>
-                            <p class="text-base text-slate-300 mb-6">Esta simulación ejecuta 10,000 escenarios variando LTV y Conversión para medir la resiliencia del ROI. Un resultado concentrado en valores altos indica una inversión de bajo riesgo.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del Gráfico</h3>
+                             <p id="monteCarlo-text" class="text-sm text-slate-300"></p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="flip-card chart-flip-card md:col-span-2">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                              <i data-lucide="info" class="flip-trigger"></i>
                             <h3 class="font-bold mb-2">Ingresos vs Costos (Crossover)</h3>
                             <canvas id="crossoverChart"></canvas>
                         </div>
                         <div class="flip-card-back">
-                            <h3 class="font-bold text-xl mb-4 text-orange-400">Punto de Equilibrio</h3>
-                            <p class="text-base text-slate-300 mb-6">Este gráfico muestra el momento exacto en que los ingresos acumulados (verde) superan a los costos acumulados (naranja), marcando el punto de equilibrio de la inversión.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del Gráfico</h3>
+                             <p id="crossover-text" class="text-sm text-slate-300"></p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
                 
                 <div class="flip-card chart-flip-card md:col-span-1">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
+                        <div class="flip-card-front text-center">
                              <i data-lucide="info" class="flip-trigger"></i>
                             <h3 class="font-bold mb-2">Componentes del ROI</h3>
                             <canvas id="roiComponentsChart"></canvas>
                         </div>
                         <div class="flip-card-back">
-                            <h3 class="font-bold text-xl mb-4 text-orange-400">¿De dónde viene el ROI?</h3>
-                            <p class="text-base text-slate-300 mb-6">Compara directamente el Costo Total de Propiedad (TCO) con los ingresos totales generados. La diferencia positiva entre ambas barras representa el beneficio neto.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del Gráfico</h3>
+                             <p id="roiComponents-text" class="text-sm text-slate-300"></p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
@@ -511,66 +512,66 @@ Versión: 16.5 (08/10/2025)
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                  <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
+                        <div class="flip-card-front card text-center">
                             <h3 class="font-bold text-lg text-orange-400 mb-2">Retorno de la Inversión (ROI)</h3>
                             <p class="text-sm text-slate-300">Mide la ganancia o pérdida generada en relación con el monto invertido.</p>
                         </div>
-                        <div class="flip-card-back">
+                        <div class="flip-card-back text-center">
                            <p class="text-sm text-slate-300">Un ROI alto indica alta rentabilidad. Es el indicador final del éxito financiero de una inversión.</p>
                         </div>
                     </div>
                 </div>
                  <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
+                        <div class="flip-card-front card text-center">
                             <h3 class="font-bold text-lg text-orange-400 mb-2">Costo Total de Propiedad (TCO)</h3>
                             <p class="text-sm text-slate-300">Cálculo de todos los costos de la solución en su vida útil (3 años).</p>
                         </div>
-                        <div class="flip-card-back">
+                        <div class="flip-card-back text-center">
                             <p class="text-sm text-slate-300">Incluye costos directos (hardware, licencias) e indirectos (soporte, mantenimiento), ofreciendo una visión completa de la inversión.</p>
                         </div>
                     </div>
                 </div>
                 <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
+                        <div class="flip-card-front card text-center">
                             <h3 class="font-bold text-lg text-orange-400 mb-2">Período de Recuperación</h3>
                             <p class="text-sm text-slate-300">El tiempo necesario para que los ingresos generados igualen la inversión.</p>
                         </div>
-                        <div class="flip-card-back">
+                        <div class="flip-card-back text-center">
                            <p class="text-sm text-slate-300">Un período de recuperación (Payback) corto es ideal, ya que indica que la inversión comienza a generar ganancias netas rápidamente.</p>
                         </div>
                     </div>
                 </div>
                 <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
+                        <div class="flip-card-front card text-center">
                            <h3 class="font-bold text-lg text-orange-400 mb-2">Valor de Vida del Cliente (LTV)</h3>
                            <p class="text-sm text-slate-300">La ganancia neta total que se espera de un cliente durante toda su relación comercial.</p>
                         </div>
-                        <div class="flip-card-back">
+                        <div class="flip-card-back text-center">
                            <p class="text-sm text-slate-300">Aumentar el LTV es un objetivo clave. Esta solución lo potencia a través del marketing de fidelización y la re-compra.</p>
                         </div>
                     </div>
                 </div>
                  <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
+                        <div class="flip-card-front card text-center">
                            <h3 class="font-bold text-lg text-orange-400 mb-2">CAPEX</h3>
                            <p class="text-sm text-slate-300">Gastos en activos fijos (Capital Expenditures), como el hardware. Es una inversión inicial.</p>
                         </div>
-                         <div class="flip-card-back">
+                         <div class="flip-card-back text-center">
                            <p class="text-sm text-slate-300">Se realiza una sola vez y se deprecia con el tiempo. Distinto de los gastos operativos recurrentes.</p>
                         </div>
                     </div>
                 </div>
                 <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front card">
+                        <div class="flip-card-front card text-center">
                             <h3 class="font-bold text-lg text-orange-400 mb-2">OPEX</h3>
                             <p class="text-sm text-slate-300">Gastos operativos continuos (Operational Expenditures), como licencias y soporte.</p>
                         </div>
-                        <div class="flip-card-back">
+                        <div class="flip-card-back text-center">
                             <p class="text-sm text-slate-300">Son los costos recurrentes para mantener la solución funcionando. Son predecibles y se presupuestan anualmente.</p>
                         </div>
                     </div>
@@ -579,7 +580,7 @@ Versión: 16.5 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v16.7 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v16.8 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -601,9 +602,8 @@ Versión: 16.5 (08/10/2025)
     </div>
 
 <script>
-    // V16.7 CALCULATION ENGINE - Advanced KPIs and UI
+    // V16.8 CALCULATION ENGINE - Business Intelligence Explanations
     const PRICING = {
-        // ... (Pricing constants remain the same)
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
         LICENSE_OHMYFI_PER_AP_MONTHLY: 16.00, LICENSE_ZOHO_FIXED_MONTHLY: 50.00,
@@ -630,7 +630,16 @@ Versión: 16.5 (08/10/2025)
             payback: { value: document.getElementById('payback-value'), text: document.getElementById('payback-text') },
             capex: { value: document.getElementById('capex-value'), text: document.getElementById('capex-text') },
             opex: { value: document.getElementById('opex-value'), text: document.getElementById('opex-text') },
-            netBenefit: { value: document.getElementById('net-benefit-value'), text: document.getElementById('net-benefit-text') }
+            netBenefit: { value: document.getElementById('net-benefit-value'), text: document.getElementById('net-benefit-text') },
+            analysis: {
+                tcoBreakdown: document.getElementById('tcoBreakdown-text'),
+                tcoComponent: document.getElementById('tcoComponent-text'),
+                monthlyCosts: document.getElementById('monthlyCosts-text'),
+                cumulativeCashflow: document.getElementById('cumulativeCashflow-text'),
+                monteCarlo: document.getElementById('monteCarlo-text'),
+                crossover: document.getElementById('crossover-text'),
+                roiComponents: document.getElementById('roiComponents-text')
+            }
         },
         report: { modal: document.getElementById('report-modal'), generateBtn: document.getElementById('generate-report-btn'), closeBtn: document.getElementById('report-close-btn'), downloadBtn: document.getElementById('report-download-btn'), content: document.getElementById('report-content') }
     };
@@ -768,9 +777,9 @@ Versión: 16.5 (08/10/2025)
         return results;
     }
 
+    const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
+
     function updateUI(d) {
-        const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
-        
         // Update main KPIs
         ui.outputs.roi.value.textContent = `${(d.roi * 100).toFixed(0)}%`;
         ui.outputs.tco.value.textContent = formatCurrency(d.tco);
@@ -788,8 +797,71 @@ Versión: 16.5 (08/10/2025)
             ui.outputs.payback.text.textContent = 'Bajo este escenario, los ingresos generados no logran cubrir los costos totales en el período de 36 meses.';
         }
         
+        updateAnalysisTexts(d);
         updateCharts(d);
     }
+
+    function updateAnalysisTexts(d) {
+        // TCO Breakdown
+        ui.outputs.analysis.tcoBreakdown.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            Esto te ayuda a entender dónde se va tu dinero. Compara tu inversión inicial (lo que pagas una vez) con tus costos fijos para mantener todo funcionando (lo que pagas recurrentemente).
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            TCO = (Inversión: ${formatCurrency(d.capex)} + Costo Financ.: ${formatCurrency(d.financingCost)}) + (Costos Operativos: ${formatCurrency(d.totalOpex)})`;
+
+        // TCO Component
+        ui.outputs.analysis.tcoComponent.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            Aquí detallamos tu inversión. Te muestra cuánto corresponde a los equipos físicos (Hardware), cuánto a la instalación y configuración (Servicios), y cuánto a los permisos de uso y soporte (Licencias).
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            TCO = Hardware (${formatCurrency(d.tcoComponents.hardware)}) + Servicios (${formatCurrency(d.tcoComponents.services)}) + Licencias (${formatCurrency(d.tcoComponents.licenses)})`;
+
+        // Monthly Costs
+        ui.outputs.analysis.monthlyCosts.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            Este es tu flujo de gastos mes a mes. Te permite ver el impacto de la inversión inicial y cómo se distribuyen tus pagos fijos (operativos y de financiamiento) a lo largo del primer año.
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            Costo Mensual = OPEX (${formatCurrency(d.monthlyData.opexOnly[0])}) + Cuota Financ. (${formatCurrency(d.monthlyData.financing[0])})`;
+
+        // Cumulative Cashflow
+        ui.outputs.analysis.cumulativeCashflow.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            Este es el gráfico más importante para tu rentabilidad. Muestra cómo, mes a mes, los ingresos van pagando la inversión hasta que la línea cruza el 'cero'. Ese es tu punto de equilibrio, cuando empiezas a ganar dinero.
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            Punto de Equilibrio = Mes en que (Ingresos Acumulados - Costos Acumulados) >= 0. <br><strong>Resultado: Mes ${d.paybackPeriod > 0 ? d.paybackPeriod : 'N/A'}</strong>`;
+            
+        // Monte Carlo
+        const positiveProbability = (d.monteCarloResults.filter(r => r > 0).length / d.monteCarloResults.length * 100).toFixed(0);
+        ui.outputs.analysis.monteCarlo.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            El futuro es incierto, y este análisis te prepara. Simulamos 10,000 escenarios económicos (buenos y malos) para ver qué tan probable es que tu inversión sea rentable. La barra naranja muestra el resultado más probable.
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            Probabilidad de un ROI positivo (mayor a 0%) en 10,000 simulaciones: <strong>${positiveProbability}%</strong>`;
+
+        // Crossover
+        const revenueAtPayback = d.paybackPeriod > 0 ? d.monthlyData.revenues[d.paybackPeriod - 1] : 0;
+        const costAtPayback = d.paybackPeriod > 0 ? d.monthlyData.costs[d.paybackPeriod - 1] : 0;
+        ui.outputs.analysis.crossover.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            Visualiza la carrera entre tus ingresos y tus costos. La línea verde (ingresos) debe superar a la naranja (costos). El punto donde se cruzan es tu 'Punto de Equilibrio'.
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            Crossover = Mes ${d.paybackPeriod > 0 ? d.paybackPeriod : 'N/A'}, cuando Ingresos (${formatCurrency(revenueAtPayback)}) superan Costos (${formatCurrency(costAtPayback)})`;
+
+        // ROI Components
+        ui.outputs.analysis.roiComponents.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            En simple: ¿cuánto ganas por cada dólar que inviertes? Comparamos la barra de todo lo que gastas (Costo Total) con la de todo lo que ganas (Ingreso Total). La diferencia es tu ganancia neta.
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            Beneficio Neto = Ingresos Totales (${formatCurrency(d.totalRevenue)}) - TCO (${formatCurrency(d.tco)}) = <strong>${formatCurrency(d.netBenefit)}</strong>`;
+    }
+
 
     function createCharts() {
         const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
@@ -831,7 +903,6 @@ Versión: 16.5 (08/10/2025)
     }
     
     function generateReportText(d) {
-        // ... (Report generation text remains the same)
         const scenarioText = d.scenario === 'completa' ? 'Solución Completa (AGT)' : 'Infraestructura Propia (BYOD)';
         let financingText = '';
         if (d.financingTerm > 0) {
@@ -892,5 +963,4 @@ Bajo los parámetros especificados, la implementación representa una inversión
 </script>
 </body>
 </html>
-
 
