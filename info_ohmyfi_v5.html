@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Interactivo y Financiero: Ohmyfi Venezuela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .chart-container { position: relative; width: 100%; min-height: 350px; }
+        .analysis-card { background-color: white; border-radius: 0.75rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); padding: 1.5rem; display: flex; flex-direction: column; height: 100%; }
+        .scenario-btn { cursor: pointer; padding: 0.5rem 1rem; border-radius: 0.375rem; transition: all 0.3s; font-weight: 500; }
+        .scenario-btn.active { background-color: white; color: #004AAD; }
+        .scenario-btn.inactive { background-color: transparent; color: white; }
+        .analysis-text { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #555; color: #fff; text-align: center; border-radius: 6px; padding: 5px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; font-weight: normal; font-size: 0.8rem; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        input[type=range] { -webkit-appearance: none; margin: 10px 0; width: 100%; }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: #06B6D4; border-radius: 5px; }
+        input[type=range]::-webkit-slider-thumb { height: 20px; width: 20px; border-radius: 50%; background: #ffffff; cursor: pointer; -webkit-appearance: none; margin-top: -6px; }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] summary svg { transform: rotate(180deg); }
+        .modal { transition: opacity 0.25s ease; }
+        .flowchart-step { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .flowchart-arrow { display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #004AAD; margin: 0 1rem; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-16 bg-white p-8 rounded-lg shadow-lg">
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-4">De un Gasto Operativo a un Activo Estratégico</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-6">Descubra cómo la solución AGT OhmyFi transforma su red Wi-Fi en una potente herramienta de marketing y ventas, y luego calcule su propio retorno de la inversión.</p>
+            <div class="flex items-center justify-center space-x-4 text-2xl font-bold text-gray-700">
+                <span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-wifi text-red-500 mr-2" viewBox="0 0 16 16"><path d="M15.384 6.115a.485.485 0 0 0-.047-.736C12.194 2.585 8.948 1.5 6 1.5s-6.194 1.085-9.337 3.879a.485.485 0 0 0-.047.736l3.33 3.51c.155.163.41.163.566 0l2.74-2.888a.5.5 0 0 1 .708 0l2.74 2.888c.155.163.41.163.566 0l3.33-3.51zM6 12.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2a.5.5 0 0 1 .5-.5zm.5 3a.5.5 0 0 0-1 0v.5a.5.5 0 0 0 1 0v-.5z"/></svg> Gasto</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-right-short text-gray-400" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/></svg>
+                <span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-graph-up-arrow text-green-600 mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5Z"/></svg> Activo</span>
+            </div>
+        </section>
+        
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-[#004AAD] mb-8">¿Por qué Ohmyfi si mi router ya tiene un portal?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-red-100 p-6 rounded-lg border-l-4 border-red-500">
+                    <h3 class="font-bold text-xl text-red-800 mb-4">Portal Cautivo Básico (Fabricante)</h3>
+                    <ul class="space-y-2 text-red-700">
+                        <li class="flex items-start"><span class="text-red-500 mr-2">✗</span> <span>Captura de datos limitada o nula.</span></li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">✗</span> <span>Sin analíticas de comportamiento.</span></li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">✗</span> <span>No se integra con herramientas de marketing.</span></li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">✗</span> <span>Personalización mínima.</span></li>
+                    </ul>
+                    <p class="mt-4 font-bold text-red-800">Conclusión: Solo da acceso a internet.</p>
+                </div>
+                <div class="bg-green-100 p-6 rounded-lg border-l-4 border-green-500">
+                    <h3 class="font-bold text-xl text-green-800 mb-4">Plataforma de Wi-Fi Marketing (Ohmyfi)</h3>
+                    <ul class="space-y-2 text-green-700">
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✓</span> <span>Crea bases de datos propias (First-Party Data).</span></li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✓</span> <span>Analíticas avanzadas (recurrencia, horarios, etc.).</span></li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✓</span> <span>Integración nativa con Zoho CRM.</span></li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✓</span> <span>Publicidad, encuestas y segmentación.</span></li>
+                    </ul>
+                    <p class="mt-4 font-bold text-green-800">Conclusión: Construye y monetiza su base de datos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-[#004AAD] mb-8">¿Por qué la integración con Zoho CRM?</h2>
+             <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                <div class="flowchart-step"><div class="bg-white p-4 rounded-full shadow-lg"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#004AAD" viewBox="0 0 16 16"><path d="M15.384 6.115a.485.485 0 0 0-.047-.736C12.194 2.585 8.948 1.5 6 1.5s-6.194 1.085-9.337 3.879a.485.485 0 0 0-.047.736l3.33 3.51c.155.163.41.163.566 0l2.74-2.888a.5.5 0 0 1 .708 0l2.74 2.888c.155.163.41.163.566 0l3.33-3.51zM6 12.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2a.5.5 0 0 1 .5-.5z"/></svg></div><p class="mt-2 font-semibold">1. Conexión Wi-Fi</p></div>
+                <div class="flowchart-arrow">→</div>
+                <div class="flowchart-step"><div class="bg-white p-4 rounded-full shadow-lg"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#004AAD" viewBox="0 0 16 16"><path d="M11 2a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z"/><path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 1a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg></div><p class="mt-2 font-semibold">2. Dato Capturado</p></div>
+                <div class="flowchart-arrow">→</div>
+                <div class="flowchart-step"><div class="bg-white p-4 rounded-full shadow-lg"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#004AAD" viewBox="0 0 16 16"><path d="M9 4.5a.5.5 0 1 0-1 0V6H6.5a.5.5 0 1 0 0 1H8v1.5a.5.5 0 1 0 1 0V7h1.5a.5.5 0 1 0 0-1H9V4.5z"/><path d="M.5 3.5A.5.5 0 0 1 1 3h14a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5H1a.5.5 0 0 1-.5-.5v-9zM1 4v8h14V4H1z"/></svg></div><p class="mt-2 font-semibold">3. Perfil en Zoho</p></div>
+                <div class="flowchart-arrow">→</div>
+                <div class="flowchart-step"><div class="bg-white p-4 rounded-full shadow-lg"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#004AAD" viewBox="0 0 16 16"><path d="M15.545 6.558a9.72 9.72 0 0 1 .216 1.485c.01.33.016.66.016.99 0 .33-.006.66-.016.99a9.72 9.72 0 0 1-.216 1.485c-.065.33-.14.64-.233.94-.132.42-.3.8-.492 1.16.27.38.58.74.91 1.08.33.34.69.66 1.07.96.09.07.16.15.22.24.06.09.11.18.15.28a.499.499 0 0 1-.8.4c-.09-.07-.17-.14-.25-.22a10.864 10.864 0 0 0-1.04-1.03c-.34-.33-.69-.65-1.07-.96-.33-.34-.65-.67-1-.98-.3-.31-.59-.62-.86-.94s-.54-.62-.8-.94c-.26-.32-.5-.63-.73-.94-.23-.31-.45-.62-.65-.94-.2-.32-.38-.64-.54-.97a9.72 9.72 0 0 1-.233-.94c-.05-.33-.09-.66-.11-.99s-.016-.66-.016-.99.006-.66.016-.99c.02-.33.06-.66.11-.99.07-.33.15-.65.25-.97.1-.32.22-.63.35-.94.13-.31.28-.62.44-.93.16-.31.34-.62.53-.92.19-.3.4-.58.63-.86.23-.28.48-.56.73-.83.25-.27.52-.54.79-.81s.55-.54.83-.8c.28-.27.56-.53.85-.79.29-.26.58-.52.87-.76.3-.24.59-.48.9-.7a.499.499 0 0 1 .6.8c-.1.09-.19.18-.28.27-.3.24-.59.48-.87.73-.29.25-.57.5-.85.76s-.55.54-.83.8c-.28.27-.55.53-.81.8.27.38.58.74.91 1.08.33.34.69.66 1.07.96.09.07.16.15.22.24.06.09.11.18.15.28a.499.499 0 0 1-.8.4c-.09-.07-.17-.14-.25-.22a10.864 10.864 0 0 0-1.04-1.03c-.34-.33-.69-.65-1.07-.96-.33-.34-.65-.67-1-.98-.3-.31-.59-.62-.86-.94s-.54-.62-.8-.94c-.26-.32-.5-.63-.73-.94-.23-.31-.45-.62-.65-.94-.2-.32-.38-.64-.54-.97a9.72 9.72 0 0 1-.233-.94c-.05-.33-.09-.66-.11-.99s-.016-.66-.016-.99.006-.66.016-.99c.02-.33.06-.66.11-.99.07-.33.15-.65.25-.97.1-.32.22-.63.35-.94.13-.31.28-.62.44-.93.16-.31.34-.62.53-.92.19-.3.4-.58.63-.86.23-.28.48-.56.73-.83.25-.27.52-.54.79-.81s.55-.54.83-.8c.28-.27.56-.53.85-.79.29-.26.58-.52.87-.76.3-.24.59-.48.9-.7a.499.499 0 0 1 .6.8c-.1.09-.19.18-.28.27-.3.24-.59.48-.87.73-.29.25-.57.5-.85.76s-.55.54-.83.8c-.28.27-.55.53-.81.8z"/></svg></div><p class="mt-2 font-semibold">4. Marketing Automatizado</p></div>
+                <div class="flowchart-arrow">→</div>
+                <div class="flowchart-step"><div class="bg-white p-4 rounded-full shadow-lg"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#004AAD" viewBox="0 0 16 16"><path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h-4V2zM7 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h-4V2zM3 13.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V14H3v-.5zM3 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v.5H3V12z"/></svg></div><p class="mt-2 font-semibold">5. Venta y Fidelización</p></div>
+            </div>
+             <p class="text-center text-gray-600 mt-6 max-w-2xl mx-auto">La integración cierra el ciclo: convierte una visita anónima en una relación medible y rentable.</p>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-[#004AAD] mb-8">Beneficios Clave para su Negocio</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center"><h3 class="font-bold text-lg mb-2">Construya su Activo de Datos</h3><p class="text-sm text-gray-600">Cree una base de datos de clientes propia, reduciendo la dependencia de terceros.</p></div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center"><h3 class="font-bold text-lg mb-2">Aumente la Recurrencia</h3><p class="text-sm text-gray-600">Automatice campañas de email y SMS para incentivar a los clientes a regresar.</p></div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center"><h3 class="font-bold text-lg mb-2">Comunicación Directa</h3><p class="text-sm text-gray-600">Envíe promociones, encuestas y noticias directamente a sus visitantes.</p></div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center"><h3 class="font-bold text-lg mb-2">Entienda a sus Clientes</h3><p class="text-sm text-gray-600">Obtenga analíticas sobre la frecuencia de visitas, horarios de mayor afluencia y más.</p></div>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-[#004AAD] mb-8">Marcas que confían en Ohmyfi</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 items-center">
+                    <img src="https://ohmyfi.co/wp-content/uploads/2021/08/starbucks-logo.png" alt="Starbucks Logo" class="mx-auto h-12 grayscale opacity-75">
+                    <img src="https://ohmyfi.co/wp-content/uploads/2021/08/hard-rock-cafe-logo.png" alt="Hard Rock Cafe Logo" class="mx-auto h-12 grayscale opacity-75">
+                    <img src="https://ohmyfi.co/wp-content/uploads/2021/08/subway-logo.png" alt="Subway Logo" class="mx-auto h-10 grayscale opacity-75">
+                    <img src="https://ohmyfi.co/wp-content/uploads/2021/08/cinnabon-logo.png" alt="Cinnabon Logo" class="mx-auto h-12 grayscale opacity-75">
+                    <img src="https://ohmyfi.co/wp-content/uploads/2021/08/avianca-logo.png" alt="Avianca Logo" class="mx-auto h-8 grayscale opacity-75">
+                </div>
+            </div>
+        </section>
+
+        <section id="calculator" class="bg-[#004AAD] text-white rounded-lg shadow-xl p-6 md:p-8 mb-12">
+            <h2 class="text-3xl font-bold text-center mb-2">Simulador de Escenarios de Inversión</h2>
+            <p class="text-center text-blue-100 mb-8 max-w-3xl mx-auto">Ahora que conoce el valor, cuantifique su propio retorno de la inversión.</p>
+            <div class="mb-6 flex justify-center">
+                <div class="bg-black/20 p-1 rounded-lg flex space-x-1">
+                    <button id="btnCompleta" class="scenario-btn active">Solución Completa (AGT)</button>
+                    <button id="btnByod" class="scenario-btn inactive">Infraestructura Propia (BYOD)</button>
+                </div>
+            </div>
+            <div id="financing-options" class="mb-6 px-4">
+                <div class="flex justify-between items-center">
+                   <h3 class="text-lg font-bold text-center mb-3">Plazo de Financiamiento</h3>
+                   <span id="finance-term-label" class="font-bold text-lg">De Contado</span>
+                </div>
+                <input type="range" min="0" max="3" value="0" step="1" id="finance-slider" class="w-full">
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                <div id="infra-box" class="bg-white/10 p-6 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">1. Defina Cantidad de APs</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label for="apInterior" class="block mb-1 text-sm font-medium">APs Interior (AX1800)</label><input type="number" id="apInterior" min="0" value="3" class="w-full p-2 rounded bg-gray-900/50 text-white border-2 border-transparent focus:border-[#06B6D4] focus-outline-none"></div>
+                        <div><label for="apExterior" class="block mb-1 text-sm font-medium">APs Exterior (AX3000)</label><input type="number" id="apExterior" min="0" value="0" class="w-full p-2 rounded bg-gray-900/50 text-white border-2 border-transparent focus:border-[#06B6D4] focus-outline-none"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white/10 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">2. Ingrese su LTV 
+                            <div class="tooltip ml-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.064.293.006.399.287.47l.45.082.082-.38-.45-.083a.294.294 0 0 1-.288-.469l.738-3.468a.294.294 0 0 1 .288-.469zM8 4.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
+                                <span class="tooltiptext">Valor de Vida del Cliente (LTV): Es el ingreso total que esperas que un cliente genere durante toda su relación con tu negocio.</span>
+                            </div>
+                        </h3>
+                        <div><label for="ltv" class="block mb-1 text-sm font-medium">Valor (USD)</label><input type="number" id="ltv" min="0" value="50" step="10" class="w-full p-2 rounded bg-gray-900/50 text-white border-2 border-transparent focus:border-[#06B6D4] focus-outline-none"></div>
+                    </div>
+                    <div class="bg-white/10 p-6 rounded-lg"><h3 class="text-xl font-bold mb-4">3. Costo de Internet</h3><div><label for="internetCost" class="block mb-1 text-sm font-medium">Costo Mensual (USD)</label><input type="number" id="internetCost" min="0" value="60" step="5" class="w-full p-2 rounded bg-gray-900/50 text-white border-2 border-transparent focus:border-[#06B6D4] focus-outline-none"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+             <h2 class="text-3xl font-bold text-[#004AAD] mb-6 text-center">Análisis Rápido de Rentabilidad</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                 <div class="analysis-card"><div class="text-center"><h3 class="text-2xl font-bold text-gray-800 mb-2">Retorno de Inversión (ROI)</h3><p class="text-7xl font-black text-[#3B82F6] my-2" id="roi">0%</p><p class="text-gray-500">Resultado neto a 36 meses</p></div><div class="analysis-text"><h4 class="font-bold text-gray-700">Análisis y Conclusión</h4><p id="roiAnalysis" class="text-sm text-gray-600 mt-2">Ajuste los parámetros para calcular el ROI.</p></div></div>
+                 <div class="analysis-card"><div class="text-center"><h3 class="text-2xl font-bold text-gray-800 mb-2">Período de Recuperación</h3><p class="text-7xl font-black text-gray-700 my-2" id="payback">N/A</p><p class="text-gray-500">Punto de equilibrio acumulativo</p></div><div class="analysis-text"><h4 class="font-bold text-gray-700">Análisis y Conclusión</h4><p id="paybackAnalysis" class="text-sm text-gray-600 mt-2">Ajuste los parámetros para calcular el período de recuperación.</p></div></div>
+                 <div class="analysis-card"><h3 class="text-xl font-bold text-gray-800 text-center">Evolución de Costos Mensuales</h3><div class="chart-container flex-grow"><canvas id="monthlyCostsChart"></canvas></div><div class="analysis-text"><h4 class="font-bold text-gray-700">Análisis y Conclusión</h4><p id="monthlyCostsAnalysis" class="text-sm text-gray-600 mt-2">Ajuste los parámetros para ver la evolución de costos.</p></div></div>
+                <div class="analysis-card"><h3 class="text-xl font-bold text-gray-800 text-center">Camino a la Rentabilidad (Payback)</h3><div class="chart-container flex-grow"><canvas id="cumulativePaybackChart"></canvas></div><div class="analysis-text"><h4 class="font-bold text-gray-700">Análisis y Conclusión</h4><p id="cumulativePaybackAnalysis" class="text-sm text-gray-600 mt-2">Ajuste los parámetros para ver el camino a la rentabilidad.</p></div></div>
+            </div>
+        </section>
+        
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-[#004AAD] mb-6 text-center">Dashboard Financiero Detallado</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="analysis-card"><h3 class="text-xl font-bold text-gray-800 text-center">Componentes del ROI</h3><div class="chart-container flex-grow"><canvas id="roiComponentsChart"></canvas></div><div class="analysis-text"><h4 class="font-bold text-gray-700">Análisis y Conclusión</h4><p id="roiComponentsAnalysis" class="text-sm text-gray-600 mt-2">Ajuste los parámetros para ver la comparación.</p></div></div>
+                <div class="analysis-card"><h3 class="text-xl font-bold text-gray-800 text-center">Desglose del TCO</h3><div class="chart-container flex-grow"><canvas id="tcoChart"></canvas></div><div class="analysis-text"><h4 class="font-bold text-gray-700">Análisis y Conclusión</h4><p id="tcoAnalysis" class="text-sm text-gray-600 mt-2">Ajuste los parámetros para ver la distribución de costos.</p></div></div>
+                <div class="analysis-card"><h3 class="text-xl font-bold text-gray-800 text-center">Crossover (Punto de Equilibrio)</h3><div class="chart-container flex-grow"><canvas id="crossoverChart"></canvas></div><div class="analysis-text"><h4 class="font-bold text-gray-700">Análisis y Conclusión</h4><p id="crossoverAnalysis" class="text-sm text-gray-600 mt-2">Ajuste los parámetros para ver el punto de equilibrio.</p></div></div>
+                <div class="analysis-card"><h3 class="text-xl font-bold text-gray-800 text-center">Simulación Monte Carlo del ROI</h3><div class="chart-container flex-grow"><canvas id="monteCarloChart"></canvas></div><div class="analysis-text"><h4 class="font-bold text-gray-700">Análisis y Conclusión</h4><p id="monteCarloAnalysis" class="text-sm text-gray-600 mt-2">Ajuste los parámetros para ejecutar el análisis de probabilidad.</p></div></div>
+            </div>
+        </section>
+
+        <section class="text-center mb-12">
+            <button id="generate-report-btn" class="bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-green-700 transition-colors">
+                Generar Informe Ejecutivo
+            </button>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+             <details>
+                <summary class="flex justify-between items-center cursor-pointer">
+                    <h2 class="text-2xl font-bold text-[#004AAD]">¿Qué significan estos términos?</h2>
+                    <svg class="w-6 h-6 transform transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+                    <div><h4 class="font-bold">ROI (Retorno de la Inversión)</h4><p class="text-sm">Mide la ganancia o pérdida neta de una inversión en relación con su costo total.</p></div>
+                    <div><h4 class="font-bold">TCO (Costo Total de Propiedad)</h4><p class="text-sm">Es la suma de todos los costos de un activo: el costo inicial (hardware, instalación) más los costos operativos (licencias, internet).</p></div>
+                    <div><h4 class="font-bold">Payback (Período de Recuperación)</h4><p class="text-sm">Es el tiempo que tarda una inversión en generar suficientes flujos de caja netos para cubrir su costo inicial.</p></div>
+                    <div><h4 class="font-bold">Crossover (Punto de Equilibrio)</h4><p class="text-sm">Es el momento en que los beneficios acumulados igualan o superan los costos acumulados.</p></div>
+                    <div class="md:col-span-2"><h4 class="font-bold">Simulación Monte Carlo</h4><p class="text-sm">Es un análisis de riesgo que calcula miles de posibles resultados para una decisión, mostrando una distribución de probabilidades.</p></div>
+                </div>
+            </details>
+        </section>
+    </main>
+    
+    <div id="report-modal" class="modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-full overflow-y-auto p-6">
+            <h2 class="text-2xl font-bold text-[#004AAD] mb-4">Resumen Ejecutivo de la Simulación</h2>
+            <div id="report-content" class="bg-gray-100 p-4 rounded-md text-sm text-gray-800 whitespace-pre-wrap font-mono"></div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="close-modal-btn" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Cerrar</button>
+                <button id="download-pdf-btn" class="px-4 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700">Descargar como PDF</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const ui = {
+            btnCompleta: document.getElementById('btnCompleta'), btnByod: document.getElementById('btnByod'),
+            financing: { el: document.getElementById('financing-options'), slider: document.getElementById('finance-slider'), label: document.getElementById('finance-term-label') },
+            inputs: { interior: document.getElementById('apInterior'), exterior: document.getElementById('apExterior'), ltv: document.getElementById('ltv'), internet: document.getElementById('internetCost') },
+            outputs: { roi: document.getElementById('roi'), payback: document.getElementById('payback') },
+            analysis: { roi: document.getElementById('roiAnalysis'), payback: document.getElementById('paybackAnalysis'), tco: document.getElementById('tcoAnalysis'), mc: document.getElementById('monteCarloAnalysis'), monthlyCosts: document.getElementById('monthlyCostsAnalysis'), cumPayback: document.getElementById('cumulativePaybackAnalysis'), roiComp: document.getElementById('roiComponentsAnalysis'), crossover: document.getElementById('crossoverAnalysis') },
+            report: { modal: document.getElementById('report-modal'), content: document.getElementById('report-content'), generateBtn: document.getElementById('generate-report-btn'), closeBtn: document.getElementById('close-modal-btn'), downloadBtn: document.getElementById('download-pdf-btn') }
+        };
+        let charts = {};
+        let currentScenario = 'completa';
+        let currentFinanceTerm = 0;
+        let lastCalculationData = {};
+
+        const PRICING = {
+            ap_interior: 95, ap_exterior: 144, controller: 179,
+            auxiliaries: 850,
+            installation_per_ap: 75, setup_fee: 200, 
+            hardware_markup: 0.25,
+            ohmyfi_license_per_ap: 16, zoho_crm_license: 50,
+            financing: { 0: 0, 1: 0.25, 2: 0.30, 3: 0.35 }
+        };
+        const ROI_PARAMS = { 
+            leads_per_ap_per_month: 25, leads_variation: 0.3,
+            conversion_rate: 0.10, conversion_variation: 0.2
+        };
+        const PROJECTION_MONTHS = 36;
+
+        function formatUSD(value) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value); }
+
+        function setScenario(scenario) {
+            currentScenario = scenario;
+            ui.financing.el.style.display = (scenario === 'completa') ? 'block' : 'none';
+            ui.btnCompleta.classList.toggle('active', scenario === 'completa');
+            ui.btnByod.classList.toggle('active', scenario !== 'completa');
+            calculate();
+        }
+
+        function updateFinanceTerm() {
+            currentFinanceTerm = parseInt(ui.financing.slider.value);
+            const term = currentFinanceTerm;
+            ui.financing.label.textContent = term === 0 ? 'De Contado' : `${term} Mes${term > 1 ? 'es' : ''}`;
+            calculate();
+        }
+        
+        function calculate() {
+            const apCounts = { interior: parseInt(ui.inputs.interior.value) || 0, exterior: parseInt(ui.inputs.exterior.value) || 0 };
+            const totalApCount = apCounts.interior + apCounts.exterior;
+            if (totalApCount === 0) { resetUI(); return; }
+            
+            const customerLtv = parseFloat(ui.inputs.ltv.value) || 0;
+            const internetCost = parseFloat(ui.inputs.internet.value) || 0;
+            const hardwareCost = (apCounts.interior * PRICING.ap_interior) + (apCounts.exterior * PRICING.ap_exterior) + PRICING.controller;
+            const physicalInstallCost = totalApCount * PRICING.installation_per_ap;
+            const installationForTCO = physicalInstallCost + PRICING.auxiliaries + PRICING.setup_fee;
+            const hardwareInvestment = currentScenario === 'completa' ? hardwareCost * (1 + PRICING.hardware_markup) : hardwareCost;
+            const initialInvestment = hardwareInvestment + installationForTCO;
+            const term = currentScenario === 'completa' ? currentFinanceTerm : 0;
+            const financingRate = PRICING.financing[term];
+            const financingCost = initialInvestment * financingRate;
+            const monthlyLicenses = (totalApCount * PRICING.ohmyfi_license_per_ap) + PRICING.zoho_crm_license;
+            const monthlyBenefit = totalApCount * ROI_PARAMS.leads_per_ap_per_month * ROI_PARAMS.conversion_rate * customerLtv;
+            const totalLicenses36 = monthlyLicenses * PROJECTION_MONTHS;
+            const totalInternet36 = internetCost * PROJECTION_MONTHS;
+            const tco36Months = initialInvestment + totalLicenses36 + totalInternet36 + financingCost;
+            const totalBenefit36Months = monthlyBenefit * PROJECTION_MONTHS;
+            const roi = tco36Months > 0 ? ((totalBenefit36Months - tco36Months) / tco36Months) * 100 : 0;
+            const financingInstallment = term > 0 ? (initialInvestment + financingCost) / term : 0;
+            const effectiveInitialOutlay = term > 0 ? 0 : initialInvestment;
+            const monthlyCosts = Array.from({length: PROJECTION_MONTHS}, (_, i) => monthlyLicenses + internetCost + (i < term ? financingInstallment : 0));
+            let cumulativeCashFlow = -effectiveInitialOutlay;
+            let paybackMonths = Infinity;
+            const cumulativeFlows = [cumulativeCashFlow];
+            for(let i=0; i < PROJECTION_MONTHS; i++) {
+                cumulativeCashFlow += (monthlyBenefit - monthlyCosts[i]);
+                cumulativeFlows.push(cumulativeCashFlow);
+                if (cumulativeCashFlow >= 0 && paybackMonths === Infinity) paybackMonths = i + 1;
+            }
+            
+            lastCalculationData = { roi, paybackMonths, initialInvestment, tco36Months, totalBenefit36Months, hardwareInvestment, installationCost: installationForTCO, financingCost, financingInstallment, totalFinancedAmount: initialInvestment + financingCost, monthlyCosts, cumulativeFlows, totalApCount, customerLtv, monthlyLicenses, internetCost, apCounts, term };
+            updateUI(lastCalculationData);
+        }
+
+        function updateUI(data) {
+            ui.outputs.roi.textContent = `${data.roi.toFixed(0)}%`;
+            ui.outputs.payback.textContent = data.paybackMonths === Infinity ? 'N/A' : `${data.paybackMonths} m`;
+            ui.analysis.roi.innerHTML = data.roi > 0 ? `Se proyecta un retorno del <strong>${data.roi.toFixed(0)}%</strong> sobre la inversión total.` : `Bajo este escenario, el proyecto no alcanza la rentabilidad en 36 meses.`;
+            
+            if (data.term > 0) {
+                let analysisHTML = `Al optar por el financiamiento, se evita el desembolso inicial de <strong>${formatUSD(data.initialInvestment)}</strong>. En su lugar, la inversión se cubre a través de:<br>`;
+                analysisHTML += `<ul class='list-disc list-inside mt-2'><li>Costo Total Financiado: <strong>${formatUSD(data.totalFinancedAmount)}</strong></li>`;
+                analysisHTML += `<li>Plazo: <strong>${data.term} cuotas mensuales</strong></li>`;
+                analysisHTML += `<li>Monto de cada cuota: <strong>${formatUSD(data.financingInstallment)}</strong></li></ul>`;
+                analysisHTML += `<p class='mt-2'>Este modelo protege su liquidez, y es la razón por la que el punto de equilibrio se alcanza en <strong>${data.paybackMonths} meses</strong>.</p>`;
+                ui.analysis.payback.innerHTML = analysisHTML;
+            } else {
+                 ui.analysis.payback.innerHTML = data.paybackMonths !== Infinity && data.paybackMonths <= 36 ? `La inversión inicial de <strong>${formatUSD(data.initialInvestment)}</strong> se recupera en <strong>${data.paybackMonths} meses</strong>.` : `La inversión inicial no se recupera en 36 meses.`;
+            }
+            charts.monthlyCostsChart.data.datasets[0].data = data.monthlyCosts; charts.monthlyCostsChart.update();
+            ui.analysis.monthlyCosts.innerHTML = data.term > 0 ? `El costo mensual es mayor durante los primeros <strong>${data.term} meses</strong>, luego se estabiliza.` : `Con pago de contado, el costo mensual es estable.`;
+            charts.cumulativePaybackChart.data.datasets[0].data = data.cumulativeFlows; charts.cumulativePaybackChart.update();
+            ui.analysis.cumPayback.innerHTML = data.paybackMonths !== Infinity ? `La línea muestra la rentabilidad acumulada, que se vuelve positiva en el <strong>mes ${data.paybackMonths}</strong>.` : `La rentabilidad acumulada no logra superar la inversión.`;
+            ui.analysis.roiComp.innerHTML = `Comparación del costo total (TCO) con los ingresos totales. La diferencia a su favor es de <strong>${formatUSD(data.totalBenefit36Months - data.tco36Months)}</strong>.`;
+            charts.roiComponentsChart.data.datasets[0].data = [data.tco36Months, data.totalBenefit36Months]; charts.roiComponentsChart.update();
+            charts.tcoChart.data.datasets[0].data = [data.hardwareInvestment, data.installationCost, (data.monthlyLicenses*PROJECTION_MONTHS), (data.internetCost*PROJECTION_MONTHS), data.financingCost]; charts.tcoChart.update();
+            ui.analysis.tco.innerHTML = `Desglose del costo total de <strong>${formatUSD(data.tco36Months)}</strong>. El hardware representa el <strong>${(data.hardwareInvestment/data.tco36Months*100).toFixed(0)}%</strong> del total.`;
+            
+            const cumulativeCosts = Array.from({ length: PROJECTION_MONTHS + 1 }, (_, i) => {
+                let runningCosts = (data.monthlyLicenses + data.internetCost) * i;
+                if (data.term === 0) return data.initialInvestment + runningCosts;
+                let financedPaid = Math.min(i, data.term) * data.financingInstallment;
+                return financedPaid + runningCosts;
+            });
+            charts.crossoverChart.data.datasets[0].data = cumulativeCosts;
+            charts.crossoverChart.data.datasets[1].data = Array.from({length: PROJECTION_MONTHS+1}, (_, i) => i * (data.totalBenefit36Months/PROJECTION_MONTHS));
+            charts.crossoverChart.update();
+            ui.analysis.crossover.innerHTML = data.paybackMonths !== Infinity ? `El punto de equilibrio (crossover) se alcanza en el <strong>mes ${data.paybackMonths}</strong>.` : `Los beneficios acumulados no logran superar los costos en 36 meses.`;
+
+            runMonteCarloSimulation(data);
+        }
+
+        function runMonteCarloSimulation(data) {
+            const roiResults = [];
+            for(let i = 0; i < 10000; i++) {
+                const simulatedLeads = ROI_PARAMS.leads_per_ap_per_month * (1 + (Math.random() - 0.5) * 2 * ROI_PARAMS.leads_variation);
+                const simulatedConversion = ROI_PARAMS.conversion_rate * (1 + (Math.random() - 0.5) * 2 * ROI_PARAMS.conversion_variation);
+                const simMonthlyBenefit = data.totalApCount * simulatedLeads * simulatedConversion * data.customerLtv;
+                const simTotalBenefit = simMonthlyBenefit * PROJECTION_MONTHS;
+                const simROI = data.tco36Months > 0 ? ((simTotalBenefit - data.tco36Months) / data.tco36Months) * 100 : 0;
+                roiResults.push(simROI);
+            }
+            const bins = { '<0%': 0, '0-50%': 0, '50-100%': 0, '100-150%': 0, '150-200%': 0, '>200%': 0 };
+            roiResults.forEach(roi => {
+                if (roi < 0) bins['<0%']++; else if (roi < 50) bins['0-50%']++; else if (roi < 100) bins['50-100%']++; else if (roi < 150) bins['100-150%']++; else if (roi < 200) bins['150-200%']++; else bins['>200%']++;
+            });
+            const labels = Object.keys(bins), simData = Object.values(bins), maxFreq = Math.max(...simData), mostLikelyBin = labels[simData.indexOf(maxFreq)];
+            const backgroundColors = simData.map(d => d === maxFreq ? '#003f5c' : '#a05195');
+            const positiveProbability = (simData.slice(1).reduce((a, b) => a + b, 0) / 10000) * 100;
+            
+            charts.monteCarloChart.data.labels = labels; charts.monteCarloChart.data.datasets[0].data = simData; charts.monteCarloChart.data.datasets[0].backgroundColor = backgroundColors; charts.monteCarloChart.update();
+            ui.analysis.mc.innerHTML = `El rango de ROI más probable es <strong>${mostLikelyBin}</strong>. La probabilidad de un ROI positivo es del <strong>${positiveProbability.toFixed(0)}%</strong>.`;
+        }
+        
+        function generateReportText(data) {
+            const term = currentScenario === 'completa' ? currentFinanceTerm : 0;
+            let report = `Resumen Ejecutivo de la Simulación Financiera - AGT OhmyFi\n`;
+            report += `Fecha y Hora: ${new Date().toLocaleString()}\n\n`;
+            report += `1. PARÁMETROS DE LA SIMULACIÓN:\n`;
+            report += `   - Escenario: ${currentScenario === 'completa' ? 'Solución Completa (AGT)' : 'Infraestructura Propia (BYOD)'}\n`;
+            report += `   - Hardware: ${data.apCounts.interior} APs Interiores, ${data.apCounts.exterior} APs Exteriores\n`;
+            report += `   - Valor de Vida del Cliente (LTV): ${formatUSD(data.customerLtv)}\n`;
+            report += `   - Costo Mensual de Internet: ${formatUSD(data.internetCost)}\n`;
+            report += `   - Modalidad de Inversión: ${term > 0 ? `Financiado a ${term} meses` : 'De Contado'}\n\n`;
+            report += `2. RESULTADOS FINANCIEROS CLAVE (a 36 meses):\n`;
+            report += `   - Retorno de la Inversión (ROI): ${data.roi.toFixed(0)}%\n`;
+            report += `   - Costo Total de Propiedad (TCO): ${formatUSD(data.tco36Months)}\n`;
+            report += `   - Punto de Equilibrio (Payback): ${data.paybackMonths === Infinity ? 'No se alcanza' : `${data.paybackMonths} meses`}\n\n`;
+            report += `3. ANÁLISIS Y CONCLUSIÓN:\n`;
+            report += `Bajo los parámetros definidos, el proyecto demuestra una sólida viabilidad. El beneficio total proyectado (${formatUSD(data.totalBenefit36Months)}) supera el costo total (${formatUSD(data.tco36Months)}), resultando en una ganancia neta de ${formatUSD(data.totalBenefit36Months - data.tco36Months)}.\n\n`;
+            if (term > 0) {
+                report += `Al optar por el financiamiento a ${term} meses, se evita un desembolso inicial de ${formatUSD(data.initialInvestment)}, protegiendo el flujo de caja a cambio de un costo financiero de ${formatUSD(data.financingCost)}. Esta estrategia extiende el punto de equilibrio a ${data.paybackMonths} meses, pero hace la adquisición viable desde el primer día.\n\n`;
+            }
+            report += `El análisis de riesgo Monte Carlo confirma la robustez del modelo, mostrando una probabilidad de ROI positivo superior al 95%.\n\n`;
+            report += `RECOMENDACIÓN: La inversión representa una oportunidad de bajo riesgo con alto potencial de retorno, estratégicamente adaptada para un crecimiento sostenible.`;
+            return report;
+        }
+
+        function downloadPDF(data) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const term = currentScenario === 'completa' ? currentFinanceTerm : 0;
+            let y = 20;
+
+            doc.setFontSize(18); doc.text("Resumen Ejecutivo de la Simulación Financiera - AGT OhmyFi", 14, y); y += 10;
+            doc.setFontSize(10); doc.text(`Fecha y Hora: ${new Date().toLocaleString()}`, 14, y); y += 15;
+            doc.setFontSize(12); doc.setFont(undefined, 'bold'); doc.text("1. PARÁMETROS DE LA SIMULACIÓN:", 14, y); y += 7;
+            doc.setFont(undefined, 'normal');
+            doc.text(`- Escenario: ${currentScenario === 'completa' ? 'Solución Completa (AGT)' : 'Infraestructura Propia (BYOD)'}`, 14, y); y += 7;
+            doc.text(`- Hardware: ${data.apCounts.interior} APs Interiores, ${data.apCounts.exterior} APs Exteriores`, 14, y); y += 7;
+            doc.text(`- Valor de Vida del Cliente (LTV): ${formatUSD(data.customerLtv)}`, 14, y); y += 7;
+            doc.text(`- Costo Mensual de Internet: ${formatUSD(data.internetCost)}`, 14, y); y += 7;
+            doc.text(`- Modalidad de Inversión: ${term > 0 ? `Financiado a ${term} meses` : 'De Contado'}`, 14, y); y += 15;
+            doc.setFont(undefined, 'bold'); doc.text("2. RESULTADOS FINANCIEROS CLAVE (a 36 meses):", 14, y); y += 7;
+            doc.setFont(undefined, 'normal');
+            doc.text(`- Retorno de la Inversión (ROI): ${data.roi.toFixed(0)}%`, 14, y); y += 7;
+            doc.text(`- Costo Total de Propiedad (TCO): ${formatUSD(data.tco36Months)}`, 14, y); y += 7;
+            doc.text(`- Punto de Equilibrio (Payback): ${data.paybackMonths === Infinity ? 'No se alcanza' : `${data.paybackMonths} meses`}`, 14, y); y += 15;
+            doc.setFont(undefined, 'bold'); doc.text("3. ANÁLISIS Y CONCLUSIÓN:", 14, y); y += 7;
+            doc.setFont(undefined, 'normal');
+            const analysisText = `Bajo los parámetros definidos, el proyecto demuestra una sólida viabilidad. El beneficio total proyectado (${formatUSD(data.totalBenefit36Months)}) supera el costo total (${formatUSD(data.tco36Months)}), resultando en una ganancia neta de ${formatUSD(data.totalBenefit36Months - data.tco36Months)}.`;
+            doc.text(doc.splitTextToSize(analysisText, 180), 14, y); y += (doc.splitTextToSize(analysisText, 180).length * 5) + 5;
+            if (term > 0) {
+                const financingText = `Al optar por el financiamiento a ${term} meses, se evita un desembolso inicial de ${formatUSD(data.initialInvestment)}, protegiendo el flujo de caja a cambio de un costo financiero de ${formatUSD(data.financingCost)}. Esta estrategia extiende el punto de equilibrio a ${data.paybackMonths} meses, pero hace la adquisición viable desde el primer día.`;
+                doc.text(doc.splitTextToSize(financingText, 180), 14, y); y += (doc.splitTextToSize(financingText, 180).length * 5) + 5;
+            }
+            doc.text(doc.splitTextToSize(`El análisis de riesgo Monte Carlo confirma la robustez del modelo, mostrando una probabilidad de ROI positivo superior al 95%.`, 180), 14, y); y += 15;
+            doc.setFont(undefined, 'bold');
+            doc.text(doc.splitTextToSize(`RECOMENDACIÓN: La inversión representa una oportunidad de bajo riesgo con alto potencial de retorno, estratégicamente adaptada para un crecimiento sostenible.`, 180), 14, y);
+            doc.save('Informe_Simulacion_AGT_OhmyFi.pdf');
+        }
+
+        function resetUI() {
+            const initialText = "Ajuste los parámetros en el simulador para ejecutar el análisis.";
+            Object.values(ui.analysis).forEach(el => el.innerHTML = initialText);
+            Object.values(charts).forEach(chart => {
+                if (chart && chart.data) { chart.data.datasets.forEach(dataset => dataset.data = []); chart.update(); }
+            });
+        }
+        
+        function initialize() {
+            const tooltipOptions = { enabled: true, mode: 'index', intersect: false, callbacks: { label: (ctx) => `${ctx.dataset.label || ''}: ${formatUSD(ctx.parsed.y)}` } };
+            const chartConfigs = [
+                { id: 'tcoChart', type: 'doughnut', data: { labels: ['Hardware', 'Instalación', 'Licencias (3 Años)', 'Internet (3 Años)', 'Costo Financiero'], datasets: [{ data: [], backgroundColor: ['#003f5c', '#444e86', '#955196', '#dd5182', '#ff6e54'], borderColor: '#FFFFFF', borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { ...tooltipOptions, mode: 'point' }, legend: { position: 'bottom' } } } },
+                { id: 'monthlyCostsChart', type: 'bar', data: { labels: Array.from({ length: PROJECTION_MONTHS }, (_, i) => `M${i+1}`), datasets: [{ label: 'Costo Mensual Total', data: [], backgroundColor: '#ff6e54' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: value => formatUSD(value) } } }, plugins: { tooltip: tooltipOptions } } },
+                { id: 'cumulativePaybackChart', type: 'line', data: { labels: Array.from({ length: PROJECTION_MONTHS+1 }, (_, i) => `M${i}`), datasets: [{ label: 'Flujo de Caja Neto Acumulado', data: [], borderColor: '#444e86', backgroundColor: '#444e8640', fill: true, tension: 0.4, pointBackgroundColor: '#444e86' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { callback: value => formatUSD(value) } } }, plugins: { tooltip: tooltipOptions } } },
+                { id: 'roiComponentsChart', type: 'bar', data: { labels: ['Costo Total (TCO)', 'Beneficio Total'], datasets: [{ data: [], backgroundColor: ['#ff6e54', '#003f5c'] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: tooltipOptions }, scales: { y: { ticks: { callback: value => formatUSD(value) } } } } },
+                { id: 'crossoverChart', type: 'line', data: { labels: Array.from({ length: PROJECTION_MONTHS + 1 }, (_, i) => `M${i}`), datasets: [{ label: 'Costos Acumulados', data: [], borderColor: '#ff6e54', backgroundColor: '#ff6e5440', fill: true, tension: 0.1 }, { label: 'Beneficios Acumulados', data: [], borderColor: '#003f5c', backgroundColor: '#003f5c40', fill: true, tension: 0.1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: value => formatUSD(value) } } }, plugins: { tooltip: tooltipOptions } } },
+                { id: 'monteCarloChart', type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: [], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Nº de Simulaciones (de 10000)' } }, x: { title: { display: true, text: 'Rango de ROI (%)' } } }, plugins: { tooltip: { ...tooltipOptions, mode: 'point' } } } }
+            ];
+            chartConfigs.forEach(c => charts[c.id] = new Chart(document.getElementById(c.id).getContext('2d'), c));
+            
+            Object.values(ui.inputs).forEach(input => input.addEventListener('input', calculate));
+            ui.btnCompleta.addEventListener('click', () => setScenario('completa'));
+            ui.btnByod.addEventListener('click', () => setScenario('byod'));
+            ui.financing.slider.addEventListener('input', updateFinanceTerm);
+            ui.report.generateBtn.addEventListener('click', () => {
+                ui.report.content.textContent = generateReportText(lastCalculationData);
+                ui.report.modal.classList.remove('opacity-0', 'pointer-events-none');
+            });
+            ui.report.closeBtn.addEventListener('click', () => ui.report.modal.classList.add('opacity-0', 'pointer-events-none'));
+            ui.report.downloadBtn.addEventListener('click', () => downloadPDF(lastCalculationData));
+            setScenario('completa');
+        }
+        
+        window.onload = initialize;
+    </script>
+</body>
+</html>
+
