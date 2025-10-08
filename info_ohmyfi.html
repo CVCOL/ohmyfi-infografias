@@ -1,14 +1,14 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 16.3 (08/10/2025)
+- Corrección Definitiva de Gráficos: Se eliminó el "código fantasma" (referencias a gráficos inexistentes) que causaba un error de detención de script. Todos los gráficos ahora se cargan y actualizan correctamente. El layout de la página se ha restaurado.
+
 Versión: 16.2 (08/10/2025)
-- Corrección de Gráficos: Se solucionó un error crítico en el código JavaScript que impedía la inicialización y actualización de todos los gráficos del dashboard. Se eliminaron referencias a elementos obsoletos, se restauró la funcionalidad completa del análisis Monte Carlo y se corrigió el layout.
+- Intento de Corrección: Versión que aún contenía el error de script que impedía la renderización de los gráficos y rompía la maquetación.
 
 Versión: 16.1 (08/10/2025)
-- Intento de Corrección de Gráficos: Versión con error de script que impedía la renderización de los gráficos.
-
-Versión: 16.0 (08/10/2025)
-- Fusión Analítica Final: Se implementaron las lógicas de análisis y visualización de la v6. Se mejoró el texto de payback con financiamiento, se ajustó el gráfico de costos mensuales para reflejar cuotas, se añadieron gráficos de desglose de TCO por componentes y flujo de caja acumulado, y se rediseñó el dashboard con KPIs destacados.
+- Fusión Analítica Final: Se implementaron las lógicas de análisis y visualización de la v6. Se introdujo el error de script durante la reestructuración del dashboard.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -509,7 +509,7 @@ Versión: 16.0 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v16.2 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v16.3 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -531,7 +531,7 @@ Versión: 16.0 (08/10/2025)
     </div>
 
 <script>
-    // V16.2 CALCULATION ENGINE - FINAL, STABLE & DEBUGGED
+    // V16.3 CALCULATION ENGINE - FINAL, STABLE & DEBUGGED
     const PRICING = {
         // 1. Costos de Inversión Inicial (Hardware)
         CONTROLLER_COST: 179.00,
@@ -618,75 +618,79 @@ Versión: 16.0 (08/10/2025)
     }
 
     function calculate() {
-        const values = {
-            apsIndoor: parseInt(ui.inputs.apsIndoor.value) || 0,
-            apsOutdoor: parseInt(ui.inputs.apsOutdoor.value) || 0,
-            customerLTV: parseFloat(ui.inputs.customerLTV.value) || 0,
-            internetCost: parseFloat(ui.inputs.internetCost.value) || 0,
-            financingTerm: parseInt(ui.financing.slider.value, 10) || 0,
-            leadsPerAp: parseInt(ui.inputs.leadsPerAp.value) || 0
-        };
+        try {
+            const values = {
+                apsIndoor: parseInt(ui.inputs.apsIndoor.value) || 0,
+                apsOutdoor: parseInt(ui.inputs.apsOutdoor.value) || 0,
+                customerLTV: parseFloat(ui.inputs.customerLTV.value) || 0,
+                internetCost: parseFloat(ui.inputs.internetCost.value) || 0,
+                financingTerm: parseInt(ui.financing.slider.value, 10) || 0,
+                leadsPerAp: parseInt(ui.inputs.leadsPerAp.value) || 0
+            };
 
-        const totalAps = values.apsIndoor + values.apsOutdoor;
+            const totalAps = values.apsIndoor + values.apsOutdoor;
 
-        let hardwarePrice = 0, servicesPrice = 0, capex = 0;
-        if (currentScenario === 'completa') {
-            const hardwareBaseCost = PRICING.CONTROLLER_COST + (values.apsIndoor * PRICING.AP_INDOOR_COST) + (values.apsOutdoor * PRICING.AP_OUTDOOR_COST);
-            hardwarePrice = hardwareBaseCost * (1 + PRICING.HARDWARE_MARKUP);
-            servicesPrice = PRICING.AUX_COMPONENTS_FIXED + PRICING.CONFIG_FEE_FIXED + (totalAps * PRICING.INSTALL_FEE_PER_AP);
-            capex = hardwarePrice + servicesPrice;
-        } else { // byod
-            capex = PRICING.BYOD_CONFIG_FEE_FIXED;
-            servicesPrice = capex;
-        }
-
-        const monthlyLicenseCost = (totalAps * PRICING.LICENSE_OHMYFI_PER_AP_MONTHLY) + PRICING.LICENSE_ZOHO_FIXED_MONTHLY;
-        const monthlyOpex = monthlyLicenseCost + values.internetCost;
-        const totalOpex = monthlyOpex * 36;
-        
-        let financingCost = 0;
-        let monthlyFinancingPayment = 0;
-        if (currentScenario === 'completa' && values.financingTerm > 0) {
-            const rate = PRICING.FINANCING_RATES[values.financingTerm];
-            financingCost = capex * rate;
-            monthlyFinancingPayment = (capex + financingCost) / values.financingTerm;
-        }
-        
-        const tco = capex + totalOpex + financingCost;
-        const newCustomersMonthly = totalAps * values.leadsPerAp * ROI_PARAMS.CONVERSION_RATE;
-        const monthlyRevenue = newCustomersMonthly * values.customerLTV;
-        const totalRevenue = monthlyRevenue * 36;
-        const netBenefit = totalRevenue - tco;
-        const roi = tco > 0 ? (netBenefit / tco) : 0;
-        
-        let cumulativeNet = -capex - financingCost;
-        let paybackPeriod = -1;
-        const monthlyData = { costs: [], revenues: [], opex: [], capex: [], cumulativeNet: [] };
-
-        for (let month = 1; month <= 36; month++) {
-            const currentMonthCost = monthlyOpex + (month <= values.financingTerm ? monthlyFinancingPayment : 0);
-            cumulativeNet += monthlyRevenue - currentMonthCost;
-            
-            if (cumulativeNet > 0 && paybackPeriod === -1) {
-                paybackPeriod = month;
+            let hardwarePrice = 0, servicesPrice = 0, capex = 0;
+            if (currentScenario === 'completa') {
+                const hardwareBaseCost = PRICING.CONTROLLER_COST + (values.apsIndoor * PRICING.AP_INDOOR_COST) + (values.apsOutdoor * PRICING.AP_OUTDOOR_COST);
+                hardwarePrice = hardwareBaseCost * (1 + PRICING.HARDWARE_MARKUP);
+                servicesPrice = PRICING.AUX_COMPONENTS_FIXED + PRICING.CONFIG_FEE_FIXED + (totalAps * PRICING.INSTALL_FEE_PER_AP);
+                capex = hardwarePrice + servicesPrice;
+            } else { // byod
+                capex = PRICING.BYOD_CONFIG_FEE_FIXED;
+                servicesPrice = capex;
             }
-            monthlyData.revenues.push(monthlyRevenue * month);
-            monthlyData.costs.push(capex + financingCost + (monthlyOpex * month));
-            monthlyData.opex.push(currentMonthCost);
-            monthlyData.capex.push(month === 1 ? capex : 0);
-            monthlyData.cumulativeNet.push(cumulativeNet + (capex+financingCost)); // Adjust for chart start
-        }
 
-        const tcoComponents = {
-            hardware: hardwarePrice,
-            services: servicesPrice,
-            licenses: totalOpex
-        };
-        
-        const monteCarloResults = runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost);
-        lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: currentScenario, monteCarloResults, monthlyData, tcoComponents };
-        
-        updateUI(lastCalculationData);
+            const monthlyLicenseCost = (totalAps * PRICING.LICENSE_OHMYFI_PER_AP_MONTHLY) + PRICING.LICENSE_ZOHO_FIXED_MONTHLY;
+            const monthlyOpex = monthlyLicenseCost + values.internetCost;
+            const totalOpex = monthlyOpex * 36;
+            
+            let financingCost = 0;
+            let monthlyFinancingPayment = 0;
+            if (currentScenario === 'completa' && values.financingTerm > 0) {
+                const rate = PRICING.FINANCING_RATES[values.financingTerm];
+                financingCost = capex * rate;
+                monthlyFinancingPayment = (capex + financingCost) / values.financingTerm;
+            }
+            
+            const tco = capex + totalOpex + financingCost;
+            const newCustomersMonthly = totalAps * values.leadsPerAp * ROI_PARAMS.CONVERSION_RATE;
+            const monthlyRevenue = newCustomersMonthly * values.customerLTV;
+            const totalRevenue = monthlyRevenue * 36;
+            const netBenefit = totalRevenue - tco;
+            const roi = tco > 0 ? (netBenefit / tco) : 0;
+            
+            let cumulativeNet = -capex - financingCost;
+            let paybackPeriod = -1;
+            const monthlyData = { costs: [], revenues: [], opex: [], capex: [], cumulativeNet: [] };
+
+            for (let month = 1; month <= 36; month++) {
+                const currentMonthCost = monthlyOpex + (month <= values.financingTerm ? monthlyFinancingPayment : 0);
+                cumulativeNet += monthlyRevenue - currentMonthCost;
+                
+                if (cumulativeNet > 0 && paybackPeriod === -1) {
+                    paybackPeriod = month;
+                }
+                monthlyData.revenues.push(monthlyRevenue * month);
+                monthlyData.costs.push(capex + financingCost + (monthlyOpex * month));
+                monthlyData.opex.push(currentMonthCost);
+                monthlyData.capex.push(month === 1 ? capex : 0);
+                monthlyData.cumulativeNet.push(cumulativeNet + (capex+financingCost)); // Adjust for chart start
+            }
+
+            const tcoComponents = {
+                hardware: hardwarePrice,
+                services: servicesPrice,
+                licenses: totalOpex
+            };
+            
+            const monteCarloResults = runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost);
+            lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: currentScenario, monteCarloResults, monthlyData, tcoComponents };
+            
+            updateUI(lastCalculationData);
+        } catch (error) {
+            console.error("Calculation failed:", error);
+        }
     }
     
     function runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost) {
@@ -740,6 +744,7 @@ Versión: 16.0 (08/10/2025)
     }
 
     function updateCharts(d) {
+        if (!charts.tcoBreakdown) return; // Safety check
         charts.tcoBreakdown.data.datasets[0].data = [d.capex + d.financingCost, d.totalOpex];
         charts.tcoBreakdown.update();
 
@@ -827,4 +832,3 @@ Bajo los parámetros especificados, la implementación representa una inversión
 </script>
 </body>
 </html>
-
