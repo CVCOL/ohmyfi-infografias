@@ -1,16 +1,15 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 9.0 (08/10/2025)
+- Restauración del Motor de Cálculo v6.0: Se reemplazó el simulador simplificado por el motor de cálculo granular y validado de la v6.0, basado en APs, LTV y costo de internet. Se adaptó la interfaz de entrada para reflejar estos cambios.
+- Mejora de Interactividad (Hover vs. Clic): Se implementó el giro 3D automático por 'hover' en las tarjetas informativas ("El Viaje del Dato", "Glosario Financiero") para una exploración fluida. Se mantuvo el giro por 'clic' en los gráficos para no interferir con sus tooltips.
+
 Versión: 8.0 (08/10/2025)
-- Corrección de Modelo Financiero: Se ajustó el plazo de financiamiento a un máximo de 3 meses, alineándolo con el modelo de negocio validado en la v6.0.
-- Reintegración de Funcionalidad: Se recuperó el generador de informes en PDF, incluyendo el botón, la modal de previsualización y la lógica de descarga.
-- Mejora de Interactividad y Usabilidad: Se extendió el efecto de giro 3D (activado por clic) a las tarjetas de la sección "El Viaje del Dato". Se añadió un botón "Volver" en la cara posterior de todas las tarjetas interactivas para una navegación más intuitiva.
+- Corrección de Modelo Financiero, Reintegración de PDF, Mejora de Usabilidad en tarjetas interactivas.
 
 Versión: 7.0 (08/10/2025)
-- Evolución a Herramienta de Ventas (Mobile-First): Rediseño integral enfocado en la experiencia móvil, con nueva narrativa visual ("El Viaje del Dato") y contenedores interactivos 3D.
-
-Versión: 6.0 (07/10/2025)
-- Rediseño gráfico integral: Implementación de la paleta de colores corporativa de AGT, nueva iconografía profesional y tarjetas de análisis interactivas.
+- Evolución a Herramienta de Ventas (Mobile-First): Rediseño integral y contenedores interactivos 3D.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -87,13 +86,14 @@ Versión: 6.0 (07/10/2025)
             border-radius: 0.75rem;
             padding: 1.5rem;
             border: 1px solid #334155; /* Slate 700 */
+            height: 100%;
         }
 
         /* 3D Flip Card Styles */
         .flip-card {
             background-color: transparent;
             width: 100%;
-            min-height: 200px; /* Altura mínima para tarjetas de viaje del dato */
+            min-height: 220px;
             perspective: 1000px;
         }
         .chart-flip-card {
@@ -107,9 +107,17 @@ Versión: 6.0 (07/10/2025)
             transition: transform 0.8s;
             transform-style: preserve-3d;
         }
-        .flip-card.is-flipped .flip-card-inner {
+        
+        /* HOVER flip for informational cards */
+        .hover-flip-card:hover .flip-card-inner {
             transform: rotateY(180deg);
         }
+
+        /* CLICK flip for chart cards */
+        .chart-flip-card.is-flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
         .flip-card-front, .flip-card-back {
             position: absolute;
             width: 100%;
@@ -148,7 +156,7 @@ Versión: 6.0 (07/10/2025)
 
         <!-- HEADER -->
         <header class="mb-16 text-center">
-            <img src="https://placehold.co/1080x720/0F172A/F97316?text=Equipo+Profesional+Analizando+Datos" 
+            <img src="https://i.imgur.com/your_code_here.jpg" 
                  alt="Equipo de profesionales analizando datos en un entorno tecnológico"
                  class="w-full h-64 md:h-96 object-cover rounded-xl mb-8 opacity-75">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
@@ -163,87 +171,68 @@ Versión: 6.0 (07/10/2025)
             <p class="section-subtitle">Visualice el flujo de valor. Así es como convertimos una simple conexión Wi-Fi en una relación rentable y medible con sus clientes.</p>
             <div class="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
                 
-                <!-- Card 1 -->
-                <div class="flip-card">
+                <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                             <i data-lucide="info" class="flip-trigger"></i>
+                        <div class="flip-card-front card">
                              <i data-lucide="wifi" class="w-12 h-12 mb-4 text-orange-500"></i>
                              <h3 class="font-bold text-lg mb-2">1. Conexión</h3>
                              <p class="text-sm text-slate-400">El cliente se conecta al Wi-Fi gratuito a través de un portal cautivo personalizado.</p>
                         </div>
                         <div class="flip-card-back">
                              <h3 class="font-bold text-lg mb-2 text-orange-400">Portal de Marca</h3>
-                             <p class="text-sm text-slate-300 mb-4">El primer contacto es clave. Creamos un portal de acceso con su identidad de marca que ofrece una experiencia de conexión segura y profesional, cumpliendo con la ley y generando confianza desde el inicio.</p>
-                             <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                             <p class="text-sm text-slate-300">El primer contacto es clave. Creamos un portal de acceso con su identidad de marca que ofrece una experiencia de conexión segura y profesional.</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Card 2 -->
-                <div class="flip-card">
+                <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <i data-lucide="info" class="flip-trigger"></i>
+                        <div class="flip-card-front card">
                             <i data-lucide="database" class="w-12 h-12 mb-4 text-orange-500"></i>
                             <h3 class="font-bold text-lg mb-2">2. Captura</h3>
                             <p class="text-sm text-slate-400">Se capturan datos de primera mano (First-Party Data) con consentimiento explícito.</p>
                         </div>
                         <div class="flip-card-back">
                             <h3 class="font-bold text-lg mb-2 text-orange-400">Activo de Datos</h3>
-                            <p class="text-sm text-slate-300 mb-4">Los "First-Party Data" son su activo más valioso. A diferencia de los datos de terceros, son precisos, relevantes y obtenidos con consentimiento, formando la base para una personalización efectiva y legal.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                            <p class="text-sm text-slate-300">Los "First-Party Data" son su activo más valioso: precisos, relevantes y obtenidos con consentimiento para una personalización efectiva y legal.</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Card 3 -->
-                <div class="flip-card">
+                <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <i data-lucide="info" class="flip-trigger"></i>
+                        <div class="flip-card-front card">
                             <i data-lucide="users" class="w-12 h-12 mb-4 text-orange-500"></i>
                             <h3 class="font-bold text-lg mb-2">3. Perfilamiento</h3>
                             <p class="text-sm text-slate-400">El perfil del cliente se crea o actualiza automáticamente en Zoho CRM.</p>
                         </div>
                          <div class="flip-card-back">
                             <h3 class="font-bold text-lg mb-2 text-orange-400">Inteligencia 360°</h3>
-                            <p class="text-sm text-slate-300 mb-4">La integración nativa con Zoho CRM es nuestro gran diferenciador. Cada conexión enriquece el perfil del cliente, unificando su comportamiento online y offline para una visión completa.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                            <p class="text-sm text-slate-300">La integración nativa con Zoho CRM enriquece el perfil del cliente, unificando su comportamiento online y offline para una visión completa.</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Card 4 -->
-                 <div class="flip-card">
+                 <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <i data-lucide="info" class="flip-trigger"></i>
+                        <div class="flip-card-front card">
                             <i data-lucide="send" class="w-12 h-12 mb-4 text-orange-500"></i>
                             <h3 class="font-bold text-lg mb-2">4. Activación</h3>
                             <p class="text-sm text-slate-400">Se disparan campañas de marketing automatizadas y personalizadas.</p>
                         </div>
                         <div class="flip-card-back">
                            <h3 class="font-bold text-lg mb-2 text-orange-400">Marketing de Precisión</h3>
-                           <p class="text-sm text-slate-300 mb-4">La automatización permite impactar al cliente correcto en el momento oportuno. Ej: un cupón de "te extrañamos" si no vuelve en 30 días, o una oferta de cumpleaños. Marketing que convierte.</p>
-                           <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                           <p class="text-sm text-slate-300">La automatización permite impactar al cliente correcto en el momento oportuno con ofertas relevantes que impulsan la conversión.</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Card 5 -->
-                <div class="flip-card">
+                <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <i data-lucide="info" class="flip-trigger"></i>
+                        <div class="flip-card-front card">
                             <i data-lucide="bar-chart-2" class="w-12 h-12 mb-4 text-orange-500"></i>
                             <h3 class="font-bold text-lg mb-2">5. Medición</h3>
                             <p class="text-sm text-slate-400">Se mide el ROI, LTV y el impacto real de cada interacción en las ventas.</p>
                         </div>
                         <div class="flip-card-back">
                             <h3 class="font-bold text-lg mb-2 text-orange-400">Cierre del Ciclo</h3>
-                            <p class="text-sm text-slate-300 mb-4">La solución permite atribuir ventas e ingresos directamente a las campañas de WiFi Marketing, demostrando el valor tangible y el ROI. Dejamos de adivinar y empezamos a medir el impacto real.</p>
-                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                            <p class="text-sm text-slate-300">La solución permite atribuir ventas a las campañas de WiFi Marketing, demostrando el valor tangible y el ROI. Dejamos de adivinar y empezamos a medir.</p>
                         </div>
                     </div>
                 </div>
@@ -269,31 +258,29 @@ Versión: 6.0 (07/10/2025)
                 <!-- Columna de Inputs -->
                 <div class="lg:col-span-1 space-y-6">
                     <div id="image-container" class="mb-6">
-                        <img id="scenario-image" src="https://placehold.co/1080x720/1E293B/94A3B8?text=Instalación+Profesional+de+Wi-Fi" 
+                        <img id="scenario-image" src="https://i.imgur.com/your_code_here.jpg" 
                              alt="Técnico instalando un punto de acceso Wi-Fi"
                              class="w-full h-auto object-cover rounded-lg transition-opacity duration-500">
                     </div>
                     
                     <div class="card">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="dollar-sign" class="w-6 h-6 mr-2"></i>Inversión Inicial (CAPEX)</h3>
-                        <label class="block mb-2 text-sm font-medium">Costo Hardware Base (USD)</label>
-                        <input type="number" id="base-hardware-cost" value="2500" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="router" class="w-6 h-6 mr-2"></i>Defina Cantidad de APs</h3>
+                        <label class="block mb-2 text-sm font-medium">APs Interiores</label>
+                        <input type="number" id="aps-indoor" value="5" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                        <label class="block mt-4 mb-2 text-sm font-medium">APs Exteriores</label>
+                        <input type="number" id="aps-outdoor" value="1" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
                     </div>
 
                     <div class="card">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="sliders-horizontal" class="w-6 h-6 mr-2"></i>Costos Operativos (OPEX)</h3>
-                        <label class="block mb-2 text-sm font-medium">Licencia Anual OhmyFi (USD)</label>
-                        <input type="number" id="annual-license-cost" value="1200" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                        <label class="block mt-4 mb-2 text-sm font-medium">Soporte y Mantenimiento Anual (USD)</label>
-                        <input type="number" id="annual-support-cost" value="600" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="trending-up" class="w-6 h-6 mr-2"></i>Ingrese su LTV</h3>
+                        <label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (USD)</label>
+                        <input type="number" id="customer-ltv" value="150" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
                     </div>
-
+                    
                     <div class="card">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="trending-up" class="w-6 h-6 mr-2"></i>Generación de Ingresos</h3>
-                        <label class="block mb-2 text-sm font-medium">Nuevos Clientes/Mes (vía WiFi)</label>
-                        <input type="number" id="new-customers-monthly" value="50" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                        <label class="block mt-4 mb-2 text-sm font-medium">Valor de Vida del Cliente (LTV - USD)</label>
-                        <input type="number" id="customer-lifetime-value" value="150" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="globe" class="w-6 h-6 mr-2"></i>Costo de Internet</h3>
+                        <label class="block mb-2 text-sm font-medium">Costo Mensual del Servicio (USD)</label>
+                        <input type="number" id="internet-cost" value="100" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
                     </div>
 
                      <div id="financing-section" class="card">
@@ -325,7 +312,6 @@ Versión: 6.0 (07/10/2025)
                             <p id="payback-text" class="text-sm text-slate-400">...</p>
                         </div>
                         
-                        <!-- ROI Components Chart -->
                         <div class="flip-card chart-flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
@@ -335,13 +321,12 @@ Versión: 6.0 (07/10/2025)
                                 </div>
                                 <div class="flip-card-back">
                                     <h3 class="font-bold text-xl mb-4 text-orange-400">¿Qué Muestra este Gráfico?</h3>
-                                    <p class="text-base text-slate-300 mb-6">Este gráfico desglosa el Retorno de la Inversión (ROI). Compara el **Beneficio Neto Total** (ingresos generados gracias a la solución) contra el **Costo Total de Propiedad (TCO)**. Un beneficio significativamente mayor que el costo resulta en un ROI positivo y una inversión rentable.</p>
-                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver al Gráfico</button>
+                                    <p class="text-base text-slate-300 mb-6">Compara el **Beneficio Neto Total** (ingresos generados) contra el **Costo Total de Propiedad (TCO)**. Un beneficio mayor que el costo resulta en un ROI positivo.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- TCO Breakdown Chart -->
                         <div class="flip-card chart-flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
@@ -351,13 +336,12 @@ Versión: 6.0 (07/10/2025)
                                 </div>
                                 <div class="flip-card-back">
                                     <h3 class="font-bold text-xl mb-4 text-orange-400">Entendiendo el TCO</h3>
-                                    <p class="text-base text-slate-300 mb-6">El Costo Total de Propiedad (TCO) no es solo el precio inicial. Este gráfico muestra cómo se distribuye su inversión a lo largo de 3 años, incluyendo el **hardware inicial (CAPEX)** y los **costos operativos recurrentes (OPEX)** como licencias y soporte. Entender esto es clave para una planificación financiera precisa.</p>
-                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver al Gráfico</button>
+                                    <p class="text-base text-slate-300 mb-6">Muestra cómo se distribuye su inversión, incluyendo el **hardware (CAPEX)** y los **costos operativos (OPEX)**. Clave para una planificación financiera precisa.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Payback Chart -->
                         <div class="flip-card chart-flip-card md:col-span-2">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
@@ -367,8 +351,8 @@ Versión: 6.0 (07/10/2025)
                                 </div>
                                 <div class="flip-card-back">
                                     <h3 class="font-bold text-xl mb-4 text-orange-400">El Punto de Equilibrio</h3>
-                                    <p class="text-base text-slate-300 mb-6">Este gráfico ilustra el "Período de Recuperación". Muestra la **inversión acumulada** (costos) y cómo los **ingresos acumulados** la superan con el tiempo. El punto donde la línea de ingresos cruza la de costos es su punto de equilibrio: el momento exacto en que la solución se ha pagado a sí misma y comienza a generar ganancias netas.</p>
-                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver al Gráfico</button>
+                                    <p class="text-base text-slate-300 mb-6">Ilustra el "Período de Recuperación". Muestra la **inversión acumulada** y cómo los **ingresos acumulados** la superan. El punto de cruce es su punto de equilibrio.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                                 </div>
                             </div>
                         </div>
@@ -378,38 +362,80 @@ Versión: 6.0 (07/10/2025)
         </section>
 
         <!-- SIGNIFICADOS SECTION -->
-        <section class="mb-16">
+        <section id="glossary" class="mb-16">
             <h2 class="section-title">Glosario Financiero</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                 <div class="card">
-                    <h3 class="font-bold text-lg text-orange-400 mb-2">Retorno de la Inversión (ROI)</h3>
-                    <p class="text-sm text-slate-300">Mide la ganancia o pérdida generada en relación con el monto invertido. Un ROI alto indica alta rentabilidad.</p>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">Retorno de la Inversión (ROI)</h3>
+                            <p class="text-sm text-slate-300">Mide la ganancia o pérdida generada en relación con el monto invertido.</p>
+                        </div>
+                        <div class="flip-card-back">
+                           <p class="text-sm text-slate-300">Un ROI alto indica alta rentabilidad. Es el indicador final del éxito financiero de una inversión.</p>
+                        </div>
+                    </div>
                 </div>
-                 <div class="card">
-                    <h3 class="font-bold text-lg text-orange-400 mb-2">Costo Total de Propiedad (TCO)</h3>
-                    <p class="text-sm text-slate-300">Cálculo completo de todos los costos asociados con la solución a lo largo de su vida útil (3 años en esta simulación).</p>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">Costo Total de Propiedad (TCO)</h3>
+                            <p class="text-sm text-slate-300">Cálculo de todos los costos de la solución en su vida útil (3 años).</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="text-sm text-slate-300">Incluye costos directos (hardware, licencias) e indirectos (soporte, mantenimiento), ofreciendo una visión completa de la inversión.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3 class="font-bold text-lg text-orange-400 mb-2">Período de Recuperación (Payback)</h3>
-                    <p class="text-sm text-slate-300">El tiempo necesario para que los ingresos generados por la solución igualen la inversión inicial. Un payback corto es ideal.</p>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">Período de Recuperación</h3>
+                            <p class="text-sm text-slate-300">El tiempo necesario para que los ingresos generados igualen la inversión.</p>
+                        </div>
+                        <div class="flip-card-back">
+                           <p class="text-sm text-slate-300">Un período de recuperación (Payback) corto es ideal, ya que indica que la inversión comienza a generar ganancias netas rápidamente.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3 class="font-bold text-lg text-orange-400 mb-2">Valor de Vida del Cliente (LTV)</h3>
-                    <p class="text-sm text-slate-300">La ganancia neta total que una empresa espera obtener de un cliente durante toda su relación comercial.</p>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                           <h3 class="font-bold text-lg text-orange-400 mb-2">Valor de Vida del Cliente (LTV)</h3>
+                           <p class="text-sm text-slate-300">La ganancia neta total que se espera de un cliente durante toda su relación comercial.</p>
+                        </div>
+                        <div class="flip-card-back">
+                           <p class="text-sm text-slate-300">Aumentar el LTV es un objetivo clave. Esta solución lo potencia a través del marketing de fidelización y la re-compra.</p>
+                        </div>
+                    </div>
                 </div>
-                 <div class="card">
-                    <h3 class="font-bold text-lg text-orange-400 mb-2">CAPEX (Capital Expenditures)</h3>
-                    <p class="text-sm text-slate-300">Gastos en activos fijos, como el hardware. Es una inversión inicial, no un gasto recurrente.</p>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                           <h3 class="font-bold text-lg text-orange-400 mb-2">CAPEX</h3>
+                           <p class="text-sm text-slate-300">Gastos en activos fijos (Capital Expenditures), como el hardware. Es una inversión inicial.</p>
+                        </div>
+                         <div class="flip-card-back">
+                           <p class="text-sm text-slate-300">Se realiza una sola vez y se deprecia con el tiempo. Distinto de los gastos operativos recurrentes.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3 class="font-bold text-lg text-orange-400 mb-2">OPEX (Operational Expenditures)</h3>
-                    <p class="text-sm text-slate-300">Gastos operativos continuos necesarios para el funcionamiento del negocio, como licencias y soporte.</p>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">OPEX</h3>
+                            <p class="text-sm text-slate-300">Gastos operativos continuos (Operational Expenditures), como licencias y soporte.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="text-sm text-slate-300">Son los costos recurrentes para mantener la solución funcionando. Son predecibles y se presupuestan anualmente.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v8.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v9.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -431,17 +457,32 @@ Versión: 6.0 (07/10/2025)
     </div>
 
 <script>
+    const PRICING = {
+        AP_INDOOR: 350, AP_OUTDOOR: 550,
+        AUX_COMPONENT_PER_AP: 150,
+        CONFIG_FEE_BASE: 500, CONFIG_FEE_PER_AP: 50,
+        INSTALL_FEE_PER_AP: 75,
+        LICENSE_PER_AP_YEAR: 120,
+        SUPPORT_PER_AP_YEAR: 60,
+        FINANCING_INTEREST: 0.15,
+        BYOD_CONFIG_FEE_BASE: 800
+    };
+
+    const ROI_PARAMS = {
+        LEADS_PER_AP_MONTH: 30,
+        CONVERSION_RATE: 0.25
+    };
+
     const ui = {
         buttons: {
             completa: document.getElementById('btn-completa'),
             byod: document.getElementById('btn-byod'),
         },
         inputs: {
-            baseHardware: document.getElementById('base-hardware-cost'),
-            annualLicense: document.getElementById('annual-license-cost'),
-            annualSupport: document.getElementById('annual-support-cost'),
-            newCustomers: document.getElementById('new-customers-monthly'),
-            customerLTV: document.getElementById('customer-lifetime-value'),
+            apsIndoor: document.getElementById('aps-indoor'),
+            apsOutdoor: document.getElementById('aps-outdoor'),
+            customerLTV: document.getElementById('customer-ltv'),
+            internetCost: document.getElementById('internet-cost'),
         },
         financing: {
             section: document.getElementById('financing-section'),
@@ -462,23 +503,6 @@ Versión: 6.0 (07/10/2025)
             closeBtn: document.getElementById('report-close-btn'),
             downloadBtn: document.getElementById('report-download-btn'),
             content: document.getElementById('report-content'),
-        }
-    };
-
-    const config = {
-        completa: {
-            auxComponents: 1250,
-            configFee: 800,
-            physicalInstall: 500,
-            financingInterest: 0.15,
-            image: 'https://placehold.co/1080x720/1E293B/94A3B8?text=Instalación+Profesional+de+Wi-Fi',
-            alt: 'Técnico instalando un punto de acceso Wi-Fi'
-        },
-        byod: {
-            configFee: 1000,
-            physicalInstall: 0,
-            image: 'https://placehold.co/1080x720/1E293B/94A3B8?text=Gestión+de+Infraestructura+Propia',
-            alt: 'Persona de TI gestionando su propia infraestructura de red'
         }
     };
 
@@ -503,7 +527,7 @@ Versión: 6.0 (07/10/2025)
             calculate();
         });
 
-        document.querySelectorAll('.flip-card').forEach(card => {
+        document.querySelectorAll('.chart-flip-card').forEach(card => {
             const trigger = card.querySelector('.flip-trigger');
             const backTrigger = card.querySelector('.flip-back-trigger');
             if(trigger) {
@@ -520,7 +544,6 @@ Versión: 6.0 (07/10/2025)
             }
         });
         
-        // Report Listeners
         ui.report.generateBtn.addEventListener('click', () => {
             ui.report.content.textContent = generateReportText(lastCalculationData);
             ui.report.modal.classList.remove('opacity-0', 'pointer-events-none');
@@ -540,8 +563,7 @@ Versión: 6.0 (07/10/2025)
         
         ui.scenario.image.style.opacity = 0;
         setTimeout(() => {
-            ui.scenario.image.src = config[scenario].image;
-            ui.scenario.image.alt = config[scenario].alt;
+            ui.scenario.image.src = scenario === 'completa' ? 'https://i.imgur.com/your_code_here.jpg' : 'https://i.imgur.com/your_code_here.jpg';
             ui.scenario.image.style.opacity = 1;
         }, 500);
 
@@ -550,39 +572,50 @@ Versión: 6.0 (07/10/2025)
 
     function calculate() {
         const values = {
-            baseHardware: parseFloat(ui.inputs.baseHardware.value) || 0,
-            annualLicense: parseFloat(ui.inputs.annualLicense.value) || 0,
-            annualSupport: parseFloat(ui.inputs.annualSupport.value) || 0,
-            newCustomers: parseFloat(ui.inputs.newCustomers.value) || 0,
+            apsIndoor: parseInt(ui.inputs.apsIndoor.value) || 0,
+            apsOutdoor: parseInt(ui.inputs.apsOutdoor.value) || 0,
             customerLTV: parseFloat(ui.inputs.customerLTV.value) || 0,
+            internetCost: parseFloat(ui.inputs.internetCost.value) || 0,
             financingTerm: parseInt(ui.financing.slider.value, 10) || 0,
         };
+        
+        const totalAps = values.apsIndoor + values.apsOutdoor;
 
-        let capex, tco, totalRevenue, netBenefit, roi, paybackPeriod;
-        let totalOpex, financingCost = 0;
+        let hardwareCost = (values.apsIndoor * PRICING.AP_INDOOR) + (values.apsOutdoor * PRICING.AP_OUTDOOR);
+        let auxComponentsCost = totalAps * PRICING.AUX_COMPONENT_PER_AP;
+        let configFee, installFee, capex;
         
         if (currentScenario === 'completa') {
-            const initialInvestment = values.baseHardware + config.completa.auxComponents + config.completa.configFee + config.completa.physicalInstall;
-            if (values.financingTerm > 0) {
-                financingCost = initialInvestment * config.completa.financingInterest * (values.financingTerm / 12);
-            }
-            capex = initialInvestment;
-            totalOpex = (values.annualLicense + values.annualSupport) * 3;
-            tco = capex + totalOpex + financingCost;
+            configFee = PRICING.CONFIG_FEE_BASE + (totalAps * PRICING.CONFIG_FEE_PER_AP);
+            installFee = totalAps * PRICING.INSTALL_FEE_PER_AP;
+            capex = hardwareCost + auxComponentsCost + configFee + installFee;
         } else { // byod
-            capex = values.baseHardware + config.byod.configFee;
-            totalOpex = (values.annualLicense + values.annualSupport) * 3;
-            tco = capex + totalOpex;
+            configFee = PRICING.BYOD_CONFIG_FEE_BASE + (totalAps * PRICING.CONFIG_FEE_PER_AP);
+            installFee = 0; // Client handles installation
+            capex = configFee; // In BYOD, client already has hardware
         }
 
-        totalRevenue = values.newCustomers * 12 * 3 * values.customerLTV;
-        netBenefit = totalRevenue - tco;
-        roi = tco > 0 ? (netBenefit / tco) * 100 : 0;
+        let financingCost = 0;
+        if (currentScenario === 'completa' && values.financingTerm > 0) {
+            financingCost = capex * PRICING.FINANCING_INTEREST * (values.financingTerm / 12);
+        }
+
+        const annualLicense = totalAps * PRICING.LICENSE_PER_AP_YEAR;
+        const annualSupport = totalAps * PRICING.SUPPORT_PER_AP_YEAR;
+        const annualInternet = values.internetCost * 12;
         
-        const monthlyRevenue = values.newCustomers * values.customerLTV;
-        const monthlyOpex = (values.annualLicense + values.annualSupport) / 12;
+        const totalOpex = (annualLicense + annualSupport + annualInternet) * 3;
+        const tco = capex + totalOpex + financingCost;
+
+        const newCustomersMonthly = totalAps * ROI_PARAMS.LEADS_PER_AP_MONTH * ROI_PARAMS.CONVERSION_RATE;
+        const totalRevenue = newCustomersMonthly * 12 * 3 * values.customerLTV;
+        const netBenefit = totalRevenue - tco;
+        const roi = tco > 0 ? (netBenefit / tco) * 100 : 0;
+        
+        const monthlyRevenue = newCustomersMonthly * values.customerLTV;
+        const monthlyOpex = (annualLicense + annualSupport + annualInternet) / 12;
         let cumulativeNet = -capex;
-        paybackPeriod = -1;
+        let paybackPeriod = -1;
         const monthlyData = [];
 
         for (let month = 1; month <= 36; month++) {
@@ -597,7 +630,7 @@ Versión: 6.0 (07/10/2025)
             });
         }
 
-        lastCalculationData = { ...values, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, scenario: currentScenario };
+        lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, scenario: currentScenario, newCustomersMonthly, annualLicense, annualSupport, annualInternet };
         updateUI(roi, tco, paybackPeriod, netBenefit, capex, totalOpex, monthlyData);
     }
     
@@ -605,7 +638,6 @@ Versión: 6.0 (07/10/2025)
         ui.outputs.roi.value.textContent = `${roi.toFixed(0)}%`;
         ui.outputs.tco.value.textContent = `$${tco.toLocaleString('en-US', {maximumFractionDigits:0})}`;
         ui.outputs.payback.value.textContent = paybackPeriod > 0 ? `${paybackPeriod} Meses` : "N/A";
-
         ui.outputs.roi.text.textContent = `Genera un beneficio neto de $${netBenefit.toLocaleString('en-US', {maximumFractionDigits:0})} sobre el costo total.`;
         ui.outputs.tco.text.textContent = `Costo total distribuido en 3 años.`;
         ui.outputs.payback.text.textContent = paybackPeriod > 0 ? `La inversión se recupera y empieza a generar ganancias en el mes ${paybackPeriod}.` : 'Los ingresos no cubren la inversión en 3 años.';
@@ -614,22 +646,14 @@ Versión: 6.0 (07/10/2025)
     }
 
     function createCharts() {
-        const chartOptions = {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: 'white' } } },
-            scales: {
-                x: { ticks: { color: 'white' }, grid: { color: '#334155' } },
-                y: { ticks: { color: 'white' }, grid: { color: '#334155' } }
-            }
-        };
-
+        const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
         charts.roiComponents = new Chart(document.getElementById('roiComponentsChart').getContext('2d'), { type: 'bar', data: { labels: ['Análisis de Rentabilidad'], datasets: [{ label: 'Beneficio Neto', data: [], backgroundColor: '#22C55E' }, { label: 'Costo Total (TCO)', data: [], backgroundColor: '#EF4444' }] }, options: chartOptions });
         charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión Inicial (CAPEX)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
         charts.payback = new Chart(document.getElementById('paybackChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Ingresos Acumulados', data: [], borderColor: '#22C55E', tension: 0.1, fill: false }, { label: 'Costos Acumulados', data: [], borderColor: '#EF4444', tension: 0.1, fill: false }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
     }
 
     function updateCharts(netBenefit, tco, capex, totalOpex, monthlyData) {
-        charts.roiComponents.data.datasets[0].data = [netBenefit];
+        charts.roiComponents.data.datasets[0].data = [netBenefit > 0 ? netBenefit : 0];
         charts.roiComponents.data.datasets[1].data = [tco];
         charts.roiComponents.update();
         charts.tcoBreakdown.data.datasets[0].data = [capex, totalOpex];
@@ -649,21 +673,25 @@ Escenario Simulado: ${scenarioText}
 
 PARÁMETROS DE ENTRADA:
 ----------------------
-- Costo Hardware Base: $${d.baseHardware.toLocaleString()}
-- Licencia Anual OhmyFi: $${d.annualLicense.toLocaleString()}
-- Soporte y Mantenimiento Anual: $${d.annualSupport.toLocaleString()}
-- Nuevos Clientes/Mes: ${d.newCustomers}
+- APs Interiores: ${d.apsIndoor}
+- APs Exteriores: ${d.apsOutdoor}
+- Total APs: ${d.totalAps}
 - Valor de Vida del Cliente (LTV): $${d.customerLTV.toLocaleString()}
+- Costo Mensual de Internet: $${d.internetCost.toLocaleString()}
 ${d.scenario === 'completa' ? `- Plazo de Financiamiento: ${d.financingTerm} meses` : ''}
 
 RESULTADOS PROYECTADOS A 3 AÑOS:
 --------------------------------
 - INVERSIÓN INICIAL (CAPEX): $${d.capex.toLocaleString()}
 - COSTOS OPERATIVOS TOTALES (OPEX): $${d.totalOpex.toLocaleString()}
+  - Licencia OhmyFi (3 años): $${(d.annualLicense*3).toLocaleString()}
+  - Soporte y Mnto (3 años): $${(d.annualSupport*3).toLocaleString()}
+  - Internet (3 años): $${(d.annualInternet*3).toLocaleString()}
 ${d.financingCost > 0 ? `- COSTO DE FINANCIAMIENTO: $${d.financingCost.toLocaleString(undefined, {maximumFractionDigits:0})}` : ''}
 
 - COSTO TOTAL DE PROPIEDAD (TCO): $${d.tco.toLocaleString(undefined, {maximumFractionDigits:0})}
 - INGRESOS TOTALES GENERADOS: $${d.totalRevenue.toLocaleString()}
+  (Proyectando ${d.newCustomersMonthly.toFixed(0)} nuevos clientes/mes)
 - BENEFICIO NETO: $${d.netBenefit.toLocaleString(undefined, {maximumFractionDigits:0})}
 
 INDICADORES CLAVE DE RENDIMIENTO (KPI):
@@ -673,7 +701,7 @@ INDICADORES CLAVE DE RENDIMIENTO (KPI):
 
 CONCLUSIÓN:
 -----------
-Bajo los parámetros especificados, la implementación de la solución representa una inversión ${d.roi > 0 ? 'altamente rentable' : 'que requiere revisión'}. El capital invertido se recuperaría en ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'más de 3 años'}, y generaría un retorno del ${d.roi.toFixed(0)}% sobre el costo total en un período de 3 años.
+Bajo los parámetros especificados, la implementación representa una inversión ${d.roi > 0 ? 'altamente rentable' : 'que requiere revisión'}. El capital invertido se recuperaría en ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'más de 3 años'}, generando un retorno del ${d.roi.toFixed(0)}% sobre el costo total.
 `;
     }
 
@@ -681,7 +709,6 @@ Bajo los parámetros especificados, la implementación de la solución represent
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         const reportText = generateReportText(d);
-        
         doc.setFont('courier', 'normal');
         doc.setFontSize(10);
         doc.text(reportText, 10, 10);
