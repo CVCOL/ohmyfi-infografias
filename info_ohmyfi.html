@@ -1,6 +1,9 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 17.0 (08/10/2025)
+- UX y Consultoría Mejoradas (Versión Final): Se reposicionó el botón de descarga del PDF a una ubicación más intuitiva. Se corrigió el bug de interactividad en los gráficos. El informe PDF fue enriquecido para incluir el análisis de riesgo de Monte Carlo y una nueva sección de consultoría sobre los beneficios estratégicos de la transformación digital, consolidando la herramienta como un potente instrumento de toma de decisiones.
+
 Versión: 16.9 (08/10/2025)
 - PDF de Consultoría Inteligente: Se rediseñó la exportación a PDF. Ahora incluye un "Análisis y Recomendación del Consultor" en lenguaje natural que interpreta los resultados de la simulación y ofrece una recomendación estratégica profesional basada en los KPIs.
 - Interactividad Reparada: Se corrigió el error que impedía activar el giro 3D en los gráficos al hacer clic en el ícono de información. La funcionalidad ha sido restaurada.
@@ -8,10 +11,6 @@ Versión: 16.9 (08/10/2025)
 
 Versión: 16.8 (08/10/2025)
 - Inteligencia de Negocio Mejorada: Se enriqueció la cara reversa de todos los gráficos. Ahora incluyen un "Racional Funcional" en lenguaje de negocios para explicar el impacto de cada métrica, además de la "Memoria de Cálculo" con los valores de la simulación.
-
-Versión: 16.7 (08/10/2025)
-- Dashboard de KPIs Avanzado: Se expandió la sección de KPIs a 6 métricas clave (ROI, TCO, Payback, CAPEX, OPEX, Beneficio Neto), organizadas en una cuadrícula de 2x3.
-- Interactividad 3D Total: Se implementó efecto de giro 3D en todas las tarjetas de KPI (al pasar el mouse) y en todos los gráficos (al hacer clic en el ícono de info) para mostrar análisis contextuales.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -257,7 +256,6 @@ Versión: 16.7 (08/10/2025)
                     <h2 class="section-title !text-left !mb-0">Simulador Financiero Interactivo</h2>
                     <p class="section-subtitle !text-left !ml-0 max-w-2xl">Ajuste las variables y proyecte el impacto financiero real. Compare dos escenarios clave para el mercado venezolano.</p>
                 </div>
-                <button id="generate-report-btn" class="btn btn-primary"><i data-lucide="download" class="w-5 h-5 mr-2"></i>Generar Informe PDF</button>
             </div>
             
             <div class="text-center mb-8">
@@ -510,6 +508,10 @@ Versión: 16.7 (08/10/2025)
                         </div>
                     </div>
                 </div>
+                 <!-- Botón de descarga de PDF reubicado -->
+                <div class="md:col-span-3 mt-8 text-center">
+                    <button id="generate-report-btn" class="btn btn-primary btn-lg"><i data-lucide="download" class="w-6 h-6 mr-3"></i>Generar Informe de Consultoría</button>
+                </div>
             </div>
         </section>
 
@@ -587,7 +589,7 @@ Versión: 16.7 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v16.9 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v17.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -609,7 +611,7 @@ Versión: 16.7 (08/10/2025)
     </div>
 
 <script>
-    // V16.9 CALCULATION ENGINE - Final Polish, PDF Consultant Analysis
+    // V17.0 CALCULATION ENGINE - Final Version with Enhanced UX and Consultant PDF
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
@@ -676,19 +678,19 @@ Versión: 16.7 (08/10/2025)
         Object.values(ui.inputs).forEach(input => input.addEventListener('input', calculate));
         ui.financing.slider.addEventListener('input', () => { ui.financing.valueLabel.textContent = ui.financing.slider.value; calculate(); });
 
-        // Corrected Event Listeners for Chart Flips
-        document.querySelectorAll('.flip-trigger').forEach(trigger => {
-            trigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                trigger.closest('.chart-flip-card').classList.add('is-flipped');
-            });
-        });
+        // Corrected Event Listeners for Chart Flips using event delegation
+        document.getElementById('dashboard').addEventListener('click', function(e) {
+            const flipTrigger = e.target.closest('.flip-trigger');
+            const backTrigger = e.target.closest('.flip-back-trigger');
 
-        document.querySelectorAll('.flip-back-trigger').forEach(trigger => {
-            trigger.addEventListener('click', (e) => {
+            if (flipTrigger) {
                 e.stopPropagation();
-                trigger.closest('.chart-flip-card').classList.remove('is-flipped');
-            });
+                flipTrigger.closest('.chart-flip-card').classList.add('is-flipped');
+            }
+            if (backTrigger) {
+                e.stopPropagation();
+                backTrigger.closest('.chart-flip-card').classList.remove('is-flipped');
+            }
         });
         
         ui.report.generateBtn.addEventListener('click', () => { 
@@ -784,7 +786,9 @@ Versión: 16.7 (08/10/2025)
 
             const tcoComponents = { hardware: hardwarePrice, services: servicesPrice, licenses: totalOpex };
             const monteCarloResults = runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost);
-            lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: currentScenario, monteCarloResults, monthlyData, tcoComponents };
+            const positiveProbability = (monteCarloResults.filter(r => r > 0).length / monteCarloResults.length * 100);
+
+            lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: currentScenario, monteCarloResults, positiveProbability, monthlyData, tcoComponents };
             
             updateUI(lastCalculationData);
         } catch (error) {
@@ -813,7 +817,6 @@ Versión: 16.7 (08/10/2025)
     const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
 
     function updateUI(d) {
-        // Update main KPIs
         ui.outputs.roi.value.textContent = `${(d.roi * 100).toFixed(0)}%`;
         ui.outputs.tco.value.textContent = formatCurrency(d.tco);
         ui.outputs.payback.value.textContent = d.paybackPeriod > 0 ? `${d.paybackPeriod} Meses` : "N/A";
@@ -821,7 +824,6 @@ Versión: 16.7 (08/10/2025)
         ui.outputs.opex.value.textContent = formatCurrency(d.totalOpex);
         ui.outputs.netBenefit.value.textContent = formatCurrency(d.netBenefit);
 
-        // Update KPI explanation texts
         if(d.financingTerm > 0 && d.paybackPeriod > 0){
             ui.outputs.payback.text.innerHTML = `Al optar por el financiamiento a <strong>${d.financingTerm} meses</strong>, el desembolso inicial es $0. Esto protege su liquidez y permite que el punto de equilibrio se alcance en solo <strong>${d.paybackPeriod} meses</strong>.`;
         } else if (d.paybackPeriod > 0) {
@@ -835,7 +837,6 @@ Versión: 16.7 (08/10/2025)
     }
 
     function updateAnalysisTexts(d) {
-        // ... (Analysis text generation remains the same)
         ui.outputs.analysis.tcoBreakdown.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
             Esto te ayuda a entender dónde se va tu dinero. Compara tu inversión inicial (lo que pagas una vez) con tus costos fijos para mantener todo funcionando (lo que pagas recurrentemente).
@@ -860,13 +861,12 @@ Versión: 16.7 (08/10/2025)
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
             Punto de Equilibrio = Mes en que (Ingresos Acumulados - Costos Acumulados) >= 0. <br><strong>Resultado: Mes ${d.paybackPeriod > 0 ? d.paybackPeriod : 'N/A'}</strong>`;
-        const positiveProbability = (d.monteCarloResults.filter(r => r > 0).length / d.monteCarloResults.length * 100).toFixed(0);
         ui.outputs.analysis.monteCarlo.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
             El futuro es incierto, y este análisis te prepara. Simulamos 10,000 escenarios económicos (buenos y malos) para ver qué tan probable es que tu inversión sea rentable. La barra naranja muestra el resultado más probable.
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
-            Probabilidad de un ROI positivo (mayor a 0%) en 10,000 simulaciones: <strong>${positiveProbability}%</strong>`;
+            Probabilidad de un ROI positivo (mayor a 0%) en 10,000 simulaciones: <strong>${d.positiveProbability.toFixed(0)}%</strong>`;
         const revenueAtPayback = d.paybackPeriod > 0 ? d.monthlyData.revenues[d.paybackPeriod - 1] : 0;
         const costAtPayback = d.paybackPeriod > 0 ? d.monthlyData.costs[d.paybackPeriod - 1] : 0;
         ui.outputs.analysis.crossover.innerHTML = `
@@ -884,7 +884,6 @@ Versión: 16.7 (08/10/2025)
     }
 
     function createCharts() {
-        // ... (Chart creation remains the same)
         const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
         try { charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión (CAPEX + Finan.)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } }); } catch (e) { console.error("Failed to create tcoBreakdownChart:", e); }
         try { charts.tcoComponentBreakdown = new Chart(document.getElementById('tcoComponentBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias y Soporte'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] }, options: { ...chartOptions, scales: {} } }); } catch (e) { console.error("Failed to create tcoComponentBreakdownChart:", e); }
@@ -922,24 +921,40 @@ Versión: 16.7 (08/10/2025)
         } catch (e) { console.error("Failed to update monteCarloChart:", e); }
     }
     
+    function generateStrategicBenefitsText() {
+        return `
+BENEFICIOS ESTRATÉGICOS DE LA TRANSFORMACIÓN DIGITAL
+=====================================================
+Más allá de los números, esta inversión representa un paso fundamental en la modernización y diferenciación de su negocio. Al implementar la solución Ohmyfi + Zoho CRM, usted obtiene ventajas competitivas clave:
+
+1.  **Capitalización de Datos Propios (First-Party Data):**
+    En un mundo sin cookies de terceros, la capacidad de recolectar datos directamente de sus clientes es el activo de marketing más valioso. Esta solución convierte su Wi-Fi en una fuente inagotable de datos consentidos, permitiéndole construir una base de clientes robusta y dejar de depender de la costosa publicidad en plataformas externas.
+
+2.  **Marketing de Precisión y Aumento del LTV:**
+    La sinergia entre Ohmyfi (captura de datos) y Zoho CRM (gestión de relaciones) le permite entender a sus clientes a un nivel profundo. Puede automatizar campañas de re-compra, fidelización y venta cruzada (cross-selling) basadas en el comportamiento real del visitante (frecuencia, horarios de visita, etc.), aumentando directamente el Valor de Vida del Cliente (LTV) y, por ende, la rentabilidad general del negocio.
+
+3.  **Diferenciación y Experiencia de Marca:**
+    Ofrecer un Wi-Fi de alta calidad a través de un portal de marca profesional no es solo un servicio, es una declaración. Posiciona su marca como moderna, centrada en el cliente y tecnológicamente avanzada. Esta percepción positiva mejora la experiencia del cliente desde el primer punto de contacto, fomenta la lealtad y genera una diferenciación clara frente a sus competidores.`;
+    }
+
     function generateConsultantAnalysis(d) {
-        let analysis = `\n\nANÁLISIS Y RECOMENDACIÓN DEL CONSULTOR\n`;
+        let analysis = `ANÁLISIS Y RECOMENDACIÓN DEL CONSULTOR\n`;
         analysis += `=========================================\n\n`;
         analysis += `Actuando como sus consultores especializados en la sinergia entre Ohmyfi y Zoho CRM, hemos interpretado los resultados de la simulación para ofrecerle una recomendación estratégica clara y directa.\n\n`;
 
         if (d.roi > 0.5 && d.paybackPeriod <= 12) {
-            analysis += `La simulación revela una oportunidad de inversión excepcionalmente sólida. Con un ROI proyectado del ${(d.roi * 100).toFixed(0)}% y un período de recuperación de tan solo ${d.paybackPeriod} meses, el proyecto no solo es financieramente viable, sino que promete una alta rentabilidad a corto plazo. El beneficio neto de ${formatCurrency(d.netBenefit)} a 36 meses subraya el potencial de la solución para convertirse en un centro de ganancias significativo.\n\n`;
+            analysis += `La simulación revela una oportunidad de inversión excepcionalmente sólida. Con un ROI proyectado del ${(d.roi * 100).toFixed(0)}% y un período de recuperación de tan solo ${d.paybackPeriod} meses, el proyecto no solo es financieramente viable, sino que promete una alta rentabilidad a corto plazo. El análisis de riesgo de Monte Carlo confirma esta solidez, mostrando una probabilidad de rentabilidad superior al ${d.positiveProbability.toFixed(0)}%.\n\n`;
             analysis += `RECOMENDACIÓN: Proceder con la implementación. El bajo riesgo y el rápido retorno sugieren que cualquier retraso podría significar una pérdida de oportunidad para capitalizar la monetización de su red Wi-Fi y la inteligencia de clientes que proporciona la integración con Zoho CRM.`;
         } else if (d.roi > 0) {
-            analysis += `El análisis indica que el proyecto es rentable en el horizonte de 36 meses, con un ROI positivo del ${(d.roi * 100).toFixed(0)}%. Sin embargo, el período de recuperación de ${d.paybackPeriod} meses sugiere que la recuperación del capital tomará más de un año. Si bien la inversión es segura, su rentabilidad no es inmediata.\n\n`;
-            analysis += `RECOMENDACIÓN: La inversión es aconsejable, pero con un enfoque estratégico en acelerar el retorno. Nuestra sugerencia es utilizar activamente la integración con Zoho CRM desde el primer día para lanzar campañas de marketing dirigidas (up-selling, cross-selling, programas de fidelización) que incrementen el Valor de Vida del Cliente (LTV). Un ligero aumento en el LTV podría reducir drásticamente el período de recuperación y maximizar el ROI final.`;
+            analysis += `El análisis indica que el proyecto es rentable en el horizonte de 36 meses, con un ROI positivo del ${(d.roi * 100).toFixed(0)}%. El análisis de riesgo de Monte Carlo respalda esto, con una probabilidad de éxito del ${d.positiveProbability.toFixed(0)}%. Sin embargo, el período de recuperación de ${d.paybackPeriod} meses sugiere que la recuperación del capital tomará más de un año.\n\n`;
+            analysis += `RECOMENDACIÓN: La inversión es aconsejable, pero con un enfoque estratégico en acelerar el retorno. Nuestra sugerencia es utilizar activamente la integración con Zoho CRM desde el primer día para lanzar campañas de marketing dirigidas (up-selling, cross-selling, programas de fidelización) que incrementen el Valor de Vida del Cliente (LTV). Un ligero aumento en el LTV podría reducir drásticamente el período de recuperación.`;
         } else {
-            analysis += `Bajo los parámetros actuales, la inversión no alcanza la rentabilidad en el horizonte de 36 meses, resultando en un ROI negativo. El Costo Total de Propiedad (${formatCurrency(d.tco)}) supera los ingresos generados (${formatCurrency(d.totalRevenue)}).\n\n`;
-            analysis += `RECOMENDACIÓN: No proceder con la inversión en este momento. Es crucial revaluar las variables de negocio. Recomendamos un análisis interno para determinar si el Valor de Vida del Cliente (LTV) de ${formatCurrency(d.customerLTV)} está subestimado. La propia implementación de Ohmyfi + Zoho CRM está diseñada para aumentar este LTV, pero es fundamental partir de un escenario base que, al menos, se acerque al punto de equilibrio. Sugerimos realizar una nueva simulación si se identifican oportunidades para mejorar el LTV.`;
+            analysis += `Bajo los parámetros actuales, la inversión no alcanza la rentabilidad en el horizonte de 36 meses. Aunque el análisis de riesgo de Monte Carlo muestra una probabilidad de éxito del ${d.positiveProbability.toFixed(0)}%, el escenario base no es favorable.\n\n`;
+            analysis += `RECOMENDACIÓN: No proceder con la inversión en este momento. Es crucial revaluar las variables de negocio. Recomendamos un análisis interno para determinar si el Valor de Vida del Cliente (LTV) de ${formatCurrency(d.customerLTV)} está subestimado. La propia implementación de Ohmyfi + Zoho CRM está diseñada para aumentar este LTV, pero es fundamental partir de un escenario base que, al menos, se acerque al punto de equilibrio.`;
         }
         
         if (d.financingTerm > 0) {
-            analysis += `\n\nNOTA SOBRE FINANCIAMIENTO: La elección de un plazo de financiamiento de ${d.financingTerm} meses es una decisión financieramente inteligente, ya que protege el flujo de caja de la empresa al eliminar el desembolso inicial de ${formatCurrency(d.capex)}. Esto hace que el proyecto sea viable desde el primer día sin comprometer la liquidez.`;
+            analysis += `\n\nNOTA SOBRE FINANCIAMIENTO: La elección de un plazo de financiamiento de ${d.financingTerm} meses es una decisión financieramente inteligente, ya que protege el flujo de caja de la empresa al eliminar el desembolso inicial de ${formatCurrency(d.capex)}.`;
         }
         return analysis;
     }
@@ -947,7 +962,10 @@ Versión: 16.7 (08/10/2025)
     function generateReportHTML(d) {
         const dataText = generateDataSummary(d);
         const analysisText = generateConsultantAnalysis(d).replace(/\n/g, '<br>');
-        return `<pre class="text-sm text-slate-300 whitespace-pre-wrap font-mono">${dataText}</pre><div class="mt-6 pt-6 border-t border-slate-700 text-slate-300 font-sans">${analysisText}</div>`;
+        const strategicText = generateStrategicBenefitsText().replace(/\n/g, '<br>');
+        return `<pre class="text-sm text-slate-300 whitespace-pre-wrap font-mono">${dataText}</pre>
+                <div class="mt-6 pt-6 border-t border-slate-700 text-slate-300 font-sans">${analysisText}</div>
+                <div class="mt-6 pt-6 border-t border-slate-700 text-slate-300 font-sans">${strategicText}</div>`;
     }
     
     function generateDataSummary(d) {
@@ -992,6 +1010,7 @@ INDICADORES CLAVE (KPI):
         const doc = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
         const dataSummary = generateDataSummary(d);
         const consultantAnalysis = generateConsultantAnalysis(d);
+        const strategicBenefits = generateStrategicBenefitsText();
         
         const margin = 15;
         const pageWidth = doc.internal.pageSize.getWidth();
@@ -1000,7 +1019,7 @@ INDICADORES CLAVE (KPI):
 
         doc.setFontSize(18);
         doc.setFont(undefined, 'bold');
-        doc.text("Informe de Simulación Financiera", pageWidth / 2, y, { align: 'center' });
+        doc.text("Informe de Consultoría Estratégica", pageWidth / 2, y, { align: 'center' });
         y += 10;
         
         doc.setFontSize(12);
@@ -1012,25 +1031,32 @@ INDICADORES CLAVE (KPI):
         doc.setFontSize(9);
         doc.text(dataSummary, margin, y);
         
-        const dataLines = doc.splitTextToSize(dataSummary, textWidth).length;
-        y += (dataLines * 3.5); // Approximate height
+        let lines = doc.splitTextToSize(dataSummary, textWidth).length;
+        y += (lines * 3.5) + 5;
         
-        y += 10;
-        
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        const analysisLines = doc.splitTextToSize(consultantAnalysis, textWidth);
+        const addSection = (title, text) => {
+            if (y > 250) { doc.addPage(); y = 20; }
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text(title, margin, y);
+            y += 7;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            lines = doc.splitTextToSize(text, textWidth);
+            doc.text(lines, margin, y);
+            y += (lines.length * 5) + 5;
+        };
 
-        if (y + (analysisLines.length * 5) > 280) { // Check if new page is needed
-            doc.addPage();
-            y = 20;
-        }
-        
-        doc.text(analysisLines, margin, y);
+        const analysisTitle = consultantAnalysis.split('\n')[0];
+        const analysisBody = consultantAnalysis.substring(analysisTitle.length + 1);
+        addSection("Análisis y Recomendación del Consultor", analysisBody);
+
+        const strategicTitle = strategicBenefits.split('\n')[0];
+        const strategicBody = strategicBenefits.substring(strategicTitle.length + 1);
+        addSection("Beneficios Estratégicos de la Transformación Digital", strategicBody);
         
         doc.save(`Reporte_Consultoria_OhmyFi_${d.scenario}_${new Date().toISOString().slice(0,10)}.pdf`);
     }
-
 
     window.onload = initialize;
 </script>
