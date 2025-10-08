@@ -1,14 +1,14 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 16.4 (08/10/2025)
+- Código Antifrágil: Se implementó manejo de errores (try...catch) individual para la inicialización y actualización de cada gráfico. Esto previene fallas en cascada y asegura que el dashboard permanezca funcional incluso si un gráfico falla.
+
 Versión: 16.3 (08/10/2025)
 - Corrección Definitiva de Gráficos: Se eliminó el "código fantasma" (referencias a gráficos inexistentes) que causaba un error de detención de script. Todos los gráficos ahora se cargan y actualizan correctamente. El layout de la página se ha restaurado.
 
 Versión: 16.2 (08/10/2025)
 - Intento de Corrección: Versión que aún contenía el error de script que impedía la renderización de los gráficos y rompía la maquetación.
-
-Versión: 16.1 (08/10/2025)
-- Fusión Analítica Final: Se implementaron las lógicas de análisis y visualización de la v6. Se introdujo el error de script durante la reestructuración del dashboard.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -509,7 +509,7 @@ Versión: 16.1 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v16.3 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v16.4 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -531,7 +531,7 @@ Versión: 16.1 (08/10/2025)
     </div>
 
 <script>
-    // V16.3 CALCULATION ENGINE - FINAL, STABLE & DEBUGGED
+    // V16.4 CALCULATION ENGINE - FINAL, STABLE & ANTIFRAGILE
     const PRICING = {
         // 1. Costos de Inversión Inicial (Hardware)
         CONTROLLER_COST: 179.00,
@@ -736,38 +736,72 @@ Versión: 16.1 (08/10/2025)
 
     function createCharts() {
         const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
-        charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión Inicial (CAPEX)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
-        charts.tcoComponentBreakdown = new Chart(document.getElementById('tcoComponentBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias y Soporte'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
-        charts.cumulativeCashflow = new Chart(document.getElementById('cumulativeCashflowChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Flujo de Caja Acumulado', data: [], borderColor: '#22C55E', tension: 0.1, fill: true, backgroundColor: 'rgba(34, 197, 94, 0.2)' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
-        charts.monthlyCosts = new Chart(document.getElementById('monthlyCostsChart').getContext('2d'), { type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [{ label: 'OPEX + Financiamiento', data: [], backgroundColor: '#F97316' }, { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { stacked: true }, y: { stacked: true } } } });
-        charts.monteCarlo = new Chart(document.getElementById('monteCarloChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Rango de ROI (%)', color:'white' } }, y: { ...chartOptions.scales.y, title: { display: true, text: 'Nº de Simulaciones', color:'white' } } } } });
+        
+        try {
+            charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión Inicial (CAPEX)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
+        } catch (e) { console.error("Failed to create tcoBreakdownChart:", e); }
+
+        try {
+            charts.tcoComponentBreakdown = new Chart(document.getElementById('tcoComponentBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias y Soporte'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
+        } catch (e) { console.error("Failed to create tcoComponentBreakdownChart:", e); }
+
+        try {
+            charts.cumulativeCashflow = new Chart(document.getElementById('cumulativeCashflowChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Flujo de Caja Acumulado', data: [], borderColor: '#22C55E', tension: 0.1, fill: true, backgroundColor: 'rgba(34, 197, 94, 0.2)' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
+        } catch (e) { console.error("Failed to create cumulativeCashflowChart:", e); }
+
+        try {
+            charts.monthlyCosts = new Chart(document.getElementById('monthlyCostsChart').getContext('2d'), { type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [{ label: 'OPEX + Financiamiento', data: [], backgroundColor: '#F97316' }, { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { stacked: true }, y: { stacked: true } } } });
+        } catch (e) { console.error("Failed to create monthlyCostsChart:", e); }
+
+        try {
+            charts.monteCarlo = new Chart(document.getElementById('monteCarloChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Rango de ROI (%)', color:'white' } }, y: { ...chartOptions.scales.y, title: { display: true, text: 'Nº de Simulaciones', color:'white' } } } } });
+        } catch (e) { console.error("Failed to create monteCarloChart:", e); }
     }
 
     function updateCharts(d) {
-        if (!charts.tcoBreakdown) return; // Safety check
-        charts.tcoBreakdown.data.datasets[0].data = [d.capex + d.financingCost, d.totalOpex];
-        charts.tcoBreakdown.update();
+        try {
+            if (charts.tcoBreakdown) {
+                charts.tcoBreakdown.data.datasets[0].data = [d.capex + d.financingCost, d.totalOpex];
+                charts.tcoBreakdown.update();
+            }
+        } catch (e) { console.error("Failed to update tcoBreakdownChart:", e); }
 
-        charts.tcoComponentBreakdown.data.datasets[0].data = [d.tcoComponents.hardware, d.tcoComponents.services, d.tcoComponents.licenses];
-        charts.tcoComponentBreakdown.update();
+        try {
+            if (charts.tcoComponentBreakdown) {
+                charts.tcoComponentBreakdown.data.datasets[0].data = [d.tcoComponents.hardware, d.tcoComponents.services, d.tcoComponents.licenses];
+                charts.tcoComponentBreakdown.update();
+            }
+        } catch (e) { console.error("Failed to update tcoComponentBreakdownChart:", e); }
+        
+        try {
+            if (charts.cumulativeCashflow) {
+                charts.cumulativeCashflow.data.datasets[0].data = d.monthlyData.cumulativeNet;
+                charts.cumulativeCashflow.update();
+            }
+        } catch (e) { console.error("Failed to update cumulativeCashflowChart:", e); }
 
-        charts.cumulativeCashflow.data.datasets[0].data = d.monthlyData.cumulativeNet;
-        charts.cumulativeCashflow.update();
+        try {
+            if (charts.monthlyCosts) {
+                charts.monthlyCosts.data.datasets[0].data = d.monthlyData.opex.slice(0, 12);
+                charts.monthlyCosts.data.datasets[1].data = d.monthlyData.capex.slice(0, 12);
+                charts.monthlyCosts.update();
+            }
+        } catch (e) { console.error("Failed to update monthlyCostsChart:", e); }
 
-        charts.monthlyCosts.data.datasets[0].data = d.monthlyData.opex.slice(0, 12);
-        charts.monthlyCosts.data.datasets[1].data = d.monthlyData.capex.slice(0, 12);
-        charts.monthlyCosts.update();
-
-        const bins = {};
-        const binSize = 0.5; // 50%
-        d.monteCarloResults.forEach(roi => {
-            const bin = Math.floor(roi / binSize) * binSize;
-            bins[bin] = (bins[bin] || 0) + 1;
-        });
-        const sortedBins = Object.keys(bins).map(parseFloat).sort((a, b) => a - b);
-        charts.monteCarlo.data.labels = sortedBins.map(bin => `${(bin*100).toFixed(0)}% a ${((bin + binSize)*100).toFixed(0)}%`);
-        charts.monteCarlo.data.datasets[0].data = sortedBins.map(bin => bins[bin]);
-        charts.monteCarlo.update();
+        try {
+            if (charts.monteCarlo) {
+                const bins = {};
+                const binSize = 0.5; // 50%
+                d.monteCarloResults.forEach(roi => {
+                    const bin = Math.floor(roi / binSize) * binSize;
+                    bins[bin] = (bins[bin] || 0) + 1;
+                });
+                const sortedBins = Object.keys(bins).map(parseFloat).sort((a, b) => a - b);
+                charts.monteCarlo.data.labels = sortedBins.map(bin => `${(bin*100).toFixed(0)}% a ${((bin + binSize)*100).toFixed(0)}%`);
+                charts.monteCarlo.data.datasets[0].data = sortedBins.map(bin => bins[bin]);
+                charts.monteCarlo.update();
+            }
+        } catch (e) { console.error("Failed to update monteCarloChart:", e); }
     }
     
     function generateReportText(d) {
