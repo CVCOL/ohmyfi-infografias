@@ -1,14 +1,14 @@
 <!--
 CONTROL DE VERSIONES
 =====================
-Versión: 21.0 (08/10/2025)
-- Estrategia de Portabilidad Directa: Se descartaron las versiones 17-20. Se tomó el bloque de script 100% funcional y estable de la v6 y se "trasplantó" directamente a la estructura HTML/CSS del diseño moderno. Las únicas modificaciones fueron para alinear los IDs de los elementos, garantizando la estabilidad del motor original. Esta es la versión definitiva.
+Versión: 16.4 (08/10/2025)
+- Código Antifrágil: Se implementó manejo de errores (try...catch) individual para la inicialización y actualización de cada gráfico. Esto previene fallas en cascada y asegura que el dashboard permanezca funcional incluso si un gráfico falla.
 
-Versión: 20.0 (08/10/2025)
-- Falla de Carga: A pesar de corregir el método de carga, una inestabilidad subyacente en el script refactorizado impidió el funcionamiento.
+Versión: 16.3 (08/10/2025)
+- Corrección Definitiva de Gráficos: Se eliminó el "código fantasma" (referencias a gráficos inexistentes) que causaba un error de detención de script. Todos los gráficos ahora se cargan y actualizan correctamente. El layout de la página se ha restaurado.
 
-Versión: 19.0 (08/10/2025)
-- Falla de Reconstrucción: El intento de reconstruir desde cero mantuvo el método de carga inestable, resultando en una aplicación no funcional.
+Versión: 16.2 (08/10/2025)
+- Intento de Corrección: Versión que aún contenía el error de script que impedía la renderización de los gráficos y rompía la maquetación.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -19,13 +19,16 @@ Versión: 19.0 (08/10/2025)
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --agt-dark: #0F172A; /* Slate 900 */
+            --agt-blue: #1E3A8A; /* Indigo 800 */
             --agt-orange: #F97316; /* Orange 500 */
+            --agt-light-gray: #F1F5F9; /* Slate 100 */
             --agt-text: #E2E8F0; /* Slate 200 */
         }
         body { 
@@ -33,39 +36,229 @@ Versión: 19.0 (08/10/2025)
             background-color: var(--agt-dark);
             color: var(--agt-text);
         }
-        .section-title { font-size: 2.25rem; font-weight: 800; line-height: 1.2; text-align: center; margin-bottom: 1rem; }
-        .section-subtitle { font-size: 1.125rem; text-align: center; color: #94a3b8; max-width: 800px; margin: 0 auto 3rem auto; }
-        .btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.3s ease; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .btn-primary { background-color: var(--agt-orange); color: white; }
-        .btn-primary:hover { background-color: #FB923C; }
-        .btn-secondary { background-color: #334155; color: var(--agt-text); }
-        .btn-secondary:hover { background-color: #475569; }
-        .btn-active { background-color: var(--agt-orange); color: white; box-shadow: 0 0 15px rgba(249, 115, 22, 0.5); }
-        .card { background-color: #1E293B; border-radius: 0.75rem; padding: 1.5rem; border: 1px solid #334155; height: 100%; }
-        .chart-card { height: 450px; min-height: 450px; }
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            line-height: 1.2;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            font-size: 1.125rem;
+            text-align: center;
+            color: #94a3b8; /* Slate 400 */
+            max-width: 800px;
+            margin: 0 auto 3rem auto;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-primary {
+            background-color: var(--agt-orange);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #FB923C; /* Orange 400 */
+        }
+        .btn-secondary {
+            background-color: #334155; /* Slate 700 */
+            color: var(--agt-text);
+        }
+        .btn-secondary:hover {
+             background-color: #475569; /* Slate 600 */
+        }
+        .btn-active {
+            background-color: var(--agt-orange);
+            color: white;
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.5);
+        }
+        .card {
+            background-color: #1E293B; /* Slate 800 */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid #334155; /* Slate 700 */
+            height: 100%;
+        }
+
+        /* 3D Flip Card Styles */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            min-height: 220px;
+            perspective: 1000px;
+        }
+        .chart-flip-card {
+            height: 450px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        /* HOVER flip for informational cards */
+        .hover-flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* CLICK flip for chart cards */
+        .chart-flip-card.is-flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #1E293B; /* Slate 800 */
+            border-radius: 0.75rem;
+            border: 1px solid #334155; /* Slate 700 */
+            padding: 1.5rem;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        .flip-trigger {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            z-index: 10;
+            color: #94a3b8;
+            transition: color 0.3s;
+        }
+        .flip-trigger:hover {
+            color: var(--agt-orange);
+        }
+
+        .tooltip-container {
+            position: relative;
+        }
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
+
+        <!-- HEADER -->
         <header class="mb-16 text-center">
-             <img src="https://placehold.co/1200x400/0F172A/E2E8F0?text=AGT+OhmyFi" alt="Header Image" class="w-full h-64 md:h-96 object-cover rounded-xl mb-8 opacity-75">
+            <img src="https://placehold.co/1200x400/0F172A/E2E8F0?text=AGT+OhmyFi" 
+                 alt="Equipo de profesionales analizando datos en un entorno tecnológico"
+                 class="w-full h-64 md:h-96 object-cover rounded-xl mb-8 opacity-75">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
                 Transforme su Wi-Fi de un <span class="text-red-400">Gasto</span> a un <span class="text-green-400">Activo Estratégico</span>
             </h1>
             <p class="section-subtitle">Descubra cómo la solución OhmyFi + Zoho CRM, implementada por AGT, convierte su red de invitados en un motor de inteligencia de negocios y crecimiento para el mercado venezolano.</p>
         </header>
 
+        <!-- DATA JOURNEY SECTION -->
+        <section class="mb-20">
+            <h2 class="section-title">El Viaje del Dato: De Conexión a Conversión</h2>
+            <p class="section-subtitle">Visualice el flujo de valor. Así es como convertimos una simple conexión Wi-Fi en una relación rentable y medible con sus clientes.</p>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
+                
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                             <i data-lucide="wifi" class="w-12 h-12 mb-4 text-orange-500"></i>
+                             <h3 class="font-bold text-lg mb-2">1. Conexión</h3>
+                             <p class="text-sm text-slate-400">El cliente se conecta al Wi-Fi gratuito a través de un portal cautivo personalizado.</p>
+                        </div>
+                        <div class="flip-card-back">
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Portal de Marca</h3>
+                             <p class="text-sm text-slate-300">El primer contacto es clave. Creamos un portal de acceso con su identidad de marca que ofrece una experiencia de conexión segura y profesional.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <i data-lucide="database" class="w-12 h-12 mb-4 text-orange-500"></i>
+                            <h3 class="font-bold text-lg mb-2">2. Captura</h3>
+                            <p class="text-sm text-slate-400">Se capturan datos de primera mano (First-Party Data) con consentimiento explícito.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Activo de Datos</h3>
+                            <p class="text-sm text-slate-300">Los "First-Party Data" son su activo más valioso: precisos, relevantes y obtenidos con consentimiento para una personalización efectiva y legal.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <i data-lucide="users" class="w-12 h-12 mb-4 text-orange-500"></i>
+                            <h3 class="font-bold text-lg mb-2">3. Perfilamiento</h3>
+                            <p class="text-sm text-slate-400">El perfil del cliente se crea o actualiza automáticamente en Zoho CRM.</p>
+                        </div>
+                         <div class="flip-card-back">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Inteligencia 360°</h3>
+                            <p class="text-sm text-slate-300">La integración nativa con Zoho CRM enriquece el perfil del cliente, unificando su comportamiento online y offline para una visión completa.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <i data-lucide="send" class="w-12 h-12 mb-4 text-orange-500"></i>
+                            <h3 class="font-bold text-lg mb-2">4. Activación</h3>
+                            <p class="text-sm text-slate-400">Se disparan campañas de marketing automatizadas y personalizadas.</p>
+                        </div>
+                        <div class="flip-card-back">
+                           <h3 class="font-bold text-lg mb-2 text-orange-400">Marketing de Precisión</h3>
+                           <p class="text-sm text-slate-300">La automatización permite impactar al cliente correcto en el momento oportuno con ofertas relevantes que impulsan la conversión.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <i data-lucide="bar-chart-2" class="w-12 h-12 mb-4 text-orange-500"></i>
+                            <h3 class="font-bold text-lg mb-2">5. Medición</h3>
+                            <p class="text-sm text-slate-400">Se mide el ROI, LTV y el impacto real de cada interacción en las ventas.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Cierre del Ciclo</h3>
+                            <p class="text-sm text-slate-300">La solución permite atribuir ventas a las campañas de WiFi Marketing, demostrando el valor tangible y el ROI. Dejamos de adivinar y empezamos a medir.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SIMULATOR SECTION -->
         <section id="simulator" class="mb-20">
              <div class="flex flex-col md:flex-row justify-between items-center mb-8">
                 <div class="text-center md:text-left mb-6 md:mb-0">
                     <h2 class="section-title !text-left !mb-0">Simulador Financiero Interactivo</h2>
-                    <p class="section-subtitle !text-left !ml-0 max-w-2xl">Ajuste las variables y proyecte el impacto financiero real.</p>
+                    <p class="section-subtitle !text-left !ml-0 max-w-2xl">Ajuste las variables y proyecte el impacto financiero real. Compare dos escenarios clave para el mercado venezolano.</p>
                 </div>
-                <button id="generate-report-btn" class="btn btn-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Generar Informe PDF
-                </button>
+                <button id="generate-report-btn" class="btn btn-primary"><i data-lucide="download" class="w-5 h-5 mr-2"></i>Generar Informe PDF</button>
             </div>
             
             <div class="text-center mb-8">
@@ -74,146 +267,338 @@ Versión: 19.0 (08/10/2025)
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Columna de Inputs -->
                 <div class="lg:col-span-1 space-y-6 flex flex-col">
+                    <div id="image-container" class="mb-6">
+                        <img id="scenario-image" src="https://placehold.co/600x400/1E293B/E2E8F0?text=Solucion+Completa" 
+                             alt="Técnico instalando un punto de acceso Wi-Fi"
+                             class="w-full h-auto object-cover rounded-lg transition-opacity duration-500">
+                    </div>
+                    
                     <div class="card flex-1">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400">1. Defina Cantidad de APs</h3>
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                            <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">1</span>
+                            Defina Cantidad de APs
+                        </h3>
                         <div class="space-y-4">
-                            <div><label class="block mb-2 text-sm font-medium">APs Interiores</label><input type="number" id="aps-indoor" value="3" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
-                            <div><label class="block mb-2 text-sm font-medium">APs Exteriores</label><input type="number" id="aps-outdoor" value="1" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">APs Interiores</label>
+                                <input type="number" id="aps-indoor" value="3" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">APs Exteriores</label>
+                                <input type="number" id="aps-outdoor" value="1" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                            </div>
                         </div>
                     </div>
-                    <div class="card flex-1"><h3 class="text-xl font-bold mb-4 text-orange-400">2. Ingrese su LTV</h3><label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (USD)</label><input type="number" id="customer-ltv" value="50" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
-                    <div class="card flex-1"><h3 class="text-xl font-bold mb-4 text-orange-400">3. Costo de Internet</h3><label class="block mb-2 text-sm font-medium">Costo Mensual del Servicio (USD)</label><input type="number" id="internet-cost" value="60" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
-                    <div class="card flex-1"><h3 class="text-xl font-bold mb-4 text-orange-400">4. Proyección de Captación</h3><label class="block mb-2 text-sm font-medium">Leads por AP al Mes</label><input type="number" id="leads-per-ap" value="10" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
-                    <div id="financing-section" class="card flex-1"><h3 class="text-xl font-bold mb-4 text-orange-400">Financiamiento</h3><label for="financing-term" class="block mb-2 text-sm font-medium">Plazo: <span id="financing-term-value" class="font-bold text-orange-400">0</span> meses</label><input type="range" id="financing-term" min="0" max="3" value="0" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"></div>
-                </div>
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="card text-center"><h3 class="text-lg font-semibold text-slate-400">Retorno de Inversión (ROI)</h3><p id="roi-value" class="text-5xl font-extrabold text-green-400 my-2">0%</p></div>
-                        <div class="card text-center"><h3 class="text-lg font-semibold text-slate-400">Costo Total (TCO)</h3><p id="tco-value" class="text-4xl font-bold text-red-400 my-2">$0</p></div>
-                        <div class="card text-center"><h3 class="text-lg font-semibold text-slate-400">Recuperación (Payback)</h3><p id="payback-value" class="text-4xl font-bold text-blue-400 my-2">0 Meses</p></div>
+
+                    <div class="card flex-1">
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                           <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">2</span>
+                           Ingrese su LTV
+                        </h3>
+                        <label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (USD)</label>
+                        <input type="number" id="customer-ltv" value="50" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
                     </div>
-                    <div class="card"><p id="payback-text" class="text-sm text-slate-300 text-center"></p></div>
+                    
+                    <div class="card flex-1">
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                           <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">3</span>
+                           Costo de Internet
+                        </h3>
+                        <label class="block mb-2 text-sm font-medium">Costo Mensual del Servicio (USD)</label>
+                        <input type="number" id="internet-cost" value="60" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                    </div>
+
+                    <div class="card flex-1">
+                         <div class="tooltip-container">
+                            <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                               <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">4</span>
+                               Proyección de Captación
+                               <i data-lucide="info" class="w-4 h-4 ml-2 text-slate-400 cursor-pointer"></i>
+                               <div class="tooltip absolute bottom-full left-0 mb-2 w-72 p-3 bg-slate-900 text-slate-300 text-sm rounded-lg shadow-lg pointer-events-none z-10">
+                                   Estime cuántos nuevos contactos (leads) espera que cada Punto de Acceso (AP) capture mensualmente. Este es el KPI principal para medir el éxito de su estrategia de WiFi Marketing.
+                                   <div class="absolute top-full left-4 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-slate-900"></div>
+                               </div>
+                            </h3>
+                        </div>
+                        <label class="block mb-2 text-sm font-medium">Leads por AP al Mes</label>
+                        <input type="number" id="leads-per-ap" value="10" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                    </div>
+
+                     <div id="financing-section" class="card flex-1">
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="banknote" class="w-6 h-6 mr-2"></i>Financiamiento (Sol. Completa)</h3>
+                        <label for="financing-term" class="block mb-2 text-sm font-medium">Plazo de Financiamiento: <span id="financing-term-value" class="font-bold text-orange-400">0</span> meses</label>
+                        <input type="range" id="financing-term" min="0" max="3" value="0" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Columna de Dashboard -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card text-center">
+                            <h3 class="text-lg font-semibold text-slate-400">Retorno de la Inversión (ROI)</h3>
+                            <p id="roi-value" class="text-5xl font-extrabold text-green-400 my-2">0%</p>
+                        </div>
+                        <div class="card text-center">
+                             <h3 class="text-lg font-semibold text-slate-400">Costo Total de Propiedad (TCO)</h3>
+                            <p id="tco-value" class="text-4xl font-bold text-red-400 my-2">$0</p>
+                        </div>
+                        <div class="card text-center">
+                            <h3 class="text-lg font-semibold text-slate-400">Período de Recuperación</h3>
+                            <p id="payback-value" class="text-4xl font-bold text-blue-400 my-2">0 Meses</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <p id="payback-text" class="text-sm text-slate-300 text-center"></p>
+                    </div>
+
+                    <!-- Chart Grid -->
                     <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="card chart-card"><h3 class="font-bold mb-2">Desglose TCO (CAPEX vs OPEX)</h3><canvas id="tcoBreakdownChart"></canvas></div>
-                        <div class="card chart-card"><h3 class="font-bold mb-2">Desglose TCO (Componentes)</h3><canvas id="tcoComponentBreakdownChart"></canvas></div>
-                        <div class="card chart-card"><h3 class="font-bold mb-2">Evolución de Costos Mensuales</h3><canvas id="monthlyCostsChart"></canvas></div>
-                        <div class="card chart-card"><h3 class="font-bold mb-2">Flujo de Caja Acumulado</h3><canvas id="cumulativeCashflowChart"></canvas></div>
-                        <div class="card chart-card md:col-span-2"><h3 class="font-bold mb-2">Simulación Monte Carlo del ROI</h3><canvas id="monteCarloChart"></canvas></div>
+                         <div class="flip-card chart-flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                     <i data-lucide="info" class="flip-trigger"></i>
+                                    <h3 class="font-bold mb-2">Desglose TCO (CAPEX vs OPEX)</h3>
+                                    <canvas id="tcoBreakdownChart"></canvas>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h3 class="font-bold text-xl mb-4 text-orange-400">Entendiendo el TCO</h3>
+                                    <p class="text-base text-slate-300 mb-6">Muestra la proporción de su inversión entre costos iniciales **(CAPEX)** y costos operativos **(OPEX)**. Clave para una planificación financiera precisa.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="flip-card chart-flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                     <i data-lucide="info" class="flip-trigger"></i>
+                                    <h3 class="font-bold mb-2">Desglose TCO (por Componente)</h3>
+                                    <canvas id="tcoComponentBreakdownChart"></canvas>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h3 class="font-bold text-xl mb-4 text-orange-400">¿En qué se invierte?</h3>
+                                    <p class="text-base text-slate-300 mb-6">Este gráfico desglosa el costo total en sus componentes principales: **Hardware**, **Servicios de Implementación** y **Licenciamiento y Soporte** a lo largo de 3 años.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="flip-card chart-flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                     <i data-lucide="info" class="flip-trigger"></i>
+                                    <h3 class="font-bold mb-2">Evolución de Costos Mensuales</h3>
+                                    <canvas id="monthlyCostsChart"></canvas>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h3 class="font-bold text-xl mb-4 text-orange-400">Estructura de Costos</h3>
+                                    <p class="text-base text-slate-300 mb-6">Este gráfico desglosa los costos a lo largo del tiempo. Muestra la **inversión inicial**, las **cuotas de financiamiento** (si aplica) y los **costos operativos recurrentes**.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flip-card chart-flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                     <i data-lucide="info" class="flip-trigger"></i>
+                                    <h3 class="font-bold mb-2">Flujo de Caja Acumulado</h3>
+                                    <canvas id="cumulativeCashflowChart"></canvas>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h3 class="font-bold text-xl mb-4 text-orange-400">Camino a la Rentabilidad</h3>
+                                    <p class="text-base text-slate-300 mb-6">Muestra el balance neto mes a mes. Comienza con el desembolso inicial y crece hasta cruzar el cero en el mes del Payback, momento en que la inversión ha sido recuperada.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                         <div class="flip-card chart-flip-card md:col-span-2">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                     <i data-lucide="info" class="flip-trigger"></i>
+                                    <h3 class="font-bold mb-2">Simulación Monte Carlo del ROI (Análisis de Riesgo)</h3>
+                                    <canvas id="monteCarloChart"></canvas>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h3 class="font-bold text-xl mb-4 text-orange-400">Análisis de Sensibilidad</h3>
+                                    <p class="text-base text-slate-300 mb-6">Esta simulación ejecuta 10,000 escenarios variando LTV y Conversión para medir la resiliencia del ROI. Un resultado concentrado en valores altos indica una inversión de bajo riesgo.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- SIGNIFICADOS SECTION -->
+        <section id="glossary" class="mb-16">
+            <h2 class="section-title">Glosario Financiero</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">Retorno de la Inversión (ROI)</h3>
+                            <p class="text-sm text-slate-300">Mide la ganancia o pérdida generada en relación con el monto invertido.</p>
+                        </div>
+                        <div class="flip-card-back">
+                           <p class="text-sm text-slate-300">Un ROI alto indica alta rentabilidad. Es el indicador final del éxito financiero de una inversión.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">Costo Total de Propiedad (TCO)</h3>
+                            <p class="text-sm text-slate-300">Cálculo de todos los costos de la solución en su vida útil (3 años).</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="text-sm text-slate-300">Incluye costos directos (hardware, licencias) e indirectos (soporte, mantenimiento), ofreciendo una visión completa de la inversión.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">Período de Recuperación</h3>
+                            <p class="text-sm text-slate-300">El tiempo necesario para que los ingresos generados igualen la inversión.</p>
+                        </div>
+                        <div class="flip-card-back">
+                           <p class="text-sm text-slate-300">Un período de recuperación (Payback) corto es ideal, ya que indica que la inversión comienza a generar ganancias netas rápidamente.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                           <h3 class="font-bold text-lg text-orange-400 mb-2">Valor de Vida del Cliente (LTV)</h3>
+                           <p class="text-sm text-slate-300">La ganancia neta total que se espera de un cliente durante toda su relación comercial.</p>
+                        </div>
+                        <div class="flip-card-back">
+                           <p class="text-sm text-slate-300">Aumentar el LTV es un objetivo clave. Esta solución lo potencia a través del marketing de fidelización y la re-compra.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                           <h3 class="font-bold text-lg text-orange-400 mb-2">CAPEX</h3>
+                           <p class="text-sm text-slate-300">Gastos en activos fijos (Capital Expenditures), como el hardware. Es una inversión inicial.</p>
+                        </div>
+                         <div class="flip-card-back">
+                           <p class="text-sm text-slate-300">Se realiza una sola vez y se deprecia con el tiempo. Distinto de los gastos operativos recurrentes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">OPEX</h3>
+                            <p class="text-sm text-slate-300">Gastos operativos continuos (Operational Expenditures), como licencias y soporte.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="text-sm text-slate-300">Son los costos recurrentes para mantener la solución funcionando. Son predecibles y se presupuestan anualmente.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v21.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v16.4 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
+
     </div>
 
+    <!-- PDF Report Modal -->
     <div id="report-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
         <div class="bg-slate-800 rounded-lg shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-orange-400">Resumen Ejecutivo</h2>
-                <button id="report-close-btn" class="text-slate-400 hover:text-white text-3xl">&times;</button>
+                <h2 class="text-2xl font-bold text-orange-400">Resumen Ejecutivo de la Simulación</h2>
+                <button id="report-close-btn" class="text-slate-400 hover:text-white">&times;</button>
             </div>
             <div class="bg-slate-900 p-4 rounded-md mb-6">
                 <pre id="report-content" class="text-sm text-slate-300 whitespace-pre-wrap font-mono"></pre>
             </div>
             <div class="text-right">
-                <button id="report-download-btn" class="btn btn-primary">Descargar PDF</button>
+                <button id="report-download-btn" class="btn btn-primary"><i data-lucide="download" class="w-5 h-5 mr-2"></i>Descargar PDF</button>
             </div>
         </div>
     </div>
 
 <script>
-    // V21.0 SCRIPT - DIRECT PORT OF STABLE V6 LOGIC
+    // V16.4 CALCULATION ENGINE - FINAL, STABLE & ANTIFRAGILE
     const PRICING = {
-        CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
-        AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00,
-        BYOD_CONFIG_FEE_FIXED: 1000.00, LICENSE_OHMYFI_PER_AP_MONTHLY: 16.00, LICENSE_ZOHO_FIXED_MONTHLY: 50.00,
+        // 1. Costos de Inversión Inicial (Hardware)
+        CONTROLLER_COST: 179.00,
+        AP_INDOOR_COST: 95.00,
+        AP_OUTDOOR_COST: 144.00,
+        HARDWARE_MARKUP: 0.25, // 25%
+
+        // 1. Costos de Inversión Inicial (Servicios)
+        AUX_COMPONENTS_FIXED: 850.00,
+        INSTALL_FEE_PER_AP: 75.00,
+        CONFIG_FEE_FIXED: 200.00,
+        BYOD_CONFIG_FEE_FIXED: 1000.00, 
+
+        // 2. Costos Recurrentes Mensuales
+        LICENSE_OHMYFI_PER_AP_MONTHLY: 16.00,
+        LICENSE_ZOHO_FIXED_MONTHLY: 50.00,
+
+        // Modelo de Financiamiento (Tasas Totales sobre CAPEX)
         FINANCING_RATES: { "0": 0, "1": 0.25, "2": 0.30, "3": 0.35 }
     };
 
-    const ROI_PARAMS = { CONVERSION_RATE: 0.25 };
-    const ui = {};
-    const charts = {};
+    const ROI_PARAMS = {
+        CONVERSION_RATE: 0.25
+    };
+
+    const ui = {
+        buttons: { completa: document.getElementById('btn-completa'), byod: document.getElementById('btn-byod') },
+        inputs: { 
+            apsIndoor: document.getElementById('aps-indoor'), 
+            apsOutdoor: document.getElementById('aps-outdoor'), 
+            customerLTV: document.getElementById('customer-ltv'), 
+            internetCost: document.getElementById('internet-cost'),
+            leadsPerAp: document.getElementById('leads-per-ap')
+        },
+        financing: { section: document.getElementById('financing-section'), slider: document.getElementById('financing-term'), valueLabel: document.getElementById('financing-term-value') },
+        outputs: { roi: { value: document.getElementById('roi-value') }, tco: { value: document.getElementById('tco-value') }, payback: { value: document.getElementById('payback-value'), text: document.getElementById('payback-text') } },
+        scenario: { image: document.getElementById('scenario-image') },
+        report: { modal: document.getElementById('report-modal'), generateBtn: document.getElementById('generate-report-btn'), closeBtn: document.getElementById('report-close-btn'), downloadBtn: document.getElementById('report-download-btn'), content: document.getElementById('report-content') }
+    };
+
     let currentScenario = 'completa';
+    let charts = {};
     let lastCalculationData = {};
 
     function initialize() {
-        // Cache DOM elements
-        ui.inputs = {
-            apsIndoor: document.getElementById('aps-indoor'),
-            apsOutdoor: document.getElementById('aps-outdoor'),
-            customerLTV: document.getElementById('customer-ltv'),
-            internetCost: document.getElementById('internet-cost'),
-            leadsPerAp: document.getElementById('leads-per-ap')
-        };
-        ui.buttons = {
-            completa: document.getElementById('btn-completa'),
-            byod: document.getElementById('btn-byod')
-        };
-        ui.financing = {
-            section: document.getElementById('financing-section'),
-            slider: document.getElementById('financing-term'),
-            valueLabel: document.getElementById('financing-term-value')
-        };
-        ui.outputs = {
-            roi: document.getElementById('roi-value'),
-            tco: document.getElementById('tco-value'),
-            payback: document.getElementById('payback-value'),
-            paybackText: document.getElementById('payback-text')
-        };
-        ui.report = {
-            modal: document.getElementById('report-modal'),
-            generateBtn: document.getElementById('generate-report-btn'),
-            closeBtn: document.getElementById('report-close-btn'),
-            downloadBtn: document.getElementById('report-download-btn'),
-            content: document.getElementById('report-content')
-        };
+        setupEventListeners();
+        createCharts();
+        setScenario('completa');
+    }
 
-        // Create Charts
-        const defaultChartOptions = {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: 'white' } } },
-            scales: {
-                x: { ticks: { color: 'white' }, grid: { color: '#334155' }, title: { color: 'white', display: true } },
-                y: { ticks: { color: 'white' }, grid: { color: '#334155' }, title: { color: 'white', display: true } }
-            }
-        };
-
-        const chartConfigs = [
-            { id: 'tcoBreakdownChart', type: 'doughnut', data: { labels: ['CAPEX', 'OPEX'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] } },
-            { id: 'tcoComponentBreakdownChart', type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] } },
-            { id: 'monthlyCostsChart', type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [{ label: 'OPEX + Finan.', data: [], backgroundColor: '#F97316' }, { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }] }, options: { scales: { x: { stacked: true }, y: { stacked: true } } } },
-            { id: 'cumulativeCashflowChart', type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Flujo Acumulado', data: [], borderColor: '#22C55E', tension: 0.1 }] } },
-            { id: 'monteCarloChart', type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { scales: { y: { title: { text: 'Nº de Simulaciones' } }, x: { title: { text: 'Rango de ROI (%)' } } } } }
-        ];
-
-        chartConfigs.forEach(c => {
-             const ctx = document.getElementById(c.id);
-             if (ctx) {
-                charts[c.id] = new Chart(ctx.getContext('2d'), { type: c.type, data: c.data, options: { ...defaultChartOptions, ...c.options } });
-             }
-        });
-        
-        // Bind Events
-        Object.values(ui.inputs).forEach(input => input.addEventListener('input', calculate));
+    function setupEventListeners() {
         ui.buttons.completa.addEventListener('click', () => setScenario('completa'));
         ui.buttons.byod.addEventListener('click', () => setScenario('byod'));
-        ui.financing.slider.addEventListener('input', () => {
-            ui.financing.valueLabel.textContent = ui.financing.slider.value;
-            calculate();
+        Object.values(ui.inputs).forEach(input => input.addEventListener('input', calculate));
+        ui.financing.slider.addEventListener('input', () => { ui.financing.valueLabel.textContent = ui.financing.slider.value; calculate(); });
+
+        document.querySelectorAll('.chart-flip-card').forEach(card => {
+            const trigger = card.querySelector('.flip-trigger');
+            const backTrigger = card.querySelector('.flip-back-trigger');
+            if(trigger) { trigger.addEventListener('click', (e) => { e.stopPropagation(); card.classList.add('is-flipped'); }); }
+            if(backTrigger) { backTrigger.addEventListener('click', (e) => { e.stopPropagation(); card.classList.remove('is-flipped'); }); }
         });
-        ui.report.generateBtn.addEventListener('click', () => {
-            ui.report.content.textContent = generateReportText(lastCalculationData);
-            ui.report.modal.classList.remove('opacity-0', 'pointer-events-none');
-        });
+        
+        ui.report.generateBtn.addEventListener('click', () => { ui.report.content.textContent = generateReportText(lastCalculationData); ui.report.modal.classList.remove('opacity-0', 'pointer-events-none'); });
         ui.report.closeBtn.addEventListener('click', () => ui.report.modal.classList.add('opacity-0', 'pointer-events-none'));
         ui.report.downloadBtn.addEventListener('click', () => downloadPDF(lastCalculationData));
-        
-        // Initial Calculation
-        setScenario('completa');
+        lucide.createIcons();
     }
 
     function setScenario(scenario) {
@@ -222,166 +607,262 @@ Versión: 19.0 (08/10/2025)
         ui.buttons.completa.classList.toggle('btn-secondary', scenario !== 'completa');
         ui.buttons.byod.classList.toggle('btn-active', scenario === 'byod');
         ui.buttons.byod.classList.toggle('btn-secondary', scenario !== 'byod');
-        ui.financing.section.style.display = scenario === 'completa' ? 'flex' : 'none';
+        ui.financing.section.style.display = scenario === 'completa' ? 'block' : 'none';
+        
+        ui.scenario.image.style.opacity = 0;
+        setTimeout(() => {
+            ui.scenario.image.src = scenario === 'completa' ? 'https://placehold.co/600x400/1E293B/E2E8F0?text=Solucion+Completa' : 'https://placehold.co/600x400/1E293B/E2E8F0?text=Infraestructura+Propia';
+            ui.scenario.image.style.opacity = 1;
+        }, 500);
         calculate();
     }
 
     function calculate() {
-        const values = {
-            apsIndoor: parseInt(ui.inputs.apsIndoor.value) || 0,
-            apsOutdoor: parseInt(ui.inputs.apsOutdoor.value) || 0,
-            customerLTV: parseFloat(ui.inputs.customerLTV.value) || 0,
-            internetCost: parseFloat(ui.inputs.internetCost.value) || 0,
-            financingTerm: parseInt(ui.financing.slider.value, 10) || 0,
-            leadsPerAp: parseInt(ui.inputs.leadsPerAp.value) || 0
-        };
+        try {
+            const values = {
+                apsIndoor: parseInt(ui.inputs.apsIndoor.value) || 0,
+                apsOutdoor: parseInt(ui.inputs.apsOutdoor.value) || 0,
+                customerLTV: parseFloat(ui.inputs.customerLTV.value) || 0,
+                internetCost: parseFloat(ui.inputs.internetCost.value) || 0,
+                financingTerm: parseInt(ui.financing.slider.value, 10) || 0,
+                leadsPerAp: parseInt(ui.inputs.leadsPerAp.value) || 0
+            };
 
-        const totalAps = values.apsIndoor + values.apsOutdoor;
-        let hardwarePrice = 0, servicesPrice = 0, capex = 0;
+            const totalAps = values.apsIndoor + values.apsOutdoor;
 
-        if (currentScenario === 'completa') {
-            const hardwareBaseCost = PRICING.CONTROLLER_COST + (values.apsIndoor * PRICING.AP_INDOOR_COST) + (values.apsOutdoor * PRICING.AP_OUTDOOR_COST);
-            hardwarePrice = hardwareBaseCost * (1 + PRICING.HARDWARE_MARKUP);
-            servicesPrice = PRICING.AUX_COMPONENTS_FIXED + PRICING.CONFIG_FEE_FIXED + (totalAps * PRICING.INSTALL_FEE_PER_AP);
-            capex = hardwarePrice + servicesPrice;
-        } else {
-            capex = PRICING.BYOD_CONFIG_FEE_FIXED;
-            servicesPrice = capex;
-        }
-
-        const monthlyLicenseCost = (totalAps * PRICING.LICENSE_OHMYFI_PER_AP_MONTHLY) + PRICING.LICENSE_ZOHO_FIXED_MONTHLY;
-        const monthlyOpex = monthlyLicenseCost + values.internetCost;
-        const totalOpex = monthlyOpex * 36;
-        
-        let financingCost = 0;
-        let monthlyFinancingPayment = 0;
-        if (currentScenario === 'completa' && values.financingTerm > 0) {
-            const rate = PRICING.FINANCING_RATES[values.financingTerm];
-            financingCost = capex * rate;
-            monthlyFinancingPayment = (capex + financingCost) / values.financingTerm;
-        }
-        
-        const tco = capex + totalOpex + financingCost;
-        const newCustomersMonthly = totalAps * values.leadsPerAp * ROI_PARAMS.CONVERSION_RATE;
-        const monthlyRevenue = newCustomersMonthly * values.customerLTV;
-        const totalRevenue = monthlyRevenue * 36;
-        const netBenefit = totalRevenue - tco;
-        const roi = tco > 0 ? (netBenefit / tco) : 0;
-        
-        let cumulativeNet = -capex - financingCost;
-        let paybackPeriod = -1;
-        const monthlyData = { opex: [], capex: [], cumulativeNet: [] };
-
-        for (let month = 1; month <= 36; month++) {
-            const currentMonthCost = monthlyOpex + (month <= values.financingTerm ? monthlyFinancingPayment : 0);
-            cumulativeNet += monthlyRevenue - currentMonthCost;
-            if (cumulativeNet > 0 && paybackPeriod === -1) paybackPeriod = month;
-            monthlyData.opex.push(currentMonthCost);
-            monthlyData.capex.push(month === 1 ? capex : 0);
-            monthlyData.cumulativeNet.push(cumulativeNet + (capex + financingCost));
-        }
-
-        const tcoComponents = { hardware: hardwarePrice, services: servicesPrice, licenses: totalOpex };
-        const monteCarloResults = runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost);
-        
-        lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: currentScenario, monteCarloResults, monthlyData, tcoComponents };
-        updateUI(lastCalculationData);
-        updateCharts(lastCalculationData);
-    }
-
-    function updateUI(d) {
-        const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
-        ui.outputs.roi.textContent = `${(d.roi * 100).toFixed(0)}%`;
-        ui.outputs.tco.textContent = formatCurrency(d.tco);
-        ui.outputs.payback.textContent = d.paybackPeriod > 0 ? `${d.paybackPeriod} Meses` : "N/A";
-        
-        if(d.paybackPeriod > 0) {
-            if(d.financingTerm > 0){
-                ui.outputs.paybackText.innerHTML = `Al optar por el financiamiento, se evita el desembolso inicial de ${formatCurrency(d.capex)}. En su lugar, la inversión se cubre con <strong>${d.financingTerm} cuotas de ${formatCurrency(d.monthlyFinancingPayment)}</strong>.<br>Este modelo protege su liquidez, y es la razón por la que el punto de equilibrio se alcanza en <strong>${d.paybackPeriod} meses</strong>.`;
-            } else {
-                ui.outputs.paybackText.textContent = `La inversión se recupera y empieza a generar ganancias en el mes ${d.paybackPeriod}.`;
+            let hardwarePrice = 0, servicesPrice = 0, capex = 0;
+            if (currentScenario === 'completa') {
+                const hardwareBaseCost = PRICING.CONTROLLER_COST + (values.apsIndoor * PRICING.AP_INDOOR_COST) + (values.apsOutdoor * PRICING.AP_OUTDOOR_COST);
+                hardwarePrice = hardwareBaseCost * (1 + PRICING.HARDWARE_MARKUP);
+                servicesPrice = PRICING.AUX_COMPONENTS_FIXED + PRICING.CONFIG_FEE_FIXED + (totalAps * PRICING.INSTALL_FEE_PER_AP);
+                capex = hardwarePrice + servicesPrice;
+            } else { // byod
+                capex = PRICING.BYOD_CONFIG_FEE_FIXED;
+                servicesPrice = capex;
             }
-        } else {
-            ui.outputs.paybackText.textContent = 'Los ingresos no cubren la inversión en 3 años.';
+
+            const monthlyLicenseCost = (totalAps * PRICING.LICENSE_OHMYFI_PER_AP_MONTHLY) + PRICING.LICENSE_ZOHO_FIXED_MONTHLY;
+            const monthlyOpex = monthlyLicenseCost + values.internetCost;
+            const totalOpex = monthlyOpex * 36;
+            
+            let financingCost = 0;
+            let monthlyFinancingPayment = 0;
+            if (currentScenario === 'completa' && values.financingTerm > 0) {
+                const rate = PRICING.FINANCING_RATES[values.financingTerm];
+                financingCost = capex * rate;
+                monthlyFinancingPayment = (capex + financingCost) / values.financingTerm;
+            }
+            
+            const tco = capex + totalOpex + financingCost;
+            const newCustomersMonthly = totalAps * values.leadsPerAp * ROI_PARAMS.CONVERSION_RATE;
+            const monthlyRevenue = newCustomersMonthly * values.customerLTV;
+            const totalRevenue = monthlyRevenue * 36;
+            const netBenefit = totalRevenue - tco;
+            const roi = tco > 0 ? (netBenefit / tco) : 0;
+            
+            let cumulativeNet = -capex - financingCost;
+            let paybackPeriod = -1;
+            const monthlyData = { costs: [], revenues: [], opex: [], capex: [], cumulativeNet: [] };
+
+            for (let month = 1; month <= 36; month++) {
+                const currentMonthCost = monthlyOpex + (month <= values.financingTerm ? monthlyFinancingPayment : 0);
+                cumulativeNet += monthlyRevenue - currentMonthCost;
+                
+                if (cumulativeNet > 0 && paybackPeriod === -1) {
+                    paybackPeriod = month;
+                }
+                monthlyData.revenues.push(monthlyRevenue * month);
+                monthlyData.costs.push(capex + financingCost + (monthlyOpex * month));
+                monthlyData.opex.push(currentMonthCost);
+                monthlyData.capex.push(month === 1 ? capex : 0);
+                monthlyData.cumulativeNet.push(cumulativeNet + (capex+financingCost)); // Adjust for chart start
+            }
+
+            const tcoComponents = {
+                hardware: hardwarePrice,
+                services: servicesPrice,
+                licenses: totalOpex
+            };
+            
+            const monteCarloResults = runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost);
+            lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: currentScenario, monteCarloResults, monthlyData, tcoComponents };
+            
+            updateUI(lastCalculationData);
+        } catch (error) {
+            console.error("Calculation failed:", error);
         }
     }
-
-    function updateCharts(d) {
-        charts.tcoBreakdownChart.data.datasets[0].data = [d.capex + d.financingCost, d.totalOpex];
-        charts.tcoComponentBreakdownChart.data.datasets[0].data = [d.tcoComponents.hardware, d.tcoComponents.services, d.tcoComponents.licenses];
-        charts.monthlyCostsChart.data.datasets[0].data = d.monthlyData.opex.slice(0, 12);
-        charts.monthlyCostsChart.data.datasets[1].data = d.monthlyData.capex.slice(0, 12);
-        charts.cumulativeCashflowChart.data.datasets[0].data = d.monthlyData.cumulativeNet;
-        
-        const bins = {};
-        const binSize = 0.5;
-        d.monteCarloResults.forEach(roi => {
-            const bin = Math.floor(roi / binSize) * binSize;
-            bins[bin] = (bins[bin] || 0) + 1;
-        });
-        const sortedBins = Object.keys(bins).map(parseFloat).sort((a, b) => a - b);
-        charts.monteCarloChart.data.labels = sortedBins.map(bin => `${(bin*100).toFixed(0)}% a ${((bin + binSize)*100).toFixed(0)}%`);
-        charts.monteCarloChart.data.datasets[0].data = sortedBins.map(bin => bins[bin]);
-        
-        Object.values(charts).forEach(c => c.update());
-    }
-
+    
     function runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost) {
+        const simulations = 10000;
         const results = [];
         const totalOpexSim = monthlyOpex * 36;
-        for (let i = 0; i < 10000; i++) {
-            const ltvVar = values.customerLTV * (0.8 + Math.random() * 0.4);
-            const convRateVar = ROI_PARAMS.CONVERSION_RATE * (0.8 + Math.random() * 0.4);
+        for (let i = 0; i < simulations; i++) {
+            const ltvVar = values.customerLTV * (0.8 + Math.random() * 0.4); // +/- 20%
+            const convRateVar = ROI_PARAMS.CONVERSION_RATE * (0.8 + Math.random() * 0.4); // +/- 20%
             const leadsPerApVar = values.leadsPerAp * (0.8 + Math.random() * 0.4);
             const newCustMonthVar = totalAps * leadsPerApVar * convRateVar;
             const totalRevVar = newCustMonthVar * 36 * ltvVar;
             const tcoVar = capex + totalOpexSim + financingCost;
             const netBenefitVar = totalRevVar - tcoVar;
-            results.push(tcoVar > 0 ? (netBenefitVar / tcoVar) : 0);
+            const roiVar = tcoVar > 0 ? (netBenefitVar / tcoVar) : 0;
+            results.push(roiVar);
         }
         return results;
     }
 
+    function updateUI(d) {
+        const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
+        ui.outputs.roi.value.textContent = `${(d.roi * 100).toFixed(0)}%`;
+        ui.outputs.tco.value.textContent = formatCurrency(d.tco);
+        ui.outputs.payback.value.textContent = d.paybackPeriod > 0 ? `${d.paybackPeriod} Meses` : "N/A";
+        
+        if(d.paybackPeriod > 0) {
+            if(d.financingTerm > 0){
+                const totalFinanced = d.capex + d.financingCost;
+                ui.outputs.payback.text.innerHTML = `
+                    Al optar por el financiamiento, se evita el desembolso inicial de ${formatCurrency(d.capex)}. En su lugar, la inversión se cubre con <strong>${d.financingTerm} cuotas de ${formatCurrency(d.monthlyFinancingPayment)}</strong>.
+                    <br>Este modelo protege su liquidez, y es la razón por la que el punto de equilibrio se alcanza en <strong>${d.paybackPeriod} meses</strong>.
+                `;
+            } else {
+                ui.outputs.payback.text.textContent = `La inversión se recupera y empieza a generar ganancias en el mes ${d.paybackPeriod}.`;
+            }
+        } else {
+            ui.outputs.payback.text.textContent = 'Los ingresos no cubren la inversión en 3 años.';
+        }
+        
+        updateCharts(d);
+    }
+
+    function createCharts() {
+        const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
+        
+        try {
+            charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión Inicial (CAPEX)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
+        } catch (e) { console.error("Failed to create tcoBreakdownChart:", e); }
+
+        try {
+            charts.tcoComponentBreakdown = new Chart(document.getElementById('tcoComponentBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias y Soporte'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
+        } catch (e) { console.error("Failed to create tcoComponentBreakdownChart:", e); }
+
+        try {
+            charts.cumulativeCashflow = new Chart(document.getElementById('cumulativeCashflowChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Flujo de Caja Acumulado', data: [], borderColor: '#22C55E', tension: 0.1, fill: true, backgroundColor: 'rgba(34, 197, 94, 0.2)' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
+        } catch (e) { console.error("Failed to create cumulativeCashflowChart:", e); }
+
+        try {
+            charts.monthlyCosts = new Chart(document.getElementById('monthlyCostsChart').getContext('2d'), { type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [{ label: 'OPEX + Financiamiento', data: [], backgroundColor: '#F97316' }, { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { stacked: true }, y: { stacked: true } } } });
+        } catch (e) { console.error("Failed to create monthlyCostsChart:", e); }
+
+        try {
+            charts.monteCarlo = new Chart(document.getElementById('monteCarloChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Rango de ROI (%)', color:'white' } }, y: { ...chartOptions.scales.y, title: { display: true, text: 'Nº de Simulaciones', color:'white' } } } } });
+        } catch (e) { console.error("Failed to create monteCarloChart:", e); }
+    }
+
+    function updateCharts(d) {
+        try {
+            if (charts.tcoBreakdown) {
+                charts.tcoBreakdown.data.datasets[0].data = [d.capex + d.financingCost, d.totalOpex];
+                charts.tcoBreakdown.update();
+            }
+        } catch (e) { console.error("Failed to update tcoBreakdownChart:", e); }
+
+        try {
+            if (charts.tcoComponentBreakdown) {
+                charts.tcoComponentBreakdown.data.datasets[0].data = [d.tcoComponents.hardware, d.tcoComponents.services, d.tcoComponents.licenses];
+                charts.tcoComponentBreakdown.update();
+            }
+        } catch (e) { console.error("Failed to update tcoComponentBreakdownChart:", e); }
+        
+        try {
+            if (charts.cumulativeCashflow) {
+                charts.cumulativeCashflow.data.datasets[0].data = d.monthlyData.cumulativeNet;
+                charts.cumulativeCashflow.update();
+            }
+        } catch (e) { console.error("Failed to update cumulativeCashflowChart:", e); }
+
+        try {
+            if (charts.monthlyCosts) {
+                charts.monthlyCosts.data.datasets[0].data = d.monthlyData.opex.slice(0, 12);
+                charts.monthlyCosts.data.datasets[1].data = d.monthlyData.capex.slice(0, 12);
+                charts.monthlyCosts.update();
+            }
+        } catch (e) { console.error("Failed to update monthlyCostsChart:", e); }
+
+        try {
+            if (charts.monteCarlo) {
+                const bins = {};
+                const binSize = 0.5; // 50%
+                d.monteCarloResults.forEach(roi => {
+                    const bin = Math.floor(roi / binSize) * binSize;
+                    bins[bin] = (bins[bin] || 0) + 1;
+                });
+                const sortedBins = Object.keys(bins).map(parseFloat).sort((a, b) => a - b);
+                charts.monteCarlo.data.labels = sortedBins.map(bin => `${(bin*100).toFixed(0)}% a ${((bin + binSize)*100).toFixed(0)}%`);
+                charts.monteCarlo.data.datasets[0].data = sortedBins.map(bin => bins[bin]);
+                charts.monteCarlo.update();
+            }
+        } catch (e) { console.error("Failed to update monteCarloChart:", e); }
+    }
+    
     function generateReportText(d) {
         const scenarioText = d.scenario === 'completa' ? 'Solución Completa (AGT)' : 'Infraestructura Propia (BYOD)';
+        let financingText = '';
+        if (d.financingTerm > 0) {
+            financingText = `
+DETALLES DEL FINANCIAMIENTO:
+---------------------------
+- Costo Total Financiado: $${(d.capex + d.financingCost).toLocaleString('en-US', {maximumFractionDigits:2})}
+- Plazo: ${d.financingTerm} cuotas mensuales
+- Monto de cada cuota: $${d.monthlyFinancingPayment.toLocaleString('en-US', {maximumFractionDigits:2})}
+`;
+        }
+
         return `
 INFORME DE ANÁLISIS FINANCIERO - SOLUCIÓN AGT OHMYFI
 =====================================================
 Fecha: ${new Date().toLocaleDateString('es-VE')}
 Escenario Simulado: ${scenarioText}
+
 PARÁMETROS DE ENTRADA:
 ----------------------
 - APs Interiores: ${d.apsIndoor}, APs Exteriores: ${d.apsOutdoor}, Total APs: ${d.totalAps}
-- Valor de Vida del Cliente (LTV): $${d.customerLTV}
-- Costo Mensual de Internet: $${d.internetCost}
+- Valor de Vida del Cliente (LTV): $${d.customerLTV.toLocaleString()}
+- Costo Mensual de Internet: $${d.internetCost.toLocaleString()}
 - Leads por AP al Mes (Proyección): ${d.leadsPerAp}
-- Plazo de Financiamiento: ${d.financingTerm} meses
+${d.scenario === 'completa' ? `- Plazo de Financiamiento: ${d.financingTerm} meses` : ''}
+
 RESULTADOS PROYECTADOS A 3 AÑOS:
 --------------------------------
-- INVERSIÓN INICIAL (CAPEX): $${d.capex.toFixed(2)}
-- COSTOS OPERATIVOS TOTALES (OPEX): $${d.totalOpex.toFixed(2)}
-- COSTO DE FINANCIAMIENTO: $${d.financingCost.toFixed(2)}
-- COSTO TOTAL DE PROPIEDAD (TCO): $${d.tco.toFixed(2)}
-- INGRESOS TOTALES GENERADOS: $${d.totalRevenue.toFixed(2)}
-- BENEFICIO NETO: $${d.netBenefit.toFixed(2)}
+- INVERSIÓN INICIAL (CAPEX): $${d.capex.toLocaleString('en-US', {maximumFractionDigits:2})}
+- COSTOS OPERATIVOS TOTALES (OPEX): $${d.totalOpex.toLocaleString('en-US', {maximumFractionDigits:2})}
+${d.financingCost > 0 ? `- COSTO DE FINANCIAMIENTO: $${d.financingCost.toLocaleString('en-US', {maximumFractionDigits:2})}` : ''}
+
+- COSTO TOTAL DE PROPIEDAD (TCO): $${d.tco.toLocaleString('en-US', {maximumFractionDigits:2})}
+- INGRESOS TOTALES GENERADOS: $${d.totalRevenue.toLocaleString('en-US', {maximumFractionDigits:2})}
+- BENEFICIO NETO: $${d.netBenefit.toLocaleString('en-US', {maximumFractionDigits:2})}
+
 INDICADORES CLAVE DE RENDIMIENTO (KPI):
 ---------------------------------------
 - RETORNO DE LA INVERSIÓN (ROI): ${(d.roi * 100).toFixed(0)}%
-- PERÍODO DE RECUPERACIÓN (PAYBACK): ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'N/A'}
+- PERÍODO DE RECUPERACIÓN (PAYBACK): ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'No se recupera en 36 meses'}
+${financingText}
+CONCLUSIÓN:
+-----------
+Bajo los parámetros especificados, la implementación representa una inversión ${d.roi > 0 ? 'altamente rentable y de bajo riesgo' : 'que requiere revisión'}. El capital invertido se recuperaría en ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'más de 3 años'}, generando un retorno del ${(d.roi * 100).toFixed(0)}% sobre el costo total.
 `;
     }
 
     function downloadPDF(d) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+        const reportText = generateReportText(d);
         doc.setFont('courier', 'normal');
         doc.setFontSize(10);
-        doc.text(generateReportText(d), 10, 10);
+        doc.text(reportText, 10, 10);
         doc.save(`Reporte_OhmyFi_${d.scenario}_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
     window.onload = initialize;
-
 </script>
 </body>
 </html>
