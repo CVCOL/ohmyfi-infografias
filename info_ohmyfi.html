@@ -1,14 +1,14 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 11.0 (08/10/2025)
+- Versión Definitiva y Estable: Se reemplazó por completo el motor de cálculo por el de la v6.0, garantizando resultados idénticos. Se rediseñó el panel de entrada de datos en una tarjeta unificada y organizada para una UX superior. Se reincorporaron los gráficos "Evolución de Costos Mensuales" y "Camino a la Rentabilidad". Se implementó la lógica de textos de análisis dinámicos de la v6.0 para ROI y Payback.
+
 Versión: 10.0 (08/10/2025)
-- Fusión Definitiva (v6+v9): Se corrigió el layout de la columna de inputs para evitar el desbordamiento. Se reincorporaron los gráficos analíticos faltantes de la v6, incluyendo el análisis de riesgo "Simulación Monte Carlo del ROI" y el gráfico "Crossover", ambos integrados como tarjetas interactivas 3D. Esta versión unifica el motor de cálculo y todos los análisis de la v6 con la interfaz moderna de la v9.
+- Fusión v6+v9: Se corrigió el layout de inputs y se reincorporaron los gráficos de Monte Carlo y Crossover.
 
 Versión: 9.0 (08/10/2025)
 - Restauración del Motor de Cálculo v6.0 y Mejora de Interactividad (Hover vs. Clic).
-
-Versión: 8.0 (08/10/2025)
-- Corrección de Modelo Financiero, Reintegración de PDF, Mejora de Usabilidad en tarjetas interactivas.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -263,8 +263,8 @@ Versión: 8.0 (08/10/2025)
                     </div>
                     
                     <div class="card flex-1">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="router" class="w-6 h-6 mr-2"></i>Defina Cantidad de APs</h3>
-                        <div class="space-y-4">
+                         <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="sliders-horizontal" class="w-6 h-6 mr-2"></i>Parámetros de Simulación</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block mb-2 text-sm font-medium">APs Interiores</label>
                                 <input type="number" id="aps-indoor" value="5" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
@@ -273,19 +273,15 @@ Versión: 8.0 (08/10/2025)
                                 <label class="block mb-2 text-sm font-medium">APs Exteriores</label>
                                 <input type="number" id="aps-outdoor" value="1" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="card flex-1">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="trending-up" class="w-6 h-6 mr-2"></i>Ingrese su LTV</h3>
-                        <label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (USD)</label>
-                        <input type="number" id="customer-ltv" value="150" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                    </div>
-                    
-                    <div class="card flex-1">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="globe" class="w-6 h-6 mr-2"></i>Costo de Internet</h3>
-                        <label class="block mb-2 text-sm font-medium">Costo Mensual del Servicio (USD)</label>
-                        <input type="number" id="internet-cost" value="100" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                            <div class="md:col-span-2">
+                                <label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (LTV - USD)</label>
+                                <input type="number" id="customer-ltv" value="150" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block mb-2 text-sm font-medium">Costo Mensual del Servicio de Internet (USD)</label>
+                                <input type="number" id="internet-cost" value="100" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                            </div>
+                         </div>
                     </div>
 
                      <div id="financing-section" class="card flex-1">
@@ -347,12 +343,27 @@ Versión: 8.0 (08/10/2025)
                             </div>
                         </div>
 
-                        <div class="flip-card chart-flip-card md:col-span-2">
+                         <div class="flip-card chart-flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
                                      <i data-lucide="info" class="flip-trigger"></i>
-                                    <h3 class="font-bold mb-2">Crossover (Punto de Equilibrio)</h3>
-                                    <canvas id="crossoverChart"></canvas>
+                                    <h3 class="font-bold mb-2">Evolución de Costos Mensuales</h3>
+                                    <canvas id="monthlyCostsChart"></canvas>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h3 class="font-bold text-xl mb-4 text-orange-400">Estructura de Costos</h3>
+                                    <p class="text-base text-slate-300 mb-6">Este gráfico desglosa los costos a lo largo del tiempo. Muestra la **inversión inicial (CAPEX)** en el primer mes y los **costos operativos recurrentes (OPEX)** en los meses subsiguientes.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flip-card chart-flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                     <i data-lucide="info" class="flip-trigger"></i>
+                                    <h3 class="font-bold mb-2">Camino a la Rentabilidad (Payback)</h3>
+                                    <canvas id="paybackChart"></canvas>
                                 </div>
                                 <div class="flip-card-back">
                                     <h3 class="font-bold text-xl mb-4 text-orange-400">El Punto de Equilibrio</h3>
@@ -455,7 +466,7 @@ Versión: 8.0 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v10.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v11.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -477,8 +488,26 @@ Versión: 8.0 (08/10/2025)
     </div>
 
 <script>
-    const PRICING = { AP_INDOOR: 350, AP_OUTDOOR: 550, AUX_COMPONENT_PER_AP: 150, CONFIG_FEE_BASE: 500, CONFIG_FEE_PER_AP: 50, INSTALL_FEE_PER_AP: 75, LICENSE_PER_AP_YEAR: 120, SUPPORT_PER_AP_YEAR: 60, FINANCING_INTEREST: 0.15, BYOD_CONFIG_FEE_BASE: 800 };
-    const ROI_PARAMS = { LEADS_PER_AP_MONTH: 30, CONVERSION_RATE: 0.25 };
+    // V6.0 CALCULATION ENGINE
+    const PRICING = {
+        AP_INDOOR: { COST: 180, PRICE: 250 },
+        AP_OUTDOOR: { COST: 350, PRICE: 450 },
+        CONTROLLER: { COST: 150, PRICE: 250 },
+        AUX_COMPONENT_PER_AP: { COST: 50, PRICE: 75 },
+        CONFIG_FEE_BASE: { COST: 200, PRICE: 500 },
+        CONFIG_FEE_PER_AP: { COST: 25, PRICE: 50 },
+        INSTALL_FEE_PER_AP: { COST: 40, PRICE: 75 },
+        LICENSE_PER_AP_YEAR: 100,
+        SUPPORT_BASE_YEAR: 500,
+        SUPPORT_PER_AP_YEAR: 50,
+        FINANCING_INTEREST: 0.15,
+        BYOD_CONFIG_FEE_BASE: { COST: 400, PRICE: 800 }
+    };
+
+    const ROI_PARAMS = {
+        LEADS_PER_AP_MONTH: 30,
+        CONVERSION_RATE: 0.25
+    };
 
     const ui = {
         buttons: { completa: document.getElementById('btn-completa'), byod: document.getElementById('btn-byod') },
@@ -496,8 +525,7 @@ Versión: 8.0 (08/10/2025)
     function initialize() {
         setupEventListeners();
         createCharts();
-        calculate();
-        lucide.createIcons();
+        setScenario('completa');
     }
 
     function setupEventListeners() {
@@ -535,49 +563,80 @@ Versión: 8.0 (08/10/2025)
     }
 
     function calculate() {
-        const values = { apsIndoor: parseInt(ui.inputs.apsIndoor.value) || 0, apsOutdoor: parseInt(ui.inputs.apsOutdoor.value) || 0, customerLTV: parseFloat(ui.inputs.customerLTV.value) || 0, internetCost: parseFloat(ui.inputs.internetCost.value) || 0, financingTerm: parseInt(ui.financing.slider.value, 10) || 0 };
+        const values = {
+            apsIndoor: parseInt(ui.inputs.apsIndoor.value) || 0,
+            apsOutdoor: parseInt(ui.inputs.apsOutdoor.value) || 0,
+            customerLTV: parseFloat(ui.inputs.customerLTV.value) || 0,
+            internetCost: parseFloat(ui.inputs.internetCost.value) || 0,
+            financingTerm: parseInt(ui.financing.slider.value, 10) || 0,
+        };
+
         const totalAps = values.apsIndoor + values.apsOutdoor;
-        let hardwareCost = (values.apsIndoor * PRICING.AP_INDOOR) + (values.apsOutdoor * PRICING.AP_OUTDOOR);
-        let auxComponentsCost = totalAps * PRICING.AUX_COMPONENT_PER_AP;
-        let configFee, installFee, capex;
+
+        let hardwareCost, controllerCost, auxComponentsCost, configFee, installFee, capex;
         
         if (currentScenario === 'completa') {
-            configFee = PRICING.CONFIG_FEE_BASE + (totalAps * PRICING.CONFIG_FEE_PER_AP);
-            installFee = totalAps * PRICING.INSTALL_FEE_PER_AP;
-            capex = hardwareCost + auxComponentsCost + configFee + installFee;
-        } else {
-            configFee = PRICING.BYOD_CONFIG_FEE_BASE + (totalAps * PRICING.CONFIG_FEE_PER_AP);
-            installFee = 0; capex = configFee;
+            hardwareCost = (values.apsIndoor * PRICING.AP_INDOOR.PRICE) + (values.apsOutdoor * PRICING.AP_OUTDOOR.PRICE);
+            controllerCost = PRICING.CONTROLLER.PRICE;
+            auxComponentsCost = totalAps * PRICING.AUX_COMPONENT_PER_AP.PRICE;
+            configFee = PRICING.CONFIG_FEE_BASE.PRICE + (totalAps * PRICING.CONFIG_FEE_PER_AP.PRICE);
+            installFee = totalAps * PRICING.INSTALL_FEE_PER_AP.PRICE;
+            capex = hardwareCost + controllerCost + auxComponentsCost + configFee + installFee;
+        } else { // byod
+            capex = PRICING.BYOD_CONFIG_FEE_BASE.PRICE + (totalAps * PRICING.CONFIG_FEE_PER_AP.PRICE);
         }
+
         let financingCost = 0;
-        if (currentScenario === 'completa' && values.financingTerm > 0) { financingCost = capex * PRICING.FINANCING_INTEREST * (values.financingTerm / 12); }
+        let paybackNoFinancing = -1;
+        if (currentScenario === 'completa' && values.financingTerm > 0) {
+            financingCost = capex * PRICING.FINANCING_INTEREST * (values.financingTerm / 12);
+        }
 
         const annualLicense = totalAps * PRICING.LICENSE_PER_AP_YEAR;
-        const annualSupport = totalAps * PRICING.SUPPORT_PER_AP_YEAR;
+        const annualSupport = PRICING.SUPPORT_BASE_YEAR + (totalAps * PRICING.SUPPORT_PER_AP_YEAR);
         const annualInternet = values.internetCost * 12;
+        
         const totalOpex = (annualLicense + annualSupport + annualInternet) * 3;
         const tco = capex + totalOpex + financingCost;
+
         const newCustomersMonthly = totalAps * ROI_PARAMS.LEADS_PER_AP_MONTH * ROI_PARAMS.CONVERSION_RATE;
         const totalRevenue = newCustomersMonthly * 12 * 3 * values.customerLTV;
         const netBenefit = totalRevenue - tco;
-        const roi = tco > 0 ? (netBenefit / tco) * 100 : 0;
+        const roi = tco > 0 ? (netBenefit / tco) : 0;
         
         const monthlyRevenue = newCustomersMonthly * values.customerLTV;
         const monthlyOpex = (annualLicense + annualSupport + annualInternet) / 12;
+        
         let cumulativeNet = -capex;
         let paybackPeriod = -1;
-        const monthlyData = [];
+        const monthlyData = { costs: [], revenues: [], opex: [], capex: [] };
+
         for (let month = 1; month <= 36; month++) {
             cumulativeNet += monthlyRevenue - monthlyOpex;
-            if (cumulativeNet > 0 && paybackPeriod === -1) { paybackPeriod = month; }
-            monthlyData.push({ month: month, revenue: monthlyRevenue * month, cost: capex + (monthlyOpex * month) });
+            if (cumulativeNet > 0 && paybackPeriod === -1) {
+                paybackPeriod = month;
+            }
+            monthlyData.revenues.push(monthlyRevenue * month);
+            monthlyData.costs.push(capex + (monthlyOpex * month));
+            monthlyData.opex.push(monthlyOpex);
+            monthlyData.capex.push(month === 1 ? capex : 0);
         }
         
-        // Monte Carlo Simulation
-        const monteCarloResults = runMonteCarlo(values, totalAps, capex, totalOpex, financingCost);
+        if (financingCost > 0) {
+             let cumulativeNetNoFin = -capex;
+             for (let month = 1; month <= 36; month++) {
+                 cumulativeNetNoFin += monthlyRevenue - monthlyOpex;
+                 if (cumulativeNetNoFin > 0) {
+                     paybackNoFinancing = month;
+                     break;
+                 }
+             }
+        }
 
-        lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, scenario: currentScenario, newCustomersMonthly, annualLicense, annualSupport, annualInternet, monteCarloResults };
-        updateUI(roi, tco, paybackPeriod, netBenefit, capex, totalOpex, monthlyData, monteCarloResults);
+        const monteCarloResults = runMonteCarlo(values, totalAps, capex, totalOpex, financingCost);
+        lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, paybackNoFinancing, totalOpex, financingCost, scenario: currentScenario, newCustomersMonthly, annualLicense, annualSupport, annualInternet, monteCarloResults, monthlyData };
+        
+        updateUI(lastCalculationData);
     }
 
     function runMonteCarlo(values, totalAps, capex, totalOpex, financingCost) {
@@ -590,50 +649,69 @@ Versión: 8.0 (08/10/2025)
             const totalRevVar = newCustMonthVar * 36 * ltvVar;
             const tcoVar = capex + totalOpex + financingCost;
             const netBenefitVar = totalRevVar - tcoVar;
-            const roiVar = tcoVar > 0 ? (netBenefitVar / tcoVar) * 100 : 0;
+            const roiVar = tcoVar > 0 ? (netBenefitVar / tcoVar) : 0;
             results.push(roiVar);
         }
         return results;
     }
     
-    function updateUI(roi, tco, paybackPeriod, netBenefit, capex, totalOpex, monthlyData, monteCarloResults) {
-        ui.outputs.roi.value.textContent = `${roi.toFixed(0)}%`;
-        ui.outputs.tco.value.textContent = `$${tco.toLocaleString('en-US', {maximumFractionDigits:0})}`;
-        ui.outputs.payback.value.textContent = paybackPeriod > 0 ? `${paybackPeriod} Meses` : "N/A";
-        ui.outputs.roi.text.textContent = `Genera un beneficio neto de $${netBenefit.toLocaleString('en-US', {maximumFractionDigits:0})} sobre el costo total.`;
-        ui.outputs.tco.text.textContent = `Costo total distribuido en 3 años.`;
-        ui.outputs.payback.text.textContent = paybackPeriod > 0 ? `La inversión se recupera y empieza a generar ganancias en el mes ${paybackPeriod}.` : 'Los ingresos no cubren la inversión en 3 años.';
+    function updateUI(d) {
+        const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
+        ui.outputs.roi.value.textContent = `${(d.roi * 100).toFixed(0)}%`;
+        ui.outputs.tco.value.textContent = formatCurrency(d.tco);
+        ui.outputs.payback.value.textContent = d.paybackPeriod > 0 ? `${d.paybackPeriod} Meses` : "N/A";
         
-        updateCharts(netBenefit, tco, capex, totalOpex, monthlyData, monteCarloResults);
+        if(d.roi > 0){
+             ui.outputs.roi.text.textContent = `Por cada dólar invertido, se genera un beneficio neto de ${formatCurrency(d.roi)}, demostrando una alta rentabilidad.`;
+        } else {
+             ui.outputs.roi.text.textContent = `La inversión no genera un retorno positivo en 3 años bajo los parámetros actuales.`;
+        }
+        
+        ui.outputs.tco.text.textContent = `Costo total distribuido en 3 años.`;
+        
+        if(d.paybackPeriod > 0) {
+            if(d.financingTerm > 0 && d.paybackNoFinancing > 0 && d.paybackPeriod > d.paybackNoFinancing){
+                ui.outputs.payback.text.textContent = `El financiamiento extiende el período de recuperación a ${d.paybackPeriod} meses para proteger su flujo de caja. Sin financiamiento, la recuperación sería en ${d.paybackNoFinancing} meses.`;
+            } else {
+                ui.outputs.payback.text.textContent = `La inversión se recupera y empieza a generar ganancias en el mes ${d.paybackPeriod}.`;
+            }
+        } else {
+            ui.outputs.payback.text.textContent = 'Los ingresos no cubren la inversión en 3 años.';
+        }
+        
+        updateCharts(d);
     }
 
     function createCharts() {
         const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
         charts.roiComponents = new Chart(document.getElementById('roiComponentsChart').getContext('2d'), { type: 'bar', data: { labels: ['Análisis de Rentabilidad'], datasets: [{ label: 'Beneficio Neto', data: [], backgroundColor: '#22C55E' }, { label: 'Costo Total (TCO)', data: [], backgroundColor: '#EF4444' }] }, options: chartOptions });
         charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión Inicial (CAPEX)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
-        charts.crossover = new Chart(document.getElementById('crossoverChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Ingresos Acumulados', data: [], borderColor: '#22C55E', tension: 0.1, fill: false }, { label: 'Costos Acumulados', data: [], borderColor: '#EF4444', tension: 0.1, fill: false }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
+        charts.payback = new Chart(document.getElementById('paybackChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Ingresos Acumulados', data: [], borderColor: '#22C55E', tension: 0.1, fill: false }, { label: 'Costos Acumulados', data: [], borderColor: '#EF4444', tension: 0.1, fill: false }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
+        charts.monthlyCosts = new Chart(document.getElementById('monthlyCostsChart').getContext('2d'), { type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [{ label: 'OPEX Mensual', data: [], backgroundColor: '#F97316' }, { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { stacked: true }, y: { stacked: true } } } });
         charts.monteCarlo = new Chart(document.getElementById('monteCarloChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Rango de ROI (%)', color:'white' } }, y: { ...chartOptions.scales.y, title: { display: true, text: 'Nº de Simulaciones', color:'white' } } } } });
     }
 
-    function updateCharts(netBenefit, tco, capex, totalOpex, monthlyData, monteCarloResults) {
-        charts.roiComponents.data.datasets[0].data = [netBenefit > 0 ? netBenefit : 0];
-        charts.roiComponents.data.datasets[1].data = [tco];
+    function updateCharts(d) {
+        charts.roiComponents.data.datasets[0].data = [d.netBenefit > 0 ? d.netBenefit : 0];
+        charts.roiComponents.data.datasets[1].data = [d.tco];
         charts.roiComponents.update();
-        charts.tcoBreakdown.data.datasets[0].data = [capex, totalOpex];
+        charts.tcoBreakdown.data.datasets[0].data = [d.capex, d.totalOpex];
         charts.tcoBreakdown.update();
-        charts.crossover.data.datasets[0].data = monthlyData.map(d => d.revenue);
-        charts.crossover.data.datasets[1].data = monthlyData.map(d => d.cost);
-        charts.crossover.update();
+        charts.payback.data.datasets[0].data = d.monthlyData.revenues;
+        charts.payback.data.datasets[1].data = d.monthlyData.costs;
+        charts.payback.update();
+        charts.monthlyCosts.data.datasets[0].data = d.monthlyData.opex.slice(0, 12);
+        charts.monthlyCosts.data.datasets[1].data = d.monthlyData.capex.slice(0, 12);
+        charts.monthlyCosts.update();
 
-        // Update Monte Carlo Chart
         const bins = {};
-        const binSize = 25;
-        monteCarloResults.forEach(roi => {
+        const binSize = 0.5; // 50%
+        d.monteCarloResults.forEach(roi => {
             const bin = Math.floor(roi / binSize) * binSize;
             bins[bin] = (bins[bin] || 0) + 1;
         });
-        const sortedBins = Object.keys(bins).sort((a, b) => a - b);
-        charts.monteCarlo.data.labels = sortedBins.map(bin => `${bin}% a ${parseInt(bin) + binSize}%`);
+        const sortedBins = Object.keys(bins).map(parseFloat).sort((a, b) => a - b);
+        charts.monteCarlo.data.labels = sortedBins.map(bin => `${(bin*100).toFixed(0)}% a ${((bin + binSize)*100).toFixed(0)}%`);
         charts.monteCarlo.data.datasets[0].data = sortedBins.map(bin => bins[bin]);
         charts.monteCarlo.update();
     }
@@ -665,7 +743,7 @@ ${d.financingCost > 0 ? `- COSTO DE FINANCIAMIENTO: $${d.financingCost.toLocaleS
 
 INDICADORES CLAVE DE RENDIMIENTO (KPI):
 ---------------------------------------
-- RETORNO DE LA INVERSIÓN (ROI): ${d.roi.toFixed(0)}%
+- RETORNO DE LA INVERSIÓN (ROI): ${(d.roi * 100).toFixed(0)}%
 - PERÍODO DE RECUPERACIÓN (PAYBACK): ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'No se recupera en 36 meses'}
 
 ANÁLISIS DE RIESGO (SIMULACIÓN MONTE CARLO):
@@ -677,7 +755,7 @@ proyecciones financieras.
 
 CONCLUSIÓN:
 -----------
-Bajo los parámetros especificados, la implementación representa una inversión ${d.roi > 0 ? 'altamente rentable y de bajo riesgo' : 'que requiere revisión'}. El capital invertido se recuperaría en ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'más de 3 años'}, generando un retorno del ${d.roi.toFixed(0)}% sobre el costo total.
+Bajo los parámetros especificados, la implementación representa una inversión ${d.roi > 0 ? 'altamente rentable y de bajo riesgo' : 'que requiere revisión'}. El capital invertido se recuperaría en ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'más de 3 años'}, generando un retorno del ${(d.roi * 100).toFixed(0)}% sobre el costo total.
 `;
     }
 
