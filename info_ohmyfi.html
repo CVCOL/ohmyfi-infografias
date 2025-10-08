@@ -1,14 +1,14 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 21.0 (08/10/2025)
+- Estrategia de Portabilidad Directa: Se descartaron las versiones 17-20. Se tomó el bloque de script 100% funcional y estable de la v6 y se "trasplantó" directamente a la estructura HTML/CSS del diseño moderno. Las únicas modificaciones fueron para alinear los IDs de los elementos, garantizando la estabilidad del motor original. Esta es la versión definitiva.
+
 Versión: 20.0 (08/10/2025)
-- Corrección de Carga y Estabilidad: Se identificó que la causa raíz de la falla era un problema de "carrera" (race condition) entre la ejecución del script y la carga de la librería externa Chart.js. Se reemplazó el evento 'DOMContentLoaded' por 'window.onload' para garantizar que todos los recursos estén completamente cargados antes de ejecutar el script, restaurando la estabilidad original de la v6.
+- Falla de Carga: A pesar de corregir el método de carga, una inestabilidad subyacente en el script refactorizado impidió el funcionamiento.
 
 Versión: 19.0 (08/10/2025)
 - Falla de Reconstrucción: El intento de reconstruir desde cero mantuvo el método de carga inestable, resultando en una aplicación no funcional.
-
-Versión: 18.0 (08/10/2025)
-- Falla de Fusión: El intento de fusionar el código estable de la v6 con el diseño de la v17 resultó en una aplicación inestable.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -25,9 +25,7 @@ Versión: 18.0 (08/10/2025)
     <style>
         :root {
             --agt-dark: #0F172A; /* Slate 900 */
-            --agt-blue: #1E3A8A; /* Indigo 800 */
             --agt-orange: #F97316; /* Orange 500 */
-            --agt-light-gray: #F1F5F9; /* Slate 100 */
             --agt-text: #E2E8F0; /* Slate 200 */
         }
         body { 
@@ -35,80 +33,29 @@ Versión: 18.0 (08/10/2025)
             background-color: var(--agt-dark);
             color: var(--agt-text);
         }
-        .section-title {
-            font-size: 2.25rem;
-            font-weight: 800;
-            line-height: 1.2;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        .section-subtitle {
-            font-size: 1.125rem;
-            text-align: center;
-            color: #94a3b8; /* Slate 400 */
-            max-width: 800px;
-            margin: 0 auto 3rem auto;
-        }
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        .btn-primary {
-            background-color: var(--agt-orange);
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #FB923C; /* Orange 400 */
-        }
-        .btn-secondary {
-            background-color: #334155; /* Slate 700 */
-            color: var(--agt-text);
-        }
-        .btn-secondary:hover {
-             background-color: #475569; /* Slate 600 */
-        }
-        .btn-active {
-            background-color: var(--agt-orange);
-            color: white;
-            box-shadow: 0 0 15px rgba(249, 115, 22, 0.5);
-        }
-        .card {
-            background-color: #1E293B; /* Slate 800 */
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            border: 1px solid #334155; /* Slate 700 */
-            height: 100%;
-        }
-        .chart-card {
-             height: 450px;
-             min-height: 450px;
-        }
+        .section-title { font-size: 2.25rem; font-weight: 800; line-height: 1.2; text-align: center; margin-bottom: 1rem; }
+        .section-subtitle { font-size: 1.125rem; text-align: center; color: #94a3b8; max-width: 800px; margin: 0 auto 3rem auto; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.3s ease; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .btn-primary { background-color: var(--agt-orange); color: white; }
+        .btn-primary:hover { background-color: #FB923C; }
+        .btn-secondary { background-color: #334155; color: var(--agt-text); }
+        .btn-secondary:hover { background-color: #475569; }
+        .btn-active { background-color: var(--agt-orange); color: white; box-shadow: 0 0 15px rgba(249, 115, 22, 0.5); }
+        .card { background-color: #1E293B; border-radius: 0.75rem; padding: 1.5rem; border: 1px solid #334155; height: 100%; }
+        .chart-card { height: 450px; min-height: 450px; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-
-        <!-- HEADER -->
         <header class="mb-16 text-center">
-             <img src="https://placehold.co/1200x400/0F172A/E2E8F0?text=AGT+OhmyFi" 
-                 alt="Equipo de profesionales analizando datos en un entorno tecnológico"
-                 class="w-full h-64 md:h-96 object-cover rounded-xl mb-8 opacity-75">
+             <img src="https://placehold.co/1200x400/0F172A/E2E8F0?text=AGT+OhmyFi" alt="Header Image" class="w-full h-64 md:h-96 object-cover rounded-xl mb-8 opacity-75">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
                 Transforme su Wi-Fi de un <span class="text-red-400">Gasto</span> a un <span class="text-green-400">Activo Estratégico</span>
             </h1>
             <p class="section-subtitle">Descubra cómo la solución OhmyFi + Zoho CRM, implementada por AGT, convierte su red de invitados en un motor de inteligencia de negocios y crecimiento para el mercado venezolano.</p>
         </header>
 
-        <!-- SIMULATOR SECTION -->
         <section id="simulator" class="mb-20">
              <div class="flex flex-col md:flex-row justify-between items-center mb-8">
                 <div class="text-center md:text-left mb-6 md:mb-0">
@@ -127,69 +74,26 @@ Versión: 18.0 (08/10/2025)
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Columna de Inputs -->
                 <div class="lg:col-span-1 space-y-6 flex flex-col">
                     <div class="card flex-1">
                         <h3 class="text-xl font-bold mb-4 text-orange-400">1. Defina Cantidad de APs</h3>
                         <div class="space-y-4">
-                            <div>
-                                <label class="block mb-2 text-sm font-medium">APs Interiores</label>
-                                <input type="number" id="aps-indoor" value="3" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                            </div>
-                            <div>
-                                <label class="block mb-2 text-sm font-medium">APs Exteriores</label>
-                                <input type="number" id="aps-outdoor" value="1" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                            </div>
+                            <div><label class="block mb-2 text-sm font-medium">APs Interiores</label><input type="number" id="aps-indoor" value="3" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
+                            <div><label class="block mb-2 text-sm font-medium">APs Exteriores</label><input type="number" id="aps-outdoor" value="1" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
                         </div>
                     </div>
-
-                    <div class="card flex-1">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400">2. Ingrese su LTV</h3>
-                        <label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (USD)</label>
-                        <input type="number" id="customer-ltv" value="50" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                    </div>
-                    
-                    <div class="card flex-1">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400">3. Costo de Internet</h3>
-                        <label class="block mb-2 text-sm font-medium">Costo Mensual del Servicio (USD)</label>
-                        <input type="number" id="internet-cost" value="60" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                    </div>
-
-                    <div class="card flex-1">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400">4. Proyección de Captación</h3>
-                        <label class="block mb-2 text-sm font-medium">Leads por AP al Mes</label>
-                        <input type="number" id="leads-per-ap" value="10" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                    </div>
-
-                     <div id="financing-section" class="card flex-1">
-                        <h3 class="text-xl font-bold mb-4 text-orange-400">Financiamiento</h3>
-                        <label for="financing-term" class="block mb-2 text-sm font-medium">Plazo: <span id="financing-term-value" class="font-bold text-orange-400">0</span> meses</label>
-                        <input type="range" id="financing-term" min="0" max="3" value="0" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
-                    </div>
+                    <div class="card flex-1"><h3 class="text-xl font-bold mb-4 text-orange-400">2. Ingrese su LTV</h3><label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (USD)</label><input type="number" id="customer-ltv" value="50" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
+                    <div class="card flex-1"><h3 class="text-xl font-bold mb-4 text-orange-400">3. Costo de Internet</h3><label class="block mb-2 text-sm font-medium">Costo Mensual del Servicio (USD)</label><input type="number" id="internet-cost" value="60" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
+                    <div class="card flex-1"><h3 class="text-xl font-bold mb-4 text-orange-400">4. Proyección de Captación</h3><label class="block mb-2 text-sm font-medium">Leads por AP al Mes</label><input type="number" id="leads-per-ap" value="10" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600"></div>
+                    <div id="financing-section" class="card flex-1"><h3 class="text-xl font-bold mb-4 text-orange-400">Financiamiento</h3><label for="financing-term" class="block mb-2 text-sm font-medium">Plazo: <span id="financing-term-value" class="font-bold text-orange-400">0</span> meses</label><input type="range" id="financing-term" min="0" max="3" value="0" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"></div>
                 </div>
-
-                <!-- Columna de Dashboard -->
                 <div class="lg:col-span-2 space-y-6">
-                    <!-- KPI Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="card text-center">
-                            <h3 class="text-lg font-semibold text-slate-400">Retorno de Inversión (ROI)</h3>
-                            <p id="roi-value" class="text-5xl font-extrabold text-green-400 my-2">0%</p>
-                        </div>
-                        <div class="card text-center">
-                             <h3 class="text-lg font-semibold text-slate-400">Costo Total (TCO)</h3>
-                            <p id="tco-value" class="text-4xl font-bold text-red-400 my-2">$0</p>
-                        </div>
-                        <div class="card text-center">
-                            <h3 class="text-lg font-semibold text-slate-400">Recuperación (Payback)</h3>
-                            <p id="payback-value" class="text-4xl font-bold text-blue-400 my-2">0 Meses</p>
-                        </div>
+                        <div class="card text-center"><h3 class="text-lg font-semibold text-slate-400">Retorno de Inversión (ROI)</h3><p id="roi-value" class="text-5xl font-extrabold text-green-400 my-2">0%</p></div>
+                        <div class="card text-center"><h3 class="text-lg font-semibold text-slate-400">Costo Total (TCO)</h3><p id="tco-value" class="text-4xl font-bold text-red-400 my-2">$0</p></div>
+                        <div class="card text-center"><h3 class="text-lg font-semibold text-slate-400">Recuperación (Payback)</h3><p id="payback-value" class="text-4xl font-bold text-blue-400 my-2">0 Meses</p></div>
                     </div>
-                    <div class="card">
-                        <p id="payback-text" class="text-sm text-slate-300 text-center"></p>
-                    </div>
-
-                    <!-- Chart Grid -->
+                    <div class="card"><p id="payback-text" class="text-sm text-slate-300 text-center"></p></div>
                     <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="card chart-card"><h3 class="font-bold mb-2">Desglose TCO (CAPEX vs OPEX)</h3><canvas id="tcoBreakdownChart"></canvas></div>
                         <div class="card chart-card"><h3 class="font-bold mb-2">Desglose TCO (Componentes)</h3><canvas id="tcoComponentBreakdownChart"></canvas></div>
@@ -202,11 +106,10 @@ Versión: 18.0 (08/10/2025)
         </section>
 
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v20.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v21.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
     </div>
 
-    <!-- PDF Report Modal -->
     <div id="report-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
         <div class="bg-slate-800 rounded-lg shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
@@ -223,75 +126,54 @@ Versión: 18.0 (08/10/2025)
     </div>
 
 <script>
-    // V20.0 SCRIPT - STABLE LOAD PATTERN
-    
-    // --- CONSTANTS & CONFIGURATION ---
+    // V21.0 SCRIPT - DIRECT PORT OF STABLE V6 LOGIC
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00,
         BYOD_CONFIG_FEE_FIXED: 1000.00, LICENSE_OHMYFI_PER_AP_MONTHLY: 16.00, LICENSE_ZOHO_FIXED_MONTHLY: 50.00,
         FINANCING_RATES: { "0": 0, "1": 0.25, "2": 0.30, "3": 0.35 }
     };
+
     const ROI_PARAMS = { CONVERSION_RATE: 0.25 };
-
-    // --- GLOBAL STATE ---
-    let state = {
-        scenario: 'completa',
-        lastData: {}
-    };
-    const dom = {};
+    const ui = {};
     const charts = {};
+    let currentScenario = 'completa';
+    let lastCalculationData = {};
 
-    // --- INITIALIZATION ---
-    function init() {
-        cacheDom();
-        createCharts();
-        bindEvents();
-        render(); 
-    }
-
-    function cacheDom() {
-        dom.inputs = {
+    function initialize() {
+        // Cache DOM elements
+        ui.inputs = {
             apsIndoor: document.getElementById('aps-indoor'),
             apsOutdoor: document.getElementById('aps-outdoor'),
             customerLTV: document.getElementById('customer-ltv'),
             internetCost: document.getElementById('internet-cost'),
             leadsPerAp: document.getElementById('leads-per-ap')
         };
-        dom.buttons = {
+        ui.buttons = {
             completa: document.getElementById('btn-completa'),
             byod: document.getElementById('btn-byod')
         };
-        dom.financing = {
+        ui.financing = {
             section: document.getElementById('financing-section'),
             slider: document.getElementById('financing-term'),
             valueLabel: document.getElementById('financing-term-value')
         };
-        dom.outputs = {
+        ui.outputs = {
             roi: document.getElementById('roi-value'),
             tco: document.getElementById('tco-value'),
             payback: document.getElementById('payback-value'),
             paybackText: document.getElementById('payback-text')
         };
-        dom.report = {
+        ui.report = {
             modal: document.getElementById('report-modal'),
             generateBtn: document.getElementById('generate-report-btn'),
             closeBtn: document.getElementById('report-close-btn'),
             downloadBtn: document.getElementById('report-download-btn'),
             content: document.getElementById('report-content')
         };
-    }
 
-    function createCharts() {
-        const chartConfigs = [
-            { id: 'tcoBreakdownChart', type: 'doughnut', data: { labels: ['CAPEX', 'OPEX'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] } },
-            { id: 'tcoComponentBreakdownChart', type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] } },
-            { id: 'monthlyCostsChart', type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [{ label: 'OPEX + Finan.', data: [], backgroundColor: '#F97316' }, { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }] }, options: { scales: { x: { stacked: true }, y: { stacked: true } } } },
-            { id: 'cumulativeCashflowChart', type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Flujo Acumulado', data: [], borderColor: '#22C55E', tension: 0.1 }] } },
-            { id: 'monteCarloChart', type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { scales: { y: { title: { display: true, text: 'Nº de Simulaciones' } }, x: { title: { display: true, text: 'Rango de ROI (%)' } } } } }
-        ];
-
-        const defaultOptions = {
+        // Create Charts
+        const defaultChartOptions = {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { labels: { color: 'white' } } },
             scales: {
@@ -299,55 +181,65 @@ Versión: 18.0 (08/10/2025)
                 y: { ticks: { color: 'white' }, grid: { color: '#334155' }, title: { color: 'white', display: true } }
             }
         };
-        
+
+        const chartConfigs = [
+            { id: 'tcoBreakdownChart', type: 'doughnut', data: { labels: ['CAPEX', 'OPEX'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] } },
+            { id: 'tcoComponentBreakdownChart', type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] } },
+            { id: 'monthlyCostsChart', type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [{ label: 'OPEX + Finan.', data: [], backgroundColor: '#F97316' }, { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }] }, options: { scales: { x: { stacked: true }, y: { stacked: true } } } },
+            { id: 'cumulativeCashflowChart', type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Flujo Acumulado', data: [], borderColor: '#22C55E', tension: 0.1 }] } },
+            { id: 'monteCarloChart', type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { scales: { y: { title: { text: 'Nº de Simulaciones' } }, x: { title: { text: 'Rango de ROI (%)' } } } } }
+        ];
+
         chartConfigs.forEach(c => {
-            const ctx = document.getElementById(c.id).getContext('2d');
-            charts[c.id] = new Chart(ctx, { type: c.type, data: c.data, options: { ...defaultOptions, ...c.options } });
+             const ctx = document.getElementById(c.id);
+             if (ctx) {
+                charts[c.id] = new Chart(ctx.getContext('2d'), { type: c.type, data: c.data, options: { ...defaultChartOptions, ...c.options } });
+             }
         });
+        
+        // Bind Events
+        Object.values(ui.inputs).forEach(input => input.addEventListener('input', calculate));
+        ui.buttons.completa.addEventListener('click', () => setScenario('completa'));
+        ui.buttons.byod.addEventListener('click', () => setScenario('byod'));
+        ui.financing.slider.addEventListener('input', () => {
+            ui.financing.valueLabel.textContent = ui.financing.slider.value;
+            calculate();
+        });
+        ui.report.generateBtn.addEventListener('click', () => {
+            ui.report.content.textContent = generateReportText(lastCalculationData);
+            ui.report.modal.classList.remove('opacity-0', 'pointer-events-none');
+        });
+        ui.report.closeBtn.addEventListener('click', () => ui.report.modal.classList.add('opacity-0', 'pointer-events-none'));
+        ui.report.downloadBtn.addEventListener('click', () => downloadPDF(lastCalculationData));
+        
+        // Initial Calculation
+        setScenario('completa');
     }
-    
-    function bindEvents() {
-        Object.values(dom.inputs).forEach(input => input.addEventListener('input', render));
-        dom.buttons.completa.addEventListener('click', () => setScenario('completa'));
-        dom.buttons.byod.addEventListener('click', () => setScenario('byod'));
-        dom.financing.slider.addEventListener('input', () => {
-            dom.financing.valueLabel.textContent = dom.financing.slider.value;
-            render();
-        });
-        dom.report.generateBtn.addEventListener('click', () => {
-            dom.report.content.textContent = generateReportText(state.lastData);
-            dom.report.modal.classList.remove('opacity-0', 'pointer-events-none');
-        });
-        dom.report.closeBtn.addEventListener('click', () => dom.report.modal.classList.add('opacity-0', 'pointer-events-none'));
-        dom.report.downloadBtn.addEventListener('click', () => downloadPDF(state.lastData));
-    }
-    
-    // --- CORE LOGIC & RENDERING ---
-    
+
     function setScenario(scenario) {
-        state.scenario = scenario;
-        dom.buttons.completa.classList.toggle('btn-active', scenario === 'completa');
-        dom.buttons.completa.classList.toggle('btn-secondary', scenario !== 'completa');
-        dom.buttons.byod.classList.toggle('btn-active', scenario === 'byod');
-        dom.buttons.byod.classList.toggle('btn-secondary', scenario !== 'byod');
-        dom.financing.section.style.display = scenario === 'completa' ? 'flex' : 'none';
-        render();
+        currentScenario = scenario;
+        ui.buttons.completa.classList.toggle('btn-active', scenario === 'completa');
+        ui.buttons.completa.classList.toggle('btn-secondary', scenario !== 'completa');
+        ui.buttons.byod.classList.toggle('btn-active', scenario === 'byod');
+        ui.buttons.byod.classList.toggle('btn-secondary', scenario !== 'byod');
+        ui.financing.section.style.display = scenario === 'completa' ? 'flex' : 'none';
+        calculate();
     }
 
     function calculate() {
         const values = {
-            apsIndoor: parseInt(dom.inputs.apsIndoor.value) || 0,
-            apsOutdoor: parseInt(dom.inputs.apsOutdoor.value) || 0,
-            customerLTV: parseFloat(dom.inputs.customerLTV.value) || 0,
-            internetCost: parseFloat(dom.inputs.internetCost.value) || 0,
-            financingTerm: parseInt(dom.financing.slider.value, 10) || 0,
-            leadsPerAp: parseInt(dom.inputs.leadsPerAp.value) || 0
+            apsIndoor: parseInt(ui.inputs.apsIndoor.value) || 0,
+            apsOutdoor: parseInt(ui.inputs.apsOutdoor.value) || 0,
+            customerLTV: parseFloat(ui.inputs.customerLTV.value) || 0,
+            internetCost: parseFloat(ui.inputs.internetCost.value) || 0,
+            financingTerm: parseInt(ui.financing.slider.value, 10) || 0,
+            leadsPerAp: parseInt(ui.inputs.leadsPerAp.value) || 0
         };
 
         const totalAps = values.apsIndoor + values.apsOutdoor;
         let hardwarePrice = 0, servicesPrice = 0, capex = 0;
 
-        if (state.scenario === 'completa') {
+        if (currentScenario === 'completa') {
             const hardwareBaseCost = PRICING.CONTROLLER_COST + (values.apsIndoor * PRICING.AP_INDOOR_COST) + (values.apsOutdoor * PRICING.AP_OUTDOOR_COST);
             hardwarePrice = hardwareBaseCost * (1 + PRICING.HARDWARE_MARKUP);
             servicesPrice = PRICING.AUX_COMPONENTS_FIXED + PRICING.CONFIG_FEE_FIXED + (totalAps * PRICING.INSTALL_FEE_PER_AP);
@@ -363,7 +255,7 @@ Versión: 18.0 (08/10/2025)
         
         let financingCost = 0;
         let monthlyFinancingPayment = 0;
-        if (state.scenario === 'completa' && values.financingTerm > 0) {
+        if (currentScenario === 'completa' && values.financingTerm > 0) {
             const rate = PRICING.FINANCING_RATES[values.financingTerm];
             financingCost = capex * rate;
             monthlyFinancingPayment = (capex + financingCost) / values.financingTerm;
@@ -392,32 +284,34 @@ Versión: 18.0 (08/10/2025)
         const tcoComponents = { hardware: hardwarePrice, services: servicesPrice, licenses: totalOpex };
         const monteCarloResults = runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost);
         
-        return { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: state.scenario, monteCarloResults, monthlyData, tcoComponents };
+        lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: currentScenario, monteCarloResults, monthlyData, tcoComponents };
+        updateUI(lastCalculationData);
+        updateCharts(lastCalculationData);
     }
 
     function updateUI(d) {
         const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
-        dom.outputs.roi.textContent = `${(d.roi * 100).toFixed(0)}%`;
-        dom.outputs.tco.textContent = formatCurrency(d.tco);
-        dom.outputs.payback.textContent = d.paybackPeriod > 0 ? `${d.paybackPeriod} Meses` : "N/A";
+        ui.outputs.roi.textContent = `${(d.roi * 100).toFixed(0)}%`;
+        ui.outputs.tco.textContent = formatCurrency(d.tco);
+        ui.outputs.payback.textContent = d.paybackPeriod > 0 ? `${d.paybackPeriod} Meses` : "N/A";
         
         if(d.paybackPeriod > 0) {
             if(d.financingTerm > 0){
-                dom.outputs.paybackText.innerHTML = `Al optar por el financiamiento, se evita el desembolso inicial de ${formatCurrency(d.capex)}. En su lugar, la inversión se cubre con <strong>${d.financingTerm} cuotas de ${formatCurrency(d.monthlyFinancingPayment)}</strong>.<br>Este modelo protege su liquidez, y es la razón por la que el punto de equilibrio se alcanza en <strong>${d.paybackPeriod} meses</strong>.`;
+                ui.outputs.paybackText.innerHTML = `Al optar por el financiamiento, se evita el desembolso inicial de ${formatCurrency(d.capex)}. En su lugar, la inversión se cubre con <strong>${d.financingTerm} cuotas de ${formatCurrency(d.monthlyFinancingPayment)}</strong>.<br>Este modelo protege su liquidez, y es la razón por la que el punto de equilibrio se alcanza en <strong>${d.paybackPeriod} meses</strong>.`;
             } else {
-                dom.outputs.paybackText.textContent = `La inversión se recupera y empieza a generar ganancias en el mes ${d.paybackPeriod}.`;
+                ui.outputs.paybackText.textContent = `La inversión se recupera y empieza a generar ganancias en el mes ${d.paybackPeriod}.`;
             }
         } else {
-            dom.outputs.paybackText.textContent = 'Los ingresos no cubren la inversión en 3 años.';
+            ui.outputs.paybackText.textContent = 'Los ingresos no cubren la inversión en 3 años.';
         }
     }
 
     function updateCharts(d) {
-        charts.tcoBreakdown.data.datasets[0].data = [d.capex + d.financingCost, d.totalOpex];
-        charts.tcoComponentBreakdown.data.datasets[0].data = [d.tcoComponents.hardware, d.tcoComponents.services, d.tcoComponents.licenses];
-        charts.monthlyCosts.data.datasets[0].data = d.monthlyData.opex.slice(0, 12);
-        charts.monthlyCosts.data.datasets[1].data = d.monthlyData.capex.slice(0, 12);
-        charts.cumulativeCashflow.data.datasets[0].data = d.monthlyData.cumulativeNet;
+        charts.tcoBreakdownChart.data.datasets[0].data = [d.capex + d.financingCost, d.totalOpex];
+        charts.tcoComponentBreakdownChart.data.datasets[0].data = [d.tcoComponents.hardware, d.tcoComponents.services, d.tcoComponents.licenses];
+        charts.monthlyCostsChart.data.datasets[0].data = d.monthlyData.opex.slice(0, 12);
+        charts.monthlyCostsChart.data.datasets[1].data = d.monthlyData.capex.slice(0, 12);
+        charts.cumulativeCashflowChart.data.datasets[0].data = d.monthlyData.cumulativeNet;
         
         const bins = {};
         const binSize = 0.5;
@@ -426,19 +320,12 @@ Versión: 18.0 (08/10/2025)
             bins[bin] = (bins[bin] || 0) + 1;
         });
         const sortedBins = Object.keys(bins).map(parseFloat).sort((a, b) => a - b);
-        charts.monteCarlo.data.labels = sortedBins.map(bin => `${(bin*100).toFixed(0)}% a ${((bin + binSize)*100).toFixed(0)}%`);
-        charts.monteCarlo.data.datasets[0].data = sortedBins.map(bin => bins[bin]);
+        charts.monteCarloChart.data.labels = sortedBins.map(bin => `${(bin*100).toFixed(0)}% a ${((bin + binSize)*100).toFixed(0)}%`);
+        charts.monteCarloChart.data.datasets[0].data = sortedBins.map(bin => bins[bin]);
         
         Object.values(charts).forEach(c => c.update());
     }
 
-    function render() {
-        state.lastData = calculate();
-        updateUI(state.lastData);
-        updateCharts(state.lastData);
-    }
-
-    // --- UTILITY FUNCTIONS ---
     function runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost) {
         const results = [];
         const totalOpexSim = monthlyOpex * 36;
@@ -462,7 +349,6 @@ INFORME DE ANÁLISIS FINANCIERO - SOLUCIÓN AGT OHMYFI
 =====================================================
 Fecha: ${new Date().toLocaleDateString('es-VE')}
 Escenario Simulado: ${scenarioText}
-
 PARÁMETROS DE ENTRADA:
 ----------------------
 - APs Interiores: ${d.apsIndoor}, APs Exteriores: ${d.apsOutdoor}, Total APs: ${d.totalAps}
@@ -470,7 +356,6 @@ PARÁMETROS DE ENTRADA:
 - Costo Mensual de Internet: $${d.internetCost}
 - Leads por AP al Mes (Proyección): ${d.leadsPerAp}
 - Plazo de Financiamiento: ${d.financingTerm} meses
-
 RESULTADOS PROYECTADOS A 3 AÑOS:
 --------------------------------
 - INVERSIÓN INICIAL (CAPEX): $${d.capex.toFixed(2)}
@@ -479,7 +364,6 @@ RESULTADOS PROYECTADOS A 3 AÑOS:
 - COSTO TOTAL DE PROPIEDAD (TCO): $${d.tco.toFixed(2)}
 - INGRESOS TOTALES GENERADOS: $${d.totalRevenue.toFixed(2)}
 - BENEFICIO NETO: $${d.netBenefit.toFixed(2)}
-
 INDICADORES CLAVE DE RENDIMIENTO (KPI):
 ---------------------------------------
 - RETORNO DE LA INVERSIÓN (ROI): ${(d.roi * 100).toFixed(0)}%
@@ -496,8 +380,7 @@ INDICADORES CLAVE DE RENDIMIENTO (KPI):
         doc.save(`Reporte_OhmyFi_${d.scenario}_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
-    // --- START THE APP ---
-    window.onload = init;
+    window.onload = initialize;
 
 </script>
 </body>
