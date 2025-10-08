@@ -1,14 +1,16 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 8.0 (08/10/2025)
+- Corrección de Modelo Financiero: Se ajustó el plazo de financiamiento a un máximo de 3 meses, alineándolo con el modelo de negocio validado en la v6.0.
+- Reintegración de Funcionalidad: Se recuperó el generador de informes en PDF, incluyendo el botón, la modal de previsualización y la lógica de descarga.
+- Mejora de Interactividad y Usabilidad: Se extendió el efecto de giro 3D (activado por clic) a las tarjetas de la sección "El Viaje del Dato". Se añadió un botón "Volver" en la cara posterior de todas las tarjetas interactivas para una navegación más intuitiva.
+
 Versión: 7.0 (08/10/2025)
-- Evolución a Herramienta de Ventas (Mobile-First): Rediseño integral enfocado en la experiencia móvil. Se implementó una nueva narrativa visual estratégica ("El Viaje del Dato") y se mejoró la UX con contenedores y gráficos interactivos 3D que rotan al hacer clic para revelar argumentos comerciales clave, alineando la herramienta con el "Análisis del Mercado Venezolano".
+- Evolución a Herramienta de Ventas (Mobile-First): Rediseño integral enfocado en la experiencia móvil, con nueva narrativa visual ("El Viaje del Dato") y contenedores interactivos 3D.
 
 Versión: 6.0 (07/10/2025)
 - Rediseño gráfico integral: Implementación de la paleta de colores corporativa de AGT, nueva iconografía profesional y tarjetas de análisis interactivas.
-
-Versión: 5.1 (07/10/2025)
-- Corrección de error crítico que impedía la renderización de todos los gráficos después de una refactorización. Se restauró el flujo de datos correcto a las funciones de actualización de la UI.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -57,6 +59,9 @@ Versión: 5.1 (07/10/2025)
             transition: all 0.3s ease;
             cursor: pointer;
             border: 2px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-primary {
             background-color: var(--agt-orange);
@@ -88,8 +93,11 @@ Versión: 5.1 (07/10/2025)
         .flip-card {
             background-color: transparent;
             width: 100%;
-            height: 450px; /* Altura fija para consistencia */
+            min-height: 200px; /* Altura mínima para tarjetas de viaje del dato */
             perspective: 1000px;
+        }
+        .chart-flip-card {
+            height: 450px;
         }
         .flip-card-inner {
             position: relative;
@@ -115,11 +123,10 @@ Versión: 5.1 (07/10/2025)
             background-color: #1E293B; /* Slate 800 */
             border-radius: 0.75rem;
             border: 1px solid #334155; /* Slate 700 */
-            padding: 1rem;
+            padding: 1.5rem;
         }
         .flip-card-back {
             transform: rotateY(180deg);
-            padding: 2rem;
         }
         .flip-trigger {
             position: absolute;
@@ -154,43 +161,104 @@ Versión: 5.1 (07/10/2025)
         <section class="mb-20">
             <h2 class="section-title">El Viaje del Dato: De Conexión a Conversión</h2>
             <p class="section-subtitle">Visualice el flujo de valor. Así es como convertimos una simple conexión Wi-Fi en una relación rentable y medible con sus clientes.</p>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-0 relative">
-                <!-- Linea de conexión -->
-                <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-slate-700" style="transform: translateY(-50%); z-index: -1;"></div>
-                <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-orange-500 to-indigo-800 animate-pulse" style="transform: translateY(-50%); z-index: -1;"></div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
                 
-                <div class="text-center card flex flex-col items-center">
-                    <i data-lucide="wifi" class="w-12 h-12 mb-4 text-orange-500"></i>
-                    <h3 class="font-bold text-lg mb-2">1. Conexión</h3>
-                    <p class="text-sm text-slate-400">El cliente se conecta al Wi-Fi gratuito a través de un portal cautivo personalizado.</p>
+                <!-- Card 1 -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                             <i data-lucide="info" class="flip-trigger"></i>
+                             <i data-lucide="wifi" class="w-12 h-12 mb-4 text-orange-500"></i>
+                             <h3 class="font-bold text-lg mb-2">1. Conexión</h3>
+                             <p class="text-sm text-slate-400">El cliente se conecta al Wi-Fi gratuito a través de un portal cautivo personalizado.</p>
+                        </div>
+                        <div class="flip-card-back">
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Portal de Marca</h3>
+                             <p class="text-sm text-slate-300 mb-4">El primer contacto es clave. Creamos un portal de acceso con su identidad de marca que ofrece una experiencia de conexión segura y profesional, cumpliendo con la ley y generando confianza desde el inicio.</p>
+                             <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-center card flex flex-col items-center">
-                    <i data-lucide="database" class="w-12 h-12 mb-4 text-orange-500"></i>
-                    <h3 class="font-bold text-lg mb-2">2. Captura</h3>
-                    <p class="text-sm text-slate-400">Se capturan datos de primera mano (First-Party Data) con consentimiento explícito.</p>
+
+                <!-- Card 2 -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i data-lucide="info" class="flip-trigger"></i>
+                            <i data-lucide="database" class="w-12 h-12 mb-4 text-orange-500"></i>
+                            <h3 class="font-bold text-lg mb-2">2. Captura</h3>
+                            <p class="text-sm text-slate-400">Se capturan datos de primera mano (First-Party Data) con consentimiento explícito.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Activo de Datos</h3>
+                            <p class="text-sm text-slate-300 mb-4">Los "First-Party Data" son su activo más valioso. A diferencia de los datos de terceros, son precisos, relevantes y obtenidos con consentimiento, formando la base para una personalización efectiva y legal.</p>
+                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-center card flex flex-col items-center">
-                    <i data-lucide="users" class="w-12 h-12 mb-4 text-orange-500"></i>
-                    <h3 class="font-bold text-lg mb-2">3. Perfilamiento</h3>
-                    <p class="text-sm text-slate-400">El perfil del cliente se crea o actualiza automáticamente en Zoho CRM.</p>
+
+                <!-- Card 3 -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i data-lucide="info" class="flip-trigger"></i>
+                            <i data-lucide="users" class="w-12 h-12 mb-4 text-orange-500"></i>
+                            <h3 class="font-bold text-lg mb-2">3. Perfilamiento</h3>
+                            <p class="text-sm text-slate-400">El perfil del cliente se crea o actualiza automáticamente en Zoho CRM.</p>
+                        </div>
+                         <div class="flip-card-back">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Inteligencia 360°</h3>
+                            <p class="text-sm text-slate-300 mb-4">La integración nativa con Zoho CRM es nuestro gran diferenciador. Cada conexión enriquece el perfil del cliente, unificando su comportamiento online y offline para una visión completa.</p>
+                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-center card flex flex-col items-center">
-                    <i data-lucide="send" class="w-12 h-12 mb-4 text-orange-500"></i>
-                    <h3 class="font-bold text-lg mb-2">4. Activación</h3>
-                    <p class="text-sm text-slate-400">Se disparan campañas de marketing automatizadas y personalizadas.</p>
+
+                <!-- Card 4 -->
+                 <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i data-lucide="info" class="flip-trigger"></i>
+                            <i data-lucide="send" class="w-12 h-12 mb-4 text-orange-500"></i>
+                            <h3 class="font-bold text-lg mb-2">4. Activación</h3>
+                            <p class="text-sm text-slate-400">Se disparan campañas de marketing automatizadas y personalizadas.</p>
+                        </div>
+                        <div class="flip-card-back">
+                           <h3 class="font-bold text-lg mb-2 text-orange-400">Marketing de Precisión</h3>
+                           <p class="text-sm text-slate-300 mb-4">La automatización permite impactar al cliente correcto en el momento oportuno. Ej: un cupón de "te extrañamos" si no vuelve en 30 días, o una oferta de cumpleaños. Marketing que convierte.</p>
+                           <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-center card flex flex-col items-center">
-                    <i data-lucide="bar-chart-2" class="w-12 h-12 mb-4 text-orange-500"></i>
-                    <h3 class="font-bold text-lg mb-2">5. Medición</h3>
-                    <p class="text-sm text-slate-400">Se mide el ROI, LTV y el impacto real de cada interacción en las ventas.</p>
+
+                <!-- Card 5 -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i data-lucide="info" class="flip-trigger"></i>
+                            <i data-lucide="bar-chart-2" class="w-12 h-12 mb-4 text-orange-500"></i>
+                            <h3 class="font-bold text-lg mb-2">5. Medición</h3>
+                            <p class="text-sm text-slate-400">Se mide el ROI, LTV y el impacto real de cada interacción en las ventas.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Cierre del Ciclo</h3>
+                            <p class="text-sm text-slate-300 mb-4">La solución permite atribuir ventas e ingresos directamente a las campañas de WiFi Marketing, demostrando el valor tangible y el ROI. Dejamos de adivinar y empezamos a medir el impacto real.</p>
+                            <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- SIMULATOR SECTION -->
         <section id="simulator" class="mb-20">
-             <h2 class="section-title">Simulador Financiero Interactivo</h2>
-            <p class="section-subtitle">Ajuste las variables según la realidad de su negocio y proyecte el impacto financiero real. Compare dos escenarios clave para el mercado venezolano.</p>
+             <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <h2 class="section-title !text-left !mb-0">Simulador Financiero Interactivo</h2>
+                    <p class="section-subtitle !text-left !ml-0 max-w-2xl">Ajuste las variables y proyecte el impacto financiero real. Compare dos escenarios clave para el mercado venezolano.</p>
+                </div>
+                <button id="generate-report-btn" class="btn btn-primary"><i data-lucide="download" class="w-5 h-5 mr-2"></i>Generar Informe PDF</button>
+            </div>
             
             <div class="text-center mb-8">
                 <button id="btn-completa" class="btn btn-active mr-4">Escenario 1: Solución Completa (AGT)</button>
@@ -231,7 +299,7 @@ Versión: 5.1 (07/10/2025)
                      <div id="financing-section" class="card">
                         <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="banknote" class="w-6 h-6 mr-2"></i>Financiamiento (Sol. Completa)</h3>
                         <label for="financing-term" class="block mb-2 text-sm font-medium">Plazo de Financiamiento: <span id="financing-term-value" class="font-bold text-orange-400">0</span> meses</label>
-                        <input type="range" id="financing-term" min="0" max="24" value="0" step="6" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                        <input type="range" id="financing-term" min="0" max="3" value="0" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
                     </div>
                 </div>
 
@@ -258,46 +326,49 @@ Versión: 5.1 (07/10/2025)
                         </div>
                         
                         <!-- ROI Components Chart -->
-                        <div class="flip-card">
-                            <i data-lucide="info" class="flip-trigger"></i>
+                        <div class="flip-card chart-flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
+                                    <i data-lucide="info" class="flip-trigger"></i>
                                     <h3 class="font-bold mb-2">Componentes del ROI</h3>
                                     <canvas id="roiComponentsChart"></canvas>
                                 </div>
                                 <div class="flip-card-back">
                                     <h3 class="font-bold text-xl mb-4 text-orange-400">¿Qué Muestra este Gráfico?</h3>
-                                    <p class="text-base text-slate-300">Este gráfico desglosa el Retorno de la Inversión (ROI). Compara el **Beneficio Neto Total** (ingresos generados gracias a la solución) contra el **Costo Total de Propiedad (TCO)**. Un beneficio significativamente mayor que el costo resulta en un ROI positivo y una inversión rentable.</p>
+                                    <p class="text-base text-slate-300 mb-6">Este gráfico desglosa el Retorno de la Inversión (ROI). Compara el **Beneficio Neto Total** (ingresos generados gracias a la solución) contra el **Costo Total de Propiedad (TCO)**. Un beneficio significativamente mayor que el costo resulta en un ROI positivo y una inversión rentable.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver al Gráfico</button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- TCO Breakdown Chart -->
-                        <div class="flip-card">
-                             <i data-lucide="info" class="flip-trigger"></i>
+                        <div class="flip-card chart-flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
+                                     <i data-lucide="info" class="flip-trigger"></i>
                                     <h3 class="font-bold mb-2">Desglose del TCO</h3>
                                     <canvas id="tcoBreakdownChart"></canvas>
                                 </div>
                                 <div class="flip-card-back">
                                     <h3 class="font-bold text-xl mb-4 text-orange-400">Entendiendo el TCO</h3>
-                                    <p class="text-base text-slate-300">El Costo Total de Propiedad (TCO) no es solo el precio inicial. Este gráfico muestra cómo se distribuye su inversión a lo largo de 3 años, incluyendo el **hardware inicial (CAPEX)** y los **costos operativos recurrentes (OPEX)** como licencias y soporte. Entender esto es clave para una planificación financiera precisa.</p>
+                                    <p class="text-base text-slate-300 mb-6">El Costo Total de Propiedad (TCO) no es solo el precio inicial. Este gráfico muestra cómo se distribuye su inversión a lo largo de 3 años, incluyendo el **hardware inicial (CAPEX)** y los **costos operativos recurrentes (OPEX)** como licencias y soporte. Entender esto es clave para una planificación financiera precisa.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver al Gráfico</button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Payback Chart -->
-                        <div class="flip-card md:col-span-2">
-                             <i data-lucide="info" class="flip-trigger"></i>
+                        <div class="flip-card chart-flip-card md:col-span-2">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
+                                     <i data-lucide="info" class="flip-trigger"></i>
                                     <h3 class="font-bold mb-2">Camino a la Rentabilidad</h3>
                                     <canvas id="paybackChart"></canvas>
                                 </div>
                                 <div class="flip-card-back">
                                     <h3 class="font-bold text-xl mb-4 text-orange-400">El Punto de Equilibrio</h3>
-                                    <p class="text-base text-slate-300">Este gráfico ilustra el "Período de Recuperación". Muestra la **inversión acumulada** (costos) y cómo los **ingresos acumulados** la superan con el tiempo. El punto donde la línea de ingresos cruza la de costos es su punto de equilibrio: el momento exacto en que la solución se ha pagado a sí misma y comienza a generar ganancias netas.</p>
+                                    <p class="text-base text-slate-300 mb-6">Este gráfico ilustra el "Período de Recuperación". Muestra la **inversión acumulada** (costos) y cómo los **ingresos acumulados** la superan con el tiempo. El punto donde la línea de ingresos cruza la de costos es su punto de equilibrio: el momento exacto en que la solución se ha pagado a sí misma y comienza a generar ganancias netas.</p>
+                                    <button class="btn btn-secondary flip-back-trigger"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver al Gráfico</button>
                                 </div>
                             </div>
                         </div>
@@ -338,9 +409,25 @@ Versión: 5.1 (07/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v7.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v8.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
+    </div>
+
+    <!-- PDF Report Modal -->
+    <div id="report-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="bg-slate-800 rounded-lg shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-orange-400">Resumen Ejecutivo de la Simulación</h2>
+                <button id="report-close-btn" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="bg-slate-900 p-4 rounded-md mb-6">
+                <pre id="report-content" class="text-sm text-slate-300 whitespace-pre-wrap font-mono"></pre>
+            </div>
+            <div class="text-right">
+                <button id="report-download-btn" class="btn btn-primary"><i data-lucide="download" class="w-5 h-5 mr-2"></i>Descargar PDF</button>
+            </div>
+        </div>
     </div>
 
 <script>
@@ -368,9 +455,14 @@ Versión: 5.1 (07/10/2025)
         },
         scenario: {
             image: document.getElementById('scenario-image'),
-            imageContainer: document.getElementById('image-container'),
         },
-        flipCards: document.querySelectorAll('.flip-card'),
+        report: {
+            modal: document.getElementById('report-modal'),
+            generateBtn: document.getElementById('generate-report-btn'),
+            closeBtn: document.getElementById('report-close-btn'),
+            downloadBtn: document.getElementById('report-download-btn'),
+            content: document.getElementById('report-content'),
+        }
     };
 
     const config = {
@@ -392,6 +484,7 @@ Versión: 5.1 (07/10/2025)
 
     let currentScenario = 'completa';
     let charts = {};
+    let lastCalculationData = {};
 
     function initialize() {
         setupEventListeners();
@@ -410,15 +503,30 @@ Versión: 5.1 (07/10/2025)
             calculate();
         });
 
-        ui.flipCards.forEach(card => {
+        document.querySelectorAll('.flip-card').forEach(card => {
             const trigger = card.querySelector('.flip-trigger');
+            const backTrigger = card.querySelector('.flip-back-trigger');
             if(trigger) {
                 trigger.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    card.classList.toggle('is-flipped');
+                    card.classList.add('is-flipped');
+                });
+            }
+             if(backTrigger) {
+                backTrigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    card.classList.remove('is-flipped');
                 });
             }
         });
+        
+        // Report Listeners
+        ui.report.generateBtn.addEventListener('click', () => {
+            ui.report.content.textContent = generateReportText(lastCalculationData);
+            ui.report.modal.classList.remove('opacity-0', 'pointer-events-none');
+        });
+        ui.report.closeBtn.addEventListener('click', () => ui.report.modal.classList.add('opacity-0', 'pointer-events-none'));
+        ui.report.downloadBtn.addEventListener('click', () => downloadPDF(lastCalculationData));
     }
 
     function setScenario(scenario) {
@@ -451,11 +559,10 @@ Versión: 5.1 (07/10/2025)
         };
 
         let capex, tco, totalRevenue, netBenefit, roi, paybackPeriod;
-        let opexY1, opexY2Y3, totalOpex;
+        let totalOpex, financingCost = 0;
         
         if (currentScenario === 'completa') {
             const initialInvestment = values.baseHardware + config.completa.auxComponents + config.completa.configFee + config.completa.physicalInstall;
-            let financingCost = 0;
             if (values.financingTerm > 0) {
                 financingCost = initialInvestment * config.completa.financingInterest * (values.financingTerm / 12);
             }
@@ -472,7 +579,6 @@ Versión: 5.1 (07/10/2025)
         netBenefit = totalRevenue - tco;
         roi = tco > 0 ? (netBenefit / tco) * 100 : 0;
         
-        // Payback Calculation
         const monthlyRevenue = values.newCustomers * values.customerLTV;
         const monthlyOpex = (values.annualLicense + values.annualSupport) / 12;
         let cumulativeNet = -capex;
@@ -491,6 +597,7 @@ Versión: 5.1 (07/10/2025)
             });
         }
 
+        lastCalculationData = { ...values, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, scenario: currentScenario };
         updateUI(roi, tco, paybackPeriod, netBenefit, capex, totalOpex, monthlyData);
     }
     
@@ -508,69 +615,80 @@ Versión: 5.1 (07/10/2025)
 
     function createCharts() {
         const chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { labels: { color: 'white' } }
-            },
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: 'white' } } },
             scales: {
                 x: { ticks: { color: 'white' }, grid: { color: '#334155' } },
                 y: { ticks: { color: 'white' }, grid: { color: '#334155' } }
             }
         };
 
-        charts.roiComponents = new Chart(document.getElementById('roiComponentsChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: ['Análisis de Rentabilidad'],
-                datasets: [
-                    { label: 'Beneficio Neto', data: [], backgroundColor: '#22C55E' },
-                    { label: 'Costo Total (TCO)', data: [], backgroundColor: '#EF4444' }
-                ]
-            },
-            options: chartOptions
-        });
-
-        charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Inversión Inicial (CAPEX)', 'Costos Operativos (OPEX)'],
-                datasets: [{
-                    data: [],
-                    backgroundColor: ['#3B82F6', '#F97316']
-                }]
-            },
-            options: { ...chartOptions, scales: {} }
-        });
-
-        charts.payback = new Chart(document.getElementById('paybackChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: Array.from({ length: 36 }, (_, i) => i + 1),
-                datasets: [
-                    { label: 'Ingresos Acumulados', data: [], borderColor: '#22C55E', tension: 0.1, fill: false },
-                    { label: 'Costos Acumulados', data: [], borderColor: '#EF4444', tension: 0.1, fill: false }
-                ]
-            },
-            options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } }
-        });
+        charts.roiComponents = new Chart(document.getElementById('roiComponentsChart').getContext('2d'), { type: 'bar', data: { labels: ['Análisis de Rentabilidad'], datasets: [{ label: 'Beneficio Neto', data: [], backgroundColor: '#22C55E' }, { label: 'Costo Total (TCO)', data: [], backgroundColor: '#EF4444' }] }, options: chartOptions });
+        charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión Inicial (CAPEX)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
+        charts.payback = new Chart(document.getElementById('paybackChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Ingresos Acumulados', data: [], borderColor: '#22C55E', tension: 0.1, fill: false }, { label: 'Costos Acumulados', data: [], borderColor: '#EF4444', tension: 0.1, fill: false }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
     }
 
     function updateCharts(netBenefit, tco, capex, totalOpex, monthlyData) {
         charts.roiComponents.data.datasets[0].data = [netBenefit];
         charts.roiComponents.data.datasets[1].data = [tco];
         charts.roiComponents.update();
-        
         charts.tcoBreakdown.data.datasets[0].data = [capex, totalOpex];
         charts.tcoBreakdown.update();
-
         charts.payback.data.datasets[0].data = monthlyData.map(d => d.revenue);
         charts.payback.data.datasets[1].data = monthlyData.map(d => d.cost);
         charts.payback.update();
+    }
+    
+    function generateReportText(d) {
+        const scenarioText = d.scenario === 'completa' ? 'Solución Completa (AGT)' : 'Infraestructura Propia (BYOD)';
+        return `
+INFORME DE ANÁLISIS FINANCIERO - SOLUCIÓN AGT OHMYFI
+=====================================================
+Fecha: ${new Date().toLocaleDateString('es-VE')}
+Escenario Simulado: ${scenarioText}
+
+PARÁMETROS DE ENTRADA:
+----------------------
+- Costo Hardware Base: $${d.baseHardware.toLocaleString()}
+- Licencia Anual OhmyFi: $${d.annualLicense.toLocaleString()}
+- Soporte y Mantenimiento Anual: $${d.annualSupport.toLocaleString()}
+- Nuevos Clientes/Mes: ${d.newCustomers}
+- Valor de Vida del Cliente (LTV): $${d.customerLTV.toLocaleString()}
+${d.scenario === 'completa' ? `- Plazo de Financiamiento: ${d.financingTerm} meses` : ''}
+
+RESULTADOS PROYECTADOS A 3 AÑOS:
+--------------------------------
+- INVERSIÓN INICIAL (CAPEX): $${d.capex.toLocaleString()}
+- COSTOS OPERATIVOS TOTALES (OPEX): $${d.totalOpex.toLocaleString()}
+${d.financingCost > 0 ? `- COSTO DE FINANCIAMIENTO: $${d.financingCost.toLocaleString(undefined, {maximumFractionDigits:0})}` : ''}
+
+- COSTO TOTAL DE PROPIEDAD (TCO): $${d.tco.toLocaleString(undefined, {maximumFractionDigits:0})}
+- INGRESOS TOTALES GENERADOS: $${d.totalRevenue.toLocaleString()}
+- BENEFICIO NETO: $${d.netBenefit.toLocaleString(undefined, {maximumFractionDigits:0})}
+
+INDICADORES CLAVE DE RENDIMIENTO (KPI):
+---------------------------------------
+- RETORNO DE LA INVERSIÓN (ROI): ${d.roi.toFixed(0)}%
+- PERÍODO DE RECUPERACIÓN (PAYBACK): ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'No se recupera en 36 meses'}
+
+CONCLUSIÓN:
+-----------
+Bajo los parámetros especificados, la implementación de la solución representa una inversión ${d.roi > 0 ? 'altamente rentable' : 'que requiere revisión'}. El capital invertido se recuperaría en ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'más de 3 años'}, y generaría un retorno del ${d.roi.toFixed(0)}% sobre el costo total en un período de 3 años.
+`;
+    }
+
+    function downloadPDF(d) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const reportText = generateReportText(d);
+        
+        doc.setFont('courier', 'normal');
+        doc.setFontSize(10);
+        doc.text(reportText, 10, 10);
+        doc.save(`Reporte_OhmyFi_${d.scenario}_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
     window.onload = initialize;
 </script>
 </body>
 </html>
-
