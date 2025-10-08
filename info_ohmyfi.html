@@ -1,17 +1,17 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 16.9 (08/10/2025)
+- PDF de Consultoría Inteligente: Se rediseñó la exportación a PDF. Ahora incluye un "Análisis y Recomendación del Consultor" en lenguaje natural que interpreta los resultados de la simulación y ofrece una recomendación estratégica profesional basada en los KPIs.
+- Interactividad Reparada: Se corrigió el error que impedía activar el giro 3D en los gráficos al hacer clic en el ícono de información. La funcionalidad ha sido restaurada.
+- Potenciación Visual: Se reemplazaron todas las imágenes de marcador de posición con las imágenes profesionales proporcionadas, mejorando significativamente el aspecto de la cabecera y el simulador.
+
 Versión: 16.8 (08/10/2025)
 - Inteligencia de Negocio Mejorada: Se enriqueció la cara reversa de todos los gráficos. Ahora incluyen un "Racional Funcional" en lenguaje de negocios para explicar el impacto de cada métrica, además de la "Memoria de Cálculo" con los valores de la simulación.
 
 Versión: 16.7 (08/10/2025)
 - Dashboard de KPIs Avanzado: Se expandió la sección de KPIs a 6 métricas clave (ROI, TCO, Payback, CAPEX, OPEX, Beneficio Neto), organizadas en una cuadrícula de 2x3.
 - Interactividad 3D Total: Se implementó efecto de giro 3D en todas las tarjetas de KPI (al pasar el mouse) y en todos los gráficos (al hacer clic en el ícono de info) para mostrar análisis contextuales.
-- Precisión Gráfica Mejorada: El gráfico "Evolución de Costos Mensuales" ahora desglosa correctamente OPEX, CAPEX y Financiamiento en barras apiladas distintas.
-- Inteligencia Visual en Monte Carlo: La barra con el rango de ROI más probable en la simulación ahora se resalta automáticamente con un color distintivo.
-
-Versión: 16.6 (08/10/2025)
-- Corrección del Payback Financiado: Se ajustó el motor de cálculo del período de recuperación para que el desembolso inicial sea $0 al seleccionar una opción de financiamiento, replicando la lógica correcta de la v6 y asegurando la precisión del KPI.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -167,7 +167,7 @@ Versión: 16.6 (08/10/2025)
 
         <!-- HEADER -->
         <header class="mb-16 text-center">
-            <img src="https://placehold.co/1200x400/0F172A/E2E8F0?text=AGT+OhmyFi" 
+            <img src="https://i.imgur.com/YjSq4q3.png" 
                  alt="Equipo de profesionales analizando datos en un entorno tecnológico"
                  class="w-full h-64 md:h-96 object-cover rounded-xl mb-8 opacity-75">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
@@ -317,6 +317,13 @@ Versión: 16.6 (08/10/2025)
                     </div>
                 </div>
             </div>
+            
+            <div id="scenario-image-container" class="my-8">
+                 <img id="scenario-image" src="https://i.imgur.com/taauS8h.png" 
+                     alt="Técnico instalando un punto de acceso Wi-Fi"
+                     class="w-full h-auto max-h-96 object-cover rounded-lg transition-opacity duration-500">
+            </div>
+
 
             <!-- Dashboard Unificado a Ancho Completo -->
             <div id="dashboard" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -580,20 +587,20 @@ Versión: 16.6 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v16.8 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v16.9 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
 
     <!-- PDF Report Modal -->
     <div id="report-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
-        <div class="bg-slate-800 rounded-lg shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-slate-800 rounded-lg shadow-xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-orange-400">Resumen Ejecutivo de la Simulación</h2>
                 <button id="report-close-btn" class="text-slate-400 hover:text-white">&times;</button>
             </div>
-            <div class="bg-slate-900 p-4 rounded-md mb-6">
-                <pre id="report-content" class="text-sm text-slate-300 whitespace-pre-wrap font-mono"></pre>
+            <div id="report-content-container" class="bg-slate-900 p-6 rounded-md mb-6">
+                <!-- Content will be injected here -->
             </div>
             <div class="text-right">
                 <button id="report-download-btn" class="btn btn-primary"><i data-lucide="download" class="w-5 h-5 mr-2"></i>Descargar PDF</button>
@@ -602,7 +609,7 @@ Versión: 16.6 (08/10/2025)
     </div>
 
 <script>
-    // V16.8 CALCULATION ENGINE - Business Intelligence Explanations
+    // V16.9 CALCULATION ENGINE - Final Polish, PDF Consultant Analysis
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
@@ -614,8 +621,16 @@ Versión: 16.6 (08/10/2025)
         CONVERSION_RATE: 0.10, // v6 Logic
         LEADS_PER_AP: 25      // v6 Logic
     };
+    
+    const IMAGE_URLS = {
+        header: 'https://i.imgur.com/YjSq4q3.png',
+        completa: 'https://i.imgur.com/taauS8h.png',
+        byod: 'https://i.imgur.com/z1hQQnN.png'
+    };
 
     const ui = {
+        headerImage: document.querySelector('header img'),
+        scenarioImage: document.getElementById('scenario-image'),
         buttons: { completa: document.getElementById('btn-completa'), byod: document.getElementById('btn-byod') },
         inputs: { 
             apsIndoor: document.getElementById('aps-indoor'), 
@@ -641,7 +656,7 @@ Versión: 16.6 (08/10/2025)
                 roiComponents: document.getElementById('roiComponents-text')
             }
         },
-        report: { modal: document.getElementById('report-modal'), generateBtn: document.getElementById('generate-report-btn'), closeBtn: document.getElementById('report-close-btn'), downloadBtn: document.getElementById('report-download-btn'), content: document.getElementById('report-content') }
+        report: { modal: document.getElementById('report-modal'), contentContainer: document.getElementById('report-content-container'), generateBtn: document.getElementById('generate-report-btn'), closeBtn: document.getElementById('report-close-btn'), downloadBtn: document.getElementById('report-download-btn') }
     };
 
     let currentScenario = 'completa';
@@ -649,6 +664,7 @@ Versión: 16.6 (08/10/2025)
     let lastCalculationData = {};
 
     function initialize() {
+        ui.headerImage.src = IMAGE_URLS.header;
         setupEventListeners();
         createCharts();
         setScenario('completa');
@@ -660,14 +676,25 @@ Versión: 16.6 (08/10/2025)
         Object.values(ui.inputs).forEach(input => input.addEventListener('input', calculate));
         ui.financing.slider.addEventListener('input', () => { ui.financing.valueLabel.textContent = ui.financing.slider.value; calculate(); });
 
-        document.querySelectorAll('.chart-flip-card').forEach(card => {
-            const trigger = card.querySelector('.flip-trigger');
-            const backTrigger = card.querySelector('.flip-back-trigger');
-            if(trigger) { trigger.addEventListener('click', (e) => { e.stopPropagation(); card.classList.toggle('is-flipped'); }); }
-            if(backTrigger) { backTrigger.addEventListener('click', (e) => { e.stopPropagation(); card.classList.remove('is-flipped'); }); }
+        // Corrected Event Listeners for Chart Flips
+        document.querySelectorAll('.flip-trigger').forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                trigger.closest('.chart-flip-card').classList.add('is-flipped');
+            });
+        });
+
+        document.querySelectorAll('.flip-back-trigger').forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                trigger.closest('.chart-flip-card').classList.remove('is-flipped');
+            });
         });
         
-        ui.report.generateBtn.addEventListener('click', () => { ui.report.content.textContent = generateReportText(lastCalculationData); ui.report.modal.classList.remove('opacity-0', 'pointer-events-none'); });
+        ui.report.generateBtn.addEventListener('click', () => { 
+            ui.report.contentContainer.innerHTML = generateReportHTML(lastCalculationData);
+            ui.report.modal.classList.remove('opacity-0', 'pointer-events-none'); 
+        });
         ui.report.closeBtn.addEventListener('click', () => ui.report.modal.classList.add('opacity-0', 'pointer-events-none'));
         ui.report.downloadBtn.addEventListener('click', () => downloadPDF(lastCalculationData));
         lucide.createIcons();
@@ -681,6 +708,12 @@ Versión: 16.6 (08/10/2025)
         ui.buttons.byod.classList.toggle('btn-secondary', scenario !== 'byod');
         ui.financing.section.style.display = scenario === 'completa' ? 'block' : 'none';
         
+        ui.scenarioImage.style.opacity = 0;
+        setTimeout(() => {
+            ui.scenarioImage.src = scenario === 'completa' ? IMAGE_URLS.completa : IMAGE_URLS.byod;
+            ui.scenarioImage.style.opacity = 1;
+        }, 300);
+
         calculate();
     }
 
@@ -802,39 +835,31 @@ Versión: 16.6 (08/10/2025)
     }
 
     function updateAnalysisTexts(d) {
-        // TCO Breakdown
+        // ... (Analysis text generation remains the same)
         ui.outputs.analysis.tcoBreakdown.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
             Esto te ayuda a entender dónde se va tu dinero. Compara tu inversión inicial (lo que pagas una vez) con tus costos fijos para mantener todo funcionando (lo que pagas recurrentemente).
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
             TCO = (Inversión: ${formatCurrency(d.capex)} + Costo Financ.: ${formatCurrency(d.financingCost)}) + (Costos Operativos: ${formatCurrency(d.totalOpex)})`;
-
-        // TCO Component
         ui.outputs.analysis.tcoComponent.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
             Aquí detallamos tu inversión. Te muestra cuánto corresponde a los equipos físicos (Hardware), cuánto a la instalación y configuración (Servicios), y cuánto a los permisos de uso y soporte (Licencias).
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
             TCO = Hardware (${formatCurrency(d.tcoComponents.hardware)}) + Servicios (${formatCurrency(d.tcoComponents.services)}) + Licencias (${formatCurrency(d.tcoComponents.licenses)})`;
-
-        // Monthly Costs
         ui.outputs.analysis.monthlyCosts.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
             Este es tu flujo de gastos mes a mes. Te permite ver el impacto de la inversión inicial y cómo se distribuyen tus pagos fijos (operativos y de financiamiento) a lo largo del primer año.
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
             Costo Mensual = OPEX (${formatCurrency(d.monthlyData.opexOnly[0])}) + Cuota Financ. (${formatCurrency(d.monthlyData.financing[0])})`;
-
-        // Cumulative Cashflow
         ui.outputs.analysis.cumulativeCashflow.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
             Este es el gráfico más importante para tu rentabilidad. Muestra cómo, mes a mes, los ingresos van pagando la inversión hasta que la línea cruza el 'cero'. Ese es tu punto de equilibrio, cuando empiezas a ganar dinero.
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
             Punto de Equilibrio = Mes en que (Ingresos Acumulados - Costos Acumulados) >= 0. <br><strong>Resultado: Mes ${d.paybackPeriod > 0 ? d.paybackPeriod : 'N/A'}</strong>`;
-            
-        // Monte Carlo
         const positiveProbability = (d.monteCarloResults.filter(r => r > 0).length / d.monteCarloResults.length * 100).toFixed(0);
         ui.outputs.analysis.monteCarlo.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
@@ -842,8 +867,6 @@ Versión: 16.6 (08/10/2025)
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
             Probabilidad de un ROI positivo (mayor a 0%) en 10,000 simulaciones: <strong>${positiveProbability}%</strong>`;
-
-        // Crossover
         const revenueAtPayback = d.paybackPeriod > 0 ? d.monthlyData.revenues[d.paybackPeriod - 1] : 0;
         const costAtPayback = d.paybackPeriod > 0 ? d.monthlyData.costs[d.paybackPeriod - 1] : 0;
         ui.outputs.analysis.crossover.innerHTML = `
@@ -852,8 +875,6 @@ Versión: 16.6 (08/10/2025)
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
             Crossover = Mes ${d.paybackPeriod > 0 ? d.paybackPeriod : 'N/A'}, cuando Ingresos (${formatCurrency(revenueAtPayback)}) superan Costos (${formatCurrency(costAtPayback)})`;
-
-        // ROI Components
         ui.outputs.analysis.roiComponents.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
             En simple: ¿cuánto ganas por cada dólar que inviertes? Comparamos la barra de todo lo que gastas (Costo Total) con la de todo lo que ganas (Ingreso Total). La diferencia es tu ganancia neta.
@@ -862,10 +883,9 @@ Versión: 16.6 (08/10/2025)
             Beneficio Neto = Ingresos Totales (${formatCurrency(d.totalRevenue)}) - TCO (${formatCurrency(d.tco)}) = <strong>${formatCurrency(d.netBenefit)}</strong>`;
     }
 
-
     function createCharts() {
+        // ... (Chart creation remains the same)
         const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
-        
         try { charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión (CAPEX + Finan.)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } }); } catch (e) { console.error("Failed to create tcoBreakdownChart:", e); }
         try { charts.tcoComponentBreakdown = new Chart(document.getElementById('tcoComponentBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias y Soporte'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] }, options: { ...chartOptions, scales: {} } }); } catch (e) { console.error("Failed to create tcoComponentBreakdownChart:", e); }
         try { charts.cumulativeCashflow = new Chart(document.getElementById('cumulativeCashflowChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 37 }, (_, i) => `M${i}`), datasets: [{ label: 'Flujo de Caja Acumulado', data: [], borderColor: '#22C55E', tension: 0.1, fill: true, backgroundColor: 'rgba(34, 197, 94, 0.2)' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } }); } catch (e) { console.error("Failed to create cumulativeCashflowChart:", e); }
@@ -902,62 +922,115 @@ Versión: 16.6 (08/10/2025)
         } catch (e) { console.error("Failed to update monteCarloChart:", e); }
     }
     
-    function generateReportText(d) {
+    function generateConsultantAnalysis(d) {
+        let analysis = `\n\nANÁLISIS Y RECOMENDACIÓN DEL CONSULTOR\n`;
+        analysis += `=========================================\n\n`;
+        analysis += `Actuando como sus consultores especializados en la sinergia entre Ohmyfi y Zoho CRM, hemos interpretado los resultados de la simulación para ofrecerle una recomendación estratégica clara y directa.\n\n`;
+
+        if (d.roi > 0.5 && d.paybackPeriod <= 12) {
+            analysis += `La simulación revela una oportunidad de inversión excepcionalmente sólida. Con un ROI proyectado del ${(d.roi * 100).toFixed(0)}% y un período de recuperación de tan solo ${d.paybackPeriod} meses, el proyecto no solo es financieramente viable, sino que promete una alta rentabilidad a corto plazo. El beneficio neto de ${formatCurrency(d.netBenefit)} a 36 meses subraya el potencial de la solución para convertirse en un centro de ganancias significativo.\n\n`;
+            analysis += `RECOMENDACIÓN: Proceder con la implementación. El bajo riesgo y el rápido retorno sugieren que cualquier retraso podría significar una pérdida de oportunidad para capitalizar la monetización de su red Wi-Fi y la inteligencia de clientes que proporciona la integración con Zoho CRM.`;
+        } else if (d.roi > 0) {
+            analysis += `El análisis indica que el proyecto es rentable en el horizonte de 36 meses, con un ROI positivo del ${(d.roi * 100).toFixed(0)}%. Sin embargo, el período de recuperación de ${d.paybackPeriod} meses sugiere que la recuperación del capital tomará más de un año. Si bien la inversión es segura, su rentabilidad no es inmediata.\n\n`;
+            analysis += `RECOMENDACIÓN: La inversión es aconsejable, pero con un enfoque estratégico en acelerar el retorno. Nuestra sugerencia es utilizar activamente la integración con Zoho CRM desde el primer día para lanzar campañas de marketing dirigidas (up-selling, cross-selling, programas de fidelización) que incrementen el Valor de Vida del Cliente (LTV). Un ligero aumento en el LTV podría reducir drásticamente el período de recuperación y maximizar el ROI final.`;
+        } else {
+            analysis += `Bajo los parámetros actuales, la inversión no alcanza la rentabilidad en el horizonte de 36 meses, resultando en un ROI negativo. El Costo Total de Propiedad (${formatCurrency(d.tco)}) supera los ingresos generados (${formatCurrency(d.totalRevenue)}).\n\n`;
+            analysis += `RECOMENDACIÓN: No proceder con la inversión en este momento. Es crucial revaluar las variables de negocio. Recomendamos un análisis interno para determinar si el Valor de Vida del Cliente (LTV) de ${formatCurrency(d.customerLTV)} está subestimado. La propia implementación de Ohmyfi + Zoho CRM está diseñada para aumentar este LTV, pero es fundamental partir de un escenario base que, al menos, se acerque al punto de equilibrio. Sugerimos realizar una nueva simulación si se identifican oportunidades para mejorar el LTV.`;
+        }
+        
+        if (d.financingTerm > 0) {
+            analysis += `\n\nNOTA SOBRE FINANCIAMIENTO: La elección de un plazo de financiamiento de ${d.financingTerm} meses es una decisión financieramente inteligente, ya que protege el flujo de caja de la empresa al eliminar el desembolso inicial de ${formatCurrency(d.capex)}. Esto hace que el proyecto sea viable desde el primer día sin comprometer la liquidez.`;
+        }
+        return analysis;
+    }
+
+    function generateReportHTML(d) {
+        const dataText = generateDataSummary(d);
+        const analysisText = generateConsultantAnalysis(d).replace(/\n/g, '<br>');
+        return `<pre class="text-sm text-slate-300 whitespace-pre-wrap font-mono">${dataText}</pre><div class="mt-6 pt-6 border-t border-slate-700 text-slate-300 font-sans">${analysisText}</div>`;
+    }
+    
+    function generateDataSummary(d) {
         const scenarioText = d.scenario === 'completa' ? 'Solución Completa (AGT)' : 'Infraestructura Propia (BYOD)';
         let financingText = '';
         if (d.financingTerm > 0) {
             financingText = `
 DETALLES DEL FINANCIAMIENTO:
 ---------------------------
-- Costo Total Financiado: $${(d.capex + d.financingCost).toLocaleString('en-US', {maximumFractionDigits:2})}
-- Plazo: ${d.financingTerm} cuotas mensuales
-- Monto de cada cuota: $${d.monthlyFinancingPayment.toLocaleString('en-US', {maximumFractionDigits:2})}
-`;
+- Plazo: ${d.financingTerm} cuotas mensuales de ${formatCurrency(d.monthlyFinancingPayment)}`;
         }
 
-        return `
-INFORME DE ANÁLISIS FINANCIERO - SOLUCIÓN AGT OHMYFI
+        return `INFORME DE ANÁLISIS FINANCIERO - SOLUCIÓN AGT OHMYFI
 =====================================================
 Fecha: ${new Date().toLocaleDateString('es-VE')}
-Escenario Simulado: ${scenarioText}
+Escenario: ${scenarioText}
 
 PARÁMETROS DE ENTRADA:
 ----------------------
-- APs Interiores: ${d.apsIndoor}, APs Exteriores: ${d.apsOutdoor}, Total APs: ${d.totalAps}
-- Valor de Vida del Cliente (LTV): $${d.customerLTV.toLocaleString()}
-- Costo Mensual de Internet: $${d.internetCost.toLocaleString()}
+- Infraestructura: ${d.totalAps} APs (${d.apsIndoor} Interiores, ${d.apsOutdoor} Exteriores)
+- Valor de Vida del Cliente (LTV): ${formatCurrency(d.customerLTV)}
+- Costo Mensual de Internet: ${formatCurrency(d.internetCost)}
 ${d.scenario === 'completa' ? `- Plazo de Financiamiento: ${d.financingTerm} meses` : ''}
 
 RESULTADOS PROYECTADOS A 3 AÑOS:
 --------------------------------
-- INVERSIÓN INICIAL (CAPEX): $${d.capex.toLocaleString('en-US', {maximumFractionDigits:2})}
-- COSTOS OPERATIVOS TOTALES (OPEX): $${d.totalOpex.toLocaleString('en-US', {maximumFractionDigits:2})}
-${d.financingCost > 0 ? `- COSTO DE FINANCIAMIENTO: $${d.financingCost.toLocaleString('en-US', {maximumFractionDigits:2})}` : ''}
+- Inversión Inicial (CAPEX): ${formatCurrency(d.capex)}
+- Costos Operativos (OPEX): ${formatCurrency(d.totalOpex)}
+- Costo de Financiamiento: ${formatCurrency(d.financingCost)}
+- COSTO TOTAL (TCO): ${formatCurrency(d.tco)}
+- INGRESOS TOTALES: ${formatCurrency(d.totalRevenue)}
+- BENEFICIO NETO: ${formatCurrency(d.netBenefit)}
 
-- COSTO TOTAL DE PROPIEDAD (TCO): $${d.tco.toLocaleString('en-US', {maximumFractionDigits:2})}
-- INGRESOS TOTALES GENERADOS: $${d.totalRevenue.toLocaleString('en-US', {maximumFractionDigits:2})}
-- BENEFICIO NETO: $${d.netBenefit.toLocaleString('en-US', {maximumFractionDigits:2})}
-
-INDICADORES CLAVE DE RENDIMIENTO (KPI):
----------------------------------------
+INDICADORES CLAVE (KPI):
+------------------------
 - RETORNO DE LA INVERSIÓN (ROI): ${(d.roi * 100).toFixed(0)}%
-- PERÍODO DE RECUPERACIÓN (PAYBACK): ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'No se recupera en 36 meses'}
-${financingText}
-CONCLUSIÓN:
------------
-Bajo los parámetros especificados, la implementación representa una inversión ${d.roi > 0 ? 'altamente rentable y de bajo riesgo' : 'que requiere revisión'}. El capital invertido se recuperaría en ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'más de 3 años'}, generando un retorno del ${(d.roi * 100).toFixed(0)}% sobre el costo total.
-`;
+- PERÍODO DE RECUPERACIÓN (PAYBACK): ${d.paybackPeriod > 0 ? `${d.paybackPeriod} meses` : 'No se recupera en 36 meses'}${financingText}`;
     }
 
     function downloadPDF(d) {
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const reportText = generateReportText(d);
+        const doc = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+        const dataSummary = generateDataSummary(d);
+        const consultantAnalysis = generateConsultantAnalysis(d);
+        
+        const margin = 15;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const textWidth = pageWidth - (margin * 2);
+        let y = 20;
+
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text("Informe de Simulación Financiera", pageWidth / 2, y, { align: 'center' });
+        y += 10;
+        
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'normal');
+        doc.text("Solución OhmyFi + Zoho CRM por AGT", pageWidth / 2, y, { align: 'center' });
+        y += 15;
+
         doc.setFont('courier', 'normal');
+        doc.setFontSize(9);
+        doc.text(dataSummary, margin, y);
+        
+        const dataLines = doc.splitTextToSize(dataSummary, textWidth).length;
+        y += (dataLines * 3.5); // Approximate height
+        
+        y += 10;
+        
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
-        doc.text(reportText, 10, 10);
-        doc.save(`Reporte_OhmyFi_${d.scenario}_${new Date().toISOString().slice(0,10)}.pdf`);
+        const analysisLines = doc.splitTextToSize(consultantAnalysis, textWidth);
+
+        if (y + (analysisLines.length * 5) > 280) { // Check if new page is needed
+            doc.addPage();
+            y = 20;
+        }
+        
+        doc.text(analysisLines, margin, y);
+        
+        doc.save(`Reporte_Consultoria_OhmyFi_${d.scenario}_${new Date().toISOString().slice(0,10)}.pdf`);
     }
+
 
     window.onload = initialize;
 </script>
