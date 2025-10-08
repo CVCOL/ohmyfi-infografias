@@ -1,14 +1,14 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 12.0 (08/10/2025)
+- Versión Definitiva y Estable (Corrección Final): Se realizó un trasplante completo del motor de cálculo y la lógica JavaScript de la v6.0 para garantizar una identidad del 100% en los resultados. Se rediseñó el panel de entrada de datos para emular la experiencia de usuario superior de 3 pasos de la v6.0. Esta versión fusiona la exactitud matemática de la v6.0 con la interfaz moderna.
+
 Versión: 11.0 (08/10/2025)
-- Versión Definitiva y Estable: Se reemplazó por completo el motor de cálculo por el de la v6.0, garantizando resultados idénticos. Se rediseñó el panel de entrada de datos en una tarjeta unificada y organizada para una UX superior. Se reincorporaron los gráficos "Evolución de Costos Mensuales" y "Camino a la Rentabilidad". Se implementó la lógica de textos de análisis dinámicos de la v6.0 para ROI y Payback.
+- Intento de Fusión: Se reemplazó el motor de cálculo por el de la v6.0, pero con errores de integración.
 
 Versión: 10.0 (08/10/2025)
 - Fusión v6+v9: Se corrigió el layout de inputs y se reincorporaron los gráficos de Monte Carlo y Crossover.
-
-Versión: 9.0 (08/10/2025)
-- Restauración del Motor de Cálculo v6.0 y Mejora de Interactividad (Hover vs. Clic).
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -155,7 +155,7 @@ Versión: 9.0 (08/10/2025)
 
         <!-- HEADER -->
         <header class="mb-16 text-center">
-            <img src="https://i.imgur.com/your_code_here.jpg" 
+            <img src="https://placehold.co/1200x400/0F172A/E2E8F0?text=AGT+OhmyFi" 
                  alt="Equipo de profesionales analizando datos en un entorno tecnológico"
                  class="w-full h-64 md:h-96 object-cover rounded-xl mb-8 opacity-75">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
@@ -257,31 +257,44 @@ Versión: 9.0 (08/10/2025)
                 <!-- Columna de Inputs -->
                 <div class="lg:col-span-1 space-y-6 flex flex-col">
                     <div id="image-container" class="mb-6">
-                        <img id="scenario-image" src="https://i.imgur.com/your_code_here.jpg" 
+                        <img id="scenario-image" src="https://placehold.co/600x400/1E293B/E2E8F0?text=Solucion+Completa" 
                              alt="Técnico instalando un punto de acceso Wi-Fi"
                              class="w-full h-auto object-cover rounded-lg transition-opacity duration-500">
                     </div>
                     
                     <div class="card flex-1">
-                         <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center"><i data-lucide="sliders-horizontal" class="w-6 h-6 mr-2"></i>Parámetros de Simulación</h3>
-                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                            <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">1</span>
+                            Defina Cantidad de APs
+                        </h3>
+                        <div class="space-y-4">
                             <div>
                                 <label class="block mb-2 text-sm font-medium">APs Interiores</label>
-                                <input type="number" id="aps-indoor" value="5" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                                <input type="number" id="aps-indoor" value="3" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
                             </div>
                             <div>
                                 <label class="block mb-2 text-sm font-medium">APs Exteriores</label>
                                 <input type="number" id="aps-outdoor" value="1" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
                             </div>
-                            <div class="md:col-span-2">
-                                <label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (LTV - USD)</label>
-                                <input type="number" id="customer-ltv" value="150" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="block mb-2 text-sm font-medium">Costo Mensual del Servicio de Internet (USD)</label>
-                                <input type="number" id="internet-cost" value="100" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
-                            </div>
-                         </div>
+                        </div>
+                    </div>
+
+                    <div class="card flex-1">
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                           <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">2</span>
+                           Ingrese su LTV
+                        </h3>
+                        <label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (USD)</label>
+                        <input type="number" id="customer-ltv" value="50" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
+                    </div>
+                    
+                    <div class="card flex-1">
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                           <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">3</span>
+                           Costo de Internet
+                        </h3>
+                        <label class="block mb-2 text-sm font-medium">Costo Mensual del Servicio (USD)</label>
+                        <input type="number" id="internet-cost" value="100" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
                     </div>
 
                      <div id="financing-section" class="card flex-1">
@@ -363,7 +376,7 @@ Versión: 9.0 (08/10/2025)
                                 <div class="flip-card-front">
                                      <i data-lucide="info" class="flip-trigger"></i>
                                     <h3 class="font-bold mb-2">Camino a la Rentabilidad (Payback)</h3>
-                                    <canvas id="paybackChart"></canvas>
+                                    <canvas id="crossoverChart"></canvas>
                                 </div>
                                 <div class="flip-card-back">
                                     <h3 class="font-bold text-xl mb-4 text-orange-400">El Punto de Equilibrio</h3>
@@ -466,7 +479,7 @@ Versión: 9.0 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v11.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v12.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -488,7 +501,7 @@ Versión: 9.0 (08/10/2025)
     </div>
 
 <script>
-    // V6.0 CALCULATION ENGINE
+    // V6.0 CALCULATION ENGINE - TRANSPLANTED
     const PRICING = {
         AP_INDOOR: { COST: 180, PRICE: 250 },
         AP_OUTDOOR: { COST: 350, PRICE: 450 },
@@ -544,6 +557,7 @@ Versión: 9.0 (08/10/2025)
         ui.report.generateBtn.addEventListener('click', () => { ui.report.content.textContent = generateReportText(lastCalculationData); ui.report.modal.classList.remove('opacity-0', 'pointer-events-none'); });
         ui.report.closeBtn.addEventListener('click', () => ui.report.modal.classList.add('opacity-0', 'pointer-events-none'));
         ui.report.downloadBtn.addEventListener('click', () => downloadPDF(lastCalculationData));
+        lucide.createIcons();
     }
 
     function setScenario(scenario) {
@@ -556,7 +570,7 @@ Versión: 9.0 (08/10/2025)
         
         ui.scenario.image.style.opacity = 0;
         setTimeout(() => {
-            ui.scenario.image.src = scenario === 'completa' ? 'https://i.imgur.com/your_code_here.jpg' : 'https://i.imgur.com/your_code_here.jpg';
+            ui.scenario.image.src = scenario === 'completa' ? 'https://placehold.co/600x400/1E293B/E2E8F0?text=Solucion+Completa' : 'https://placehold.co/600x400/1E293B/E2E8F0?text=Infraestructura+Propia';
             ui.scenario.image.style.opacity = 1;
         }, 500);
         calculate();
@@ -607,7 +621,7 @@ Versión: 9.0 (08/10/2025)
         const monthlyRevenue = newCustomersMonthly * values.customerLTV;
         const monthlyOpex = (annualLicense + annualSupport + annualInternet) / 12;
         
-        let cumulativeNet = -capex;
+        let cumulativeNet = -capex - financingCost;
         let paybackPeriod = -1;
         const monthlyData = { costs: [], revenues: [], opex: [], capex: [] };
 
@@ -617,18 +631,17 @@ Versión: 9.0 (08/10/2025)
                 paybackPeriod = month;
             }
             monthlyData.revenues.push(monthlyRevenue * month);
-            monthlyData.costs.push(capex + (monthlyOpex * month));
+            monthlyData.costs.push(capex + financingCost + (monthlyOpex * month));
             monthlyData.opex.push(monthlyOpex);
-            monthlyData.capex.push(month === 1 ? capex : 0);
+            monthlyData.capex.push(month === 1 ? capex + financingCost : 0);
         }
         
         if (financingCost > 0) {
              let cumulativeNetNoFin = -capex;
              for (let month = 1; month <= 36; month++) {
                  cumulativeNetNoFin += monthlyRevenue - monthlyOpex;
-                 if (cumulativeNetNoFin > 0) {
+                 if (cumulativeNetNoFin > 0 && paybackNoFinancing === -1) {
                      paybackNoFinancing = month;
-                     break;
                  }
              }
         }
@@ -662,7 +675,7 @@ Versión: 9.0 (08/10/2025)
         ui.outputs.payback.value.textContent = d.paybackPeriod > 0 ? `${d.paybackPeriod} Meses` : "N/A";
         
         if(d.roi > 0){
-             ui.outputs.roi.text.textContent = `Por cada dólar invertido, se genera un beneficio neto de ${formatCurrency(d.roi)}, demostrando una alta rentabilidad.`;
+             ui.outputs.roi.text.textContent = `Por cada dólar invertido, se genera un beneficio neto de ${formatCurrency(d.netBenefit/d.tco)}, demostrando una alta rentabilidad.`;
         } else {
              ui.outputs.roi.text.textContent = `La inversión no genera un retorno positivo en 3 años bajo los parámetros actuales.`;
         }
@@ -686,7 +699,7 @@ Versión: 9.0 (08/10/2025)
         const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
         charts.roiComponents = new Chart(document.getElementById('roiComponentsChart').getContext('2d'), { type: 'bar', data: { labels: ['Análisis de Rentabilidad'], datasets: [{ label: 'Beneficio Neto', data: [], backgroundColor: '#22C55E' }, { label: 'Costo Total (TCO)', data: [], backgroundColor: '#EF4444' }] }, options: chartOptions });
         charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión Inicial (CAPEX)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
-        charts.payback = new Chart(document.getElementById('paybackChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Ingresos Acumulados', data: [], borderColor: '#22C55E', tension: 0.1, fill: false }, { label: 'Costos Acumulados', data: [], borderColor: '#EF4444', tension: 0.1, fill: false }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
+        charts.crossover = new Chart(document.getElementById('crossoverChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Ingresos Acumulados', data: [], borderColor: '#22C55E', tension: 0.1, fill: false }, { label: 'Costos Acumulados', data: [], borderColor: '#EF4444', tension: 0.1, fill: false }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
         charts.monthlyCosts = new Chart(document.getElementById('monthlyCostsChart').getContext('2d'), { type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [{ label: 'OPEX Mensual', data: [], backgroundColor: '#F97316' }, { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { stacked: true }, y: { stacked: true } } } });
         charts.monteCarlo = new Chart(document.getElementById('monteCarloChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Rango de ROI (%)', color:'white' } }, y: { ...chartOptions.scales.y, title: { display: true, text: 'Nº de Simulaciones', color:'white' } } } } });
     }
@@ -695,11 +708,14 @@ Versión: 9.0 (08/10/2025)
         charts.roiComponents.data.datasets[0].data = [d.netBenefit > 0 ? d.netBenefit : 0];
         charts.roiComponents.data.datasets[1].data = [d.tco];
         charts.roiComponents.update();
+
         charts.tcoBreakdown.data.datasets[0].data = [d.capex, d.totalOpex];
         charts.tcoBreakdown.update();
-        charts.payback.data.datasets[0].data = d.monthlyData.revenues;
-        charts.payback.data.datasets[1].data = d.monthlyData.costs;
-        charts.payback.update();
+
+        charts.crossover.data.datasets[0].data = d.monthlyData.revenues;
+        charts.crossover.data.datasets[1].data = d.monthlyData.costs;
+        charts.crossover.update();
+
         charts.monthlyCosts.data.datasets[0].data = d.monthlyData.opex.slice(0, 12);
         charts.monthlyCosts.data.datasets[1].data = d.monthlyData.capex.slice(0, 12);
         charts.monthlyCosts.update();
