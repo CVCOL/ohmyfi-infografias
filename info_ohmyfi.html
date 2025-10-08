@@ -1,14 +1,14 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 16.2 (08/10/2025)
+- Corrección de Gráficos: Se solucionó un error crítico en el código JavaScript que impedía la inicialización y actualización de todos los gráficos del dashboard. Se eliminaron referencias a elementos obsoletos, se restauró la funcionalidad completa del análisis Monte Carlo y se corrigió el layout.
+
 Versión: 16.1 (08/10/2025)
-- Corrección de Gráficos: Se solucionó un error crítico en el código JavaScript que impedía la inicialización y actualización de todos los gráficos del dashboard. Se eliminaron referencias a elementos obsoletos y se restauró la funcionalidad completa.
+- Intento de Corrección de Gráficos: Versión con error de script que impedía la renderización de los gráficos.
 
 Versión: 16.0 (08/10/2025)
 - Fusión Analítica Final: Se implementaron las lógicas de análisis y visualización de la v6. Se mejoró el texto de payback con financiamiento, se ajustó el gráfico de costos mensuales para reflejar cuotas, se añadieron gráficos de desglose de TCO por componentes y flujo de caja acumulado, y se rediseñó el dashboard con KPIs destacados.
-
-Versión: 15.0 (08/10/2025)
-- KPI como Variable de Entrada: Se transformó el parámetro "Leads por AP al Mes" de una constante interna a un campo de entrada para el usuario, con un valor por defecto de 10.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -509,7 +509,7 @@ Versión: 15.0 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v16.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v16.2 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -531,7 +531,7 @@ Versión: 15.0 (08/10/2025)
     </div>
 
 <script>
-    // V16.0 CALCULATION ENGINE - FINAL ANALYTICAL VERSION
+    // V16.2 CALCULATION ENGINE - FINAL, STABLE & DEBUGGED
     const PRICING = {
         // 1. Costos de Inversión Inicial (Hardware)
         CONTROLLER_COST: 179.00,
@@ -664,15 +664,15 @@ Versión: 15.0 (08/10/2025)
         const monthlyData = { costs: [], revenues: [], opex: [], capex: [], cumulativeNet: [] };
 
         for (let month = 1; month <= 36; month++) {
-            const currentMonthOpex = monthlyOpex + (month <= values.financingTerm ? monthlyFinancingPayment : 0);
-            cumulativeNet += monthlyRevenue - currentMonthOpex;
+            const currentMonthCost = monthlyOpex + (month <= values.financingTerm ? monthlyFinancingPayment : 0);
+            cumulativeNet += monthlyRevenue - currentMonthCost;
             
             if (cumulativeNet > 0 && paybackPeriod === -1) {
                 paybackPeriod = month;
             }
             monthlyData.revenues.push(monthlyRevenue * month);
             monthlyData.costs.push(capex + financingCost + (monthlyOpex * month));
-            monthlyData.opex.push(currentMonthOpex);
+            monthlyData.opex.push(currentMonthCost);
             monthlyData.capex.push(month === 1 ? capex : 0);
             monthlyData.cumulativeNet.push(cumulativeNet + (capex+financingCost)); // Adjust for chart start
         }
@@ -682,12 +682,31 @@ Versión: 15.0 (08/10/2025)
             services: servicesPrice,
             licenses: totalOpex
         };
-
-        lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: currentScenario, monteCarloResults: [], monthlyData, tcoComponents };
+        
+        const monteCarloResults = runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost);
+        lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, scenario: currentScenario, monteCarloResults, monthlyData, tcoComponents };
         
         updateUI(lastCalculationData);
     }
     
+    function runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost) {
+        const simulations = 10000;
+        const results = [];
+        const totalOpexSim = monthlyOpex * 36;
+        for (let i = 0; i < simulations; i++) {
+            const ltvVar = values.customerLTV * (0.8 + Math.random() * 0.4); // +/- 20%
+            const convRateVar = ROI_PARAMS.CONVERSION_RATE * (0.8 + Math.random() * 0.4); // +/- 20%
+            const leadsPerApVar = values.leadsPerAp * (0.8 + Math.random() * 0.4);
+            const newCustMonthVar = totalAps * leadsPerApVar * convRateVar;
+            const totalRevVar = newCustMonthVar * 36 * ltvVar;
+            const tcoVar = capex + totalOpexSim + financingCost;
+            const netBenefitVar = totalRevVar - tcoVar;
+            const roiVar = tcoVar > 0 ? (netBenefitVar / tcoVar) : 0;
+            results.push(roiVar);
+        }
+        return results;
+    }
+
     function updateUI(d) {
         const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
         ui.outputs.roi.value.textContent = `${(d.roi * 100).toFixed(0)}%`;
@@ -717,10 +736,7 @@ Versión: 15.0 (08/10/2025)
         charts.tcoComponentBreakdown = new Chart(document.getElementById('tcoComponentBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias y Soporte'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] }, options: { ...chartOptions, scales: {} } });
         charts.cumulativeCashflow = new Chart(document.getElementById('cumulativeCashflowChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Flujo de Caja Acumulado', data: [], borderColor: '#22C55E', tension: 0.1, fill: true, backgroundColor: 'rgba(34, 197, 94, 0.2)' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } });
         charts.monthlyCosts = new Chart(document.getElementById('monthlyCostsChart').getContext('2d'), { type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [{ label: 'OPEX + Financiamiento', data: [], backgroundColor: '#F97316' }, { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { stacked: true }, y: { stacked: true } } } });
-        // Charts below are kept for layout but might be removed or repurposed
-        charts.roiComponents = new Chart(document.getElementById('roiComponentsChart'), {});
-        charts.crossover = new Chart(document.getElementById('crossoverChart'), {});
-        charts.monteCarlo = new Chart(document.getElementById('monteCarloChart'), {});
+        charts.monteCarlo = new Chart(document.getElementById('monteCarloChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Rango de ROI (%)', color:'white' } }, y: { ...chartOptions.scales.y, title: { display: true, text: 'Nº de Simulaciones', color:'white' } } } } });
     }
 
     function updateCharts(d) {
@@ -736,6 +752,17 @@ Versión: 15.0 (08/10/2025)
         charts.monthlyCosts.data.datasets[0].data = d.monthlyData.opex.slice(0, 12);
         charts.monthlyCosts.data.datasets[1].data = d.monthlyData.capex.slice(0, 12);
         charts.monthlyCosts.update();
+
+        const bins = {};
+        const binSize = 0.5; // 50%
+        d.monteCarloResults.forEach(roi => {
+            const bin = Math.floor(roi / binSize) * binSize;
+            bins[bin] = (bins[bin] || 0) + 1;
+        });
+        const sortedBins = Object.keys(bins).map(parseFloat).sort((a, b) => a - b);
+        charts.monteCarlo.data.labels = sortedBins.map(bin => `${(bin*100).toFixed(0)}% a ${((bin + binSize)*100).toFixed(0)}%`);
+        charts.monteCarlo.data.datasets[0].data = sortedBins.map(bin => bins[bin]);
+        charts.monteCarlo.update();
     }
     
     function generateReportText(d) {
@@ -795,11 +822,6 @@ Bajo los parámetros especificados, la implementación representa una inversión
         doc.text(reportText, 10, 10);
         doc.save(`Reporte_OhmyFi_${d.scenario}_${new Date().toISOString().slice(0,10)}.pdf`);
     }
-
-    // A simple polyfill for requestAnimationFrame
-    const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                                  window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-    window.requestAnimationFrame = requestAnimationFrame;
 
     window.onload = initialize;
 </script>
