@@ -1,16 +1,17 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 20.0 (08/10/2025)
+- Rediseño Estratégico de Contenido y UX (Versión Final):
+  1.  Se rediseñó la sección "El Viaje del Dato" como un diagrama de flujo dinámico y se añadió una nueva sección "El Ecosistema Zoho CRM Plus" para explicar el valor de las herramientas integradas.
+  2.  Se corrigió el desbordamiento de contenido en el panel de control y se mejoró la UX haciendo las tarjetas interactivas.
+  3.  Se integraron nuevas imágenes de fondo y logos para potenciar el profesionalismo y la narrativa visual de la infografía, asegurando la adaptabilidad en dispositivos móviles.
+
 Versión: 19.0 (08/10/2025)
-- Inteligencia de Contenido y UX (Versión Final):
-  1.  Se añadieron dos nuevas secciones de infografía basadas en el análisis de mercado: una comparativa visual "Gasto vs. Activo" y una de prueba social con "Marcas que confían en la tecnología".
-  2.  Se implementó capacidad 3D interactiva en las tarjetas del panel de control ("Infraestructura", "Métricas", "Costos") para explicar cada variable de entrada al usuario.
+- Inteligencia de Contenido y UX: Se añadieron secciones de "Gasto vs. Activo" y "Prueba Social". Se implementó interactividad 3D en el panel de control.
 
 Versión: 18.0 (08/10/2025)
-- Plataforma de Modelado de Negocio: Se reintrodujeron los controles para "Leads" y "Conversión" como sliders. Se implementó un sistema de calificación visual ("Semáforo") en los KPIs, con análisis dinámicos en el reverso de cada tarjeta.
-
-Versión: 17.0 (08/10/2025)
-- UX y Consultoría Mejoradas: Se reposicionó el botón de descarga del PDF. Se corrigió el bug de interactividad en los gráficos. El informe PDF fue enriquecido para incluir el análisis de riesgo de Monte Carlo y una nueva sección de consultoría estratégica.
+- Plataforma de Modelado de Negocio: Se reintrodujeron los controles para "Leads" y "Conversión" como sliders. Se implementó un sistema de calificación visual ("Semáforo") en los KPIs.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -97,6 +98,9 @@ Versión: 17.0 (08/10/2025)
             perspective: 1000px;
             min-height: 220px;
         }
+        .control-panel-card {
+            min-height: 380px;
+        }
         .kpi-flip-card {
              min-height: 180px;
         }
@@ -165,6 +169,9 @@ Versión: 17.0 (08/10/2025)
             .chart-flip-card {
                 height: 450px; /* Altura original para pantallas medianas y grandes */
             }
+            .control-panel-card {
+                min-height: 340px;
+            }
         }
     </style>
 </head>
@@ -183,76 +190,48 @@ Versión: 17.0 (08/10/2025)
             <p class="section-subtitle">Descubra cómo la solución OhmyFi + Zoho CRM, implementada por AGT, convierte su red de invitados en un motor de inteligencia de negocios y crecimiento para el mercado venezolano.</p>
         </header>
 
-        <!-- DATA JOURNEY SECTION -->
+        <!-- DATA JOURNEY SECTION - Redesigned -->
         <section class="mb-20">
-            <h2 class="section-title">El Viaje del Dato: De Conexión a Conversión</h2>
-            <p class="section-subtitle">Visualice el flujo de valor. Así es como convertimos una simple conexión Wi-Fi en una relación rentable y medible con sus clientes.</p>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
-                
-                <div class="flip-card hover-flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front card text-center">
-                             <i data-lucide="wifi" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
-                             <h3 class="font-bold text-lg mb-2">1. Conexión</h3>
-                             <p class="text-sm text-slate-400">El cliente se conecta al Wi-Fi gratuito a través de un portal cautivo personalizado.</p>
-                        </div>
-                        <div class="flip-card-back text-center">
-                             <h3 class="font-bold text-lg mb-2 text-orange-400">Portal de Marca</h3>
-                             <p class="text-sm text-slate-300">El primer contacto es clave. Creamos un portal de acceso con su identidad de marca que ofrece una experiencia de conexión segura y profesional.</p>
-                        </div>
+            <h2 class="section-title">El Flujo de Datos Inteligente</h2>
+            <p class="section-subtitle">Este no es un simple Wi-Fi. Es un ciclo automatizado de adquisición y conversión de clientes.</p>
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-center space-y-8 md:space-y-0 md:space-x-4">
+                <!-- Step 1 -->
+                <div class="flex flex-col items-center text-center max-w-[200px] mx-auto">
+                    <div class="bg-slate-800 rounded-full p-4 mb-3 border-2 border-orange-500">
+                        <i data-lucide="wifi" class="w-10 h-10 text-orange-500"></i>
                     </div>
+                    <h3 class="font-bold text-lg">1. Conexión y Captura</h3>
+                    <p class="text-sm text-slate-400">El cliente se conecta al Wi-Fi a través de un portal de marca, entregando sus datos con consentimiento.</p>
                 </div>
-                <div class="flip-card hover-flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front card text-center">
-                            <i data-lucide="database" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
-                            <h3 class="font-bold text-lg mb-2">2. Captura</h3>
-                            <p class="text-sm text-slate-400">Se capturan datos de primera mano (First-Party Data) con consentimiento explícito.</p>
-                        </div>
-                        <div class="flip-card-back text-center">
-                            <h3 class="font-bold text-lg mb-2 text-orange-400">Activo de Datos</h3>
-                            <p class="text-sm text-slate-300">Los "First-Party Data" son su activo más valioso: precisos, relevantes y obtenidos con consentimiento para una personalización efectiva y legal.</p>
-                        </div>
+                <i data-lucide="arrow-right" class="w-10 h-10 text-slate-600 hidden md:block"></i>
+                <i data-lucide="arrow-down" class="w-10 h-10 text-slate-600 md:hidden mx-auto"></i>
+                <!-- Step 2 -->
+                <div class="flex flex-col items-center text-center max-w-[200px] mx-auto">
+                    <div class="bg-slate-800 rounded-full p-4 mb-3 border-2 border-orange-500">
+                         <i data-lucide="users" class="w-10 h-10 text-orange-500"></i>
                     </div>
+                    <h3 class="font-bold text-lg">2. Perfilamiento 360°</h3>
+                    <p class="text-sm text-slate-400">El dato viaja a Zoho CRM, donde se crea o enriquece el perfil del cliente con su comportamiento físico.</p>
                 </div>
-                <div class="flip-card hover-flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front card text-center">
-                            <i data-lucide="users" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
-                            <h3 class="font-bold text-lg mb-2">3. Perfilamiento</h3>
-                            <p class="text-sm text-slate-400">El perfil del cliente se crea o actualiza automáticamente en Zoho CRM.</p>
-                        </div>
-                         <div class="flip-card-back text-center">
-                            <h3 class="font-bold text-lg mb-2 text-orange-400">Inteligencia 360°</h3>
-                            <p class="text-sm text-slate-300">La integración nativa con Zoho CRM enriquece el perfil del cliente, unificando su comportamiento online y offline para una visión completa.</p>
-                        </div>
+                 <i data-lucide="arrow-right" class="w-10 h-10 text-slate-600 hidden md:block"></i>
+                 <i data-lucide="arrow-down" class="w-10 h-10 text-slate-600 md:hidden mx-auto"></i>
+                <!-- Step 3 -->
+                <div class="flex flex-col items-center text-center max-w-[200px] mx-auto">
+                    <div class="bg-slate-800 rounded-full p-4 mb-3 border-2 border-orange-500">
+                         <i data-lucide="send" class="w-10 h-10 text-orange-500"></i>
                     </div>
+                    <h3 class="font-bold text-lg">3. Marketing Automatizado</h3>
+                    <p class="text-sm text-slate-400">Zoho Campaigns y SalesIQ activan secuencias de email, SMS o chat personalizadas según la visita.</p>
                 </div>
-                 <div class="flip-card hover-flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front card text-center">
-                            <i data-lucide="send" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
-                            <h3 class="font-bold text-lg mb-2">4. Activación</h3>
-                            <p class="text-sm text-slate-400">Se disparan campañas de marketing automatizadas y personalizadas.</p>
-                        </div>
-                        <div class="flip-card-back text-center">
-                           <h3 class="font-bold text-lg mb-2 text-orange-400">Marketing de Precisión</h3>
-                           <p class="text-sm text-slate-300">La automatización permite impactar al cliente correcto en el momento oportuno con ofertas relevantes que impulsan la conversión.</p>
-                        </div>
+                 <i data-lucide="arrow-right" class="w-10 h-10 text-slate-600 hidden md:block"></i>
+                 <i data-lucide="arrow-down" class="w-10 h-10 text-slate-600 md:hidden mx-auto"></i>
+                <!-- Step 4 -->
+                <div class="flex flex-col items-center text-center max-w-[200px] mx-auto">
+                    <div class="bg-slate-800 rounded-full p-4 mb-3 border-2 border-orange-500">
+                         <i data-lucide="dollar-sign" class="w-10 h-10 text-orange-500"></i>
                     </div>
-                </div>
-                <div class="flip-card hover-flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front card text-center">
-                            <i data-lucide="bar-chart-2" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
-                            <h3 class="font-bold text-lg mb-2">5. Medición</h3>
-                            <p class="text-sm text-slate-400">Se mide el ROI, LTV y el impacto real de cada interacción en las ventas.</p>
-                        </div>
-                        <div class="flip-card-back text-center">
-                            <h3 class="font-bold text-lg mb-2 text-orange-400">Cierre del Ciclo</h3>
-                            <p class="text-sm text-slate-300">La solución permite atribuir ventas a las campañas de WiFi Marketing, demostrando el valor tangible y el ROI. Dejamos de adivinar y empezamos a medir.</p>
-                        </div>
-                    </div>
+                    <h3 class="font-bold text-lg">4. Venta y Medición</h3>
+                    <p class="text-sm text-slate-400">La venta se atribuye a la campaña de Wi-Fi Marketing, cerrando el ciclo y demostrando el ROI en Zoho Analytics.</p>
                 </div>
             </div>
         </section>
@@ -279,6 +258,34 @@ Versión: 17.0 (08/10/2025)
                         <li class="flex items-start"><i data-lucide="check-circle" class="w-5 h-5 mr-3 text-green-400 flex-shrink-0 mt-1"></i><span>Se integra con Zoho CRM para automatizar el marketing.</span></li>
                         <li class="flex items-start"><i data-lucide="check-circle" class="w-5 h-5 mr-3 text-green-400 flex-shrink-0 mt-1"></i><span>Genera ingresos y demuestra el ROI de cada campaña.</span></li>
                     </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ZOHO ECOSYSTEM SECTION -->
+        <section class="mb-20">
+            <h2 class="section-title">El Ecosistema Zoho CRM Plus: Su Centro de Operaciones</h2>
+            <p class="section-subtitle">Ohmyfi es la puerta de entrada. Zoho CRM Plus es el motor que convierte los datos en relaciones y ventas.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card text-center">
+                    <img src="https://www.zoho.com/sites/zweb/images/crm/crm-logo.svg" alt="Zoho CRM" class="h-12 mx-auto mb-4"/>
+                    <h3 class="font-bold text-lg mb-2">Zoho CRM</h3>
+                    <p class="text-sm text-slate-400">El núcleo donde vive el perfil de su cliente. Unifica todas las interacciones en una vista 360°.</p>
+                </div>
+                 <div class="card text-center">
+                    <img src="https://www.zoho.com/sites/zweb/images/campaigns/zoho-campaigns.svg" alt="Zoho Campaigns" class="h-12 mx-auto mb-4"/>
+                    <h3 class="font-bold text-lg mb-2">Zoho Campaigns</h3>
+                    <p class="text-sm text-slate-400">Le permite enviar campañas de email y SMS automatizadas para fomentar la re-compra y la fidelización.</p>
+                </div>
+                 <div class="card text-center">
+                    <img src="https://www.zoho.com/sites/zweb/images/salesiq/salesiq-logo.svg" alt="Zoho SalesIQ" class="h-12 mx-auto mb-4"/>
+                    <h3 class="font-bold text-lg mb-2">Zoho SalesIQ</h3>
+                    <p class="text-sm text-slate-400">Interactúe con los visitantes de su web en tiempo real y ofrezca promociones vía chat basadas en sus visitas físicas.</p>
+                </div>
+                 <div class="card text-center">
+                    <img src="https://www.zoho.com/sites/zweb/images/analytics/zoho-analytics.svg" alt="Zoho Analytics" class="h-12 mx-auto mb-4"/>
+                    <h3 class="font-bold text-lg mb-2">Zoho Analytics</h3>
+                    <p class="text-sm text-slate-400">Crea dashboards para medir el impacto real de sus campañas, atribuyendo ventas al WiFi Marketing y calculando el ROI.</p>
                 </div>
             </div>
         </section>
@@ -314,7 +321,7 @@ Versión: 17.0 (08/10/2025)
             <!-- Panel de Control Horizontal -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <!-- Panel 1: Infraestructura -->
-                <div class="flip-card hover-flip-card">
+                <div class="flip-card hover-flip-card control-panel-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card bg-slate-800/50">
                             <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
@@ -340,7 +347,7 @@ Versión: 17.0 (08/10/2025)
                 </div>
 
                 <!-- Panel 2: Métricas de Negocio -->
-                 <div class="flip-card hover-flip-card">
+                 <div class="flip-card hover-flip-card control-panel-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card bg-slate-800/50">
                             <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
@@ -376,7 +383,7 @@ Versión: 17.0 (08/10/2025)
                 </div>
                 
                 <!-- Panel 3: Costos y Financiamiento -->
-                <div class="flip-card hover-flip-card">
+                <div class="flip-card hover-flip-card control-panel-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card bg-slate-800/50">
                              <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
@@ -679,7 +686,7 @@ Versión: 17.0 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v18.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v19.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -701,7 +708,7 @@ Versión: 17.0 (08/10/2025)
     </div>
 
 <script>
-    // V18.0 CALCULATION ENGINE - Business Modeling Platform (Final)
+    // V19.0 CALCULATION ENGINE - Final Version with Full Interactivity and Content
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
