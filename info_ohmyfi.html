@@ -1,16 +1,17 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 18.0 (08/10/2025)
+- Versión Definitiva - Plataforma de Modelado de Negocio:
+  1.  Se reintrodujeron los controles para "Leads por AP al Mes" y "Tasa de Conversión" como sliders, transformando la herramienta en un potente simulador de escenarios.
+  2.  Se implementó un sistema de calificación visual ("Semáforo") con bordes de color dinámicos en las tarjetas de KPI (ROI, Payback, Beneficio Neto) para una interpretación instantánea.
+  3.  El reverso de cada tarjeta de KPI ahora muestra un análisis dinámico que explica el racional detrás de la calificación (Malo, Regular, Bueno, Excepcional), completando la capa de inteligencia de negocio.
+
 Versión: 17.0 (08/10/2025)
-- UX y Consultoría Mejoradas (Versión Final): Se reposicionó el botón de descarga del PDF a una ubicación más intuitiva. Se corrigió el bug de interactividad en los gráficos. El informe PDF fue enriquecido para incluir el análisis de riesgo de Monte Carlo y una nueva sección de consultoría sobre los beneficios estratégicos de la transformación digital, consolidando la herramienta como un potente instrumento de toma de decisiones.
+- UX y Consultoría Mejoradas: Se reposicionó el botón de descarga del PDF. Se corrigió el bug de interactividad en los gráficos. El informe PDF fue enriquecido para incluir el análisis de riesgo de Monte Carlo y una nueva sección de consultoría estratégica.
 
 Versión: 16.9 (08/10/2025)
-- PDF de Consultoría Inteligente: Se rediseñó la exportación a PDF. Ahora incluye un "Análisis y Recomendación del Consultor" en lenguaje natural que interpreta los resultados de la simulación y ofrece una recomendación estratégica profesional basada en los KPIs.
-- Interactividad Reparada: Se corrigió el error que impedía activar el giro 3D en los gráficos al hacer clic en el ícono de información. La funcionalidad ha sido restaurada.
-- Potenciación Visual: Se reemplazaron todas las imágenes de marcador de posición con las imágenes profesionales proporcionadas, mejorando significativamente el aspecto de la cabecera y el simulador.
-
-Versión: 16.8 (08/10/2025)
-- Inteligencia de Negocio Mejorada: Se enriqueció la cara reversa de todos los gráficos. Ahora incluyen un "Racional Funcional" en lenguaje de negocios para explicar el impacto de cada métrica, además de la "Memoria de Cálculo" con los valores de la simulación.
+- PDF de Consultoría Inteligente y Mejoras Visuales: Se rediseñó la exportación a PDF para incluir un análisis consultivo. Se reparó la interactividad de los gráficos y se integraron las imágenes profesionales.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -95,7 +96,7 @@ Versión: 16.8 (08/10/2025)
             background-color: transparent;
             width: 100%;
             perspective: 1000px;
-            min-height: 220px; /* SOLUCIÓN: Restablecer altura mínima para tarjetas de info */
+            min-height: 220px;
         }
         .kpi-flip-card {
              min-height: 180px;
@@ -134,8 +135,9 @@ Versión: 16.8 (08/10/2025)
             align-items: center;
             background-color: #1E293B; /* Slate 800 */
             border-radius: 0.75rem;
-            border: 1px solid #334155; /* Slate 700 */
+            border: 2px solid #334155; /* Slate 700 */
             padding: 1.5rem;
+            transition: border-color 0.5s ease;
         }
         .flip-card-back {
             transform: rotateY(180deg);
@@ -153,6 +155,13 @@ Versión: 16.8 (08/10/2025)
         .flip-trigger:hover {
             color: var(--agt-orange);
         }
+
+        /* KPI Rating Colors */
+        .rating-bad { border-color: #F87171; /* red-400 */ }
+        .rating-regular { border-color: #F97316; /* orange-500 */ }
+        .rating-good { border-color: #4ADE80; /* green-400 */ }
+        .rating-excellent { border-color: #2DD4BF; /* cyan-400 */ }
+
         @media (min-width: 768px) {
             .chart-flip-card {
                 height: 450px; /* Altura original para pantallas medianas y grandes */
@@ -294,6 +303,14 @@ Versión: 16.8 (08/10/2025)
                             <label class="block mb-2 text-sm font-medium">Valor de Vida del Cliente (LTV)</label>
                             <input type="number" id="customer-ltv" value="50" min="0" class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:ring-orange-500 focus:border-orange-500">
                         </div>
+                        <div>
+                           <label for="leads-per-ap" class="block mb-2 text-sm font-medium">Leads por AP al Mes: <span id="leads-per-ap-value" class="font-bold text-orange-400">25</span></label>
+                           <input type="range" id="leads-per-ap" min="5" max="100" value="25" step="5" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                         <div>
+                           <label for="conversion-rate" class="block mb-2 text-sm font-medium">Tasa de Conversión: <span id="conversion-rate-value" class="font-bold text-orange-400">10</span>%</label>
+                           <input type="range" id="conversion-rate" min="1" max="50" value="10" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                        </div>
                     </div>
                 </div>
                 
@@ -327,19 +344,19 @@ Versión: 16.8 (08/10/2025)
             <div id="dashboard" class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 <!-- KPI Cards - Row 1 -->
-                <div class="flip-card kpi-flip-card hover-flip-card">
+                <div id="roi-card" class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front text-center">
                             <h3 class="text-lg font-semibold text-slate-400">Retorno de la Inversión (ROI)</h3>
                             <p id="roi-value" class="text-5xl font-extrabold text-green-400 my-2">0%</p>
                         </div>
                         <div class="flip-card-back">
-                            <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del ROI</h3>
-                            <p id="roi-text" class="text-sm text-slate-300">Este es el indicador final de rentabilidad. Muestra el porcentaje de ganancia neta sobre el costo total de la inversión a 36 meses.</p>
+                            <h3 id="roi-rating" class="font-bold text-lg mb-2"></h3>
+                            <p id="roi-text" class="text-sm text-slate-300"></p>
                         </div>
                     </div>
                 </div>
-                <div class="flip-card kpi-flip-card hover-flip-card">
+                <div id="tco-card" class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front text-center">
                             <h3 class="text-lg font-semibold text-slate-400">Costo Total (TCO)</h3>
@@ -351,21 +368,21 @@ Versión: 16.8 (08/10/2025)
                         </div>
                     </div>
                 </div>
-                <div class="flip-card kpi-flip-card hover-flip-card">
+                <div id="payback-card" class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front text-center">
                              <h3 class="text-lg font-semibold text-slate-400">Período de Recuperación</h3>
                              <p id="payback-value" class="text-4xl font-bold text-blue-400 my-2">0 Meses</p>
                         </div>
                         <div class="flip-card-back">
-                             <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del Payback</h3>
-                             <p id="payback-text" class="text-sm text-slate-300">Indica el mes exacto en que los ingresos acumulados cubren la totalidad de los costos acumulados. A partir de este punto, la inversión genera ganancias netas.</p>
+                             <h3 id="payback-rating" class="font-bold text-lg mb-2"></h3>
+                             <p id="payback-text" class="text-sm text-slate-300"></p>
                         </div>
                     </div>
                 </div>
 
                 <!-- KPI Cards - Row 2 -->
-                <div class="flip-card kpi-flip-card hover-flip-card">
+                <div id="capex-card" class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front text-center">
                             <h3 class="text-lg font-semibold text-slate-400">Inversión Inicial (CAPEX)</h3>
@@ -377,7 +394,7 @@ Versión: 16.8 (08/10/2025)
                         </div>
                     </div>
                 </div>
-                <div class="flip-card kpi-flip-card hover-flip-card">
+                <div id="opex-card" class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front text-center">
                             <h3 class="text-lg font-semibold text-slate-400">Costos Operativos (OPEX)</h3>
@@ -389,15 +406,15 @@ Versión: 16.8 (08/10/2025)
                         </div>
                     </div>
                 </div>
-                <div class="flip-card kpi-flip-card hover-flip-card">
+                <div id="net-benefit-card" class="flip-card kpi-flip-card hover-flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front text-center">
                              <h3 class="text-lg font-semibold text-slate-400">Beneficio Neto</h3>
                              <p id="net-benefit-value" class="text-4xl font-bold text-green-400 my-2">$0</p>
                         </div>
                         <div class="flip-card-back">
-                             <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis del Beneficio</h3>
-                             <p id="net-benefit-text" class="text-sm text-slate-300">Es el resultado final después de 36 meses: Ingresos Totales Generados menos el Costo Total de Propiedad (TCO). Es la ganancia real del proyecto.</p>
+                             <h3 id="net-benefit-rating" class="font-bold text-lg mb-2"></h3>
+                             <p id="net-benefit-text" class="text-sm text-slate-300"></p>
                         </div>
                     </div>
                 </div>
@@ -589,7 +606,7 @@ Versión: 16.8 (08/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <p class="text-slate-400">Simulador Financiero v17.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v18.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -611,17 +628,12 @@ Versión: 16.8 (08/10/2025)
     </div>
 
 <script>
-    // V17.0 CALCULATION ENGINE - Final Version with Enhanced UX and Consultant PDF
+    // V18.0 CALCULATION ENGINE - Business Modeling Platform (Final)
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
         LICENSE_OHMYFI_PER_AP_MONTHLY: 16.00, LICENSE_ZOHO_FIXED_MONTHLY: 50.00,
         FINANCING_RATES: { "0": 0, "1": 0.25, "2": 0.30, "3": 0.35 }
-    };
-
-    const ROI_PARAMS = {
-        CONVERSION_RATE: 0.10, // v6 Logic
-        LEADS_PER_AP: 25      // v6 Logic
     };
     
     const IMAGE_URLS = {
@@ -639,15 +651,17 @@ Versión: 16.8 (08/10/2025)
             apsOutdoor: document.getElementById('aps-outdoor'), 
             customerLTV: document.getElementById('customer-ltv'), 
             internetCost: document.getElementById('internet-cost'),
+            leadsPerAp: { slider: document.getElementById('leads-per-ap'), value: document.getElementById('leads-per-ap-value') },
+            conversionRate: { slider: document.getElementById('conversion-rate'), value: document.getElementById('conversion-rate-value') }
         },
         financing: { section: document.getElementById('financing-section'), slider: document.getElementById('financing-term'), valueLabel: document.getElementById('financing-term-value') },
         outputs: { 
-            roi: { value: document.getElementById('roi-value'), text: document.getElementById('roi-text') }, 
-            tco: { value: document.getElementById('tco-value'), text: document.getElementById('tco-text') }, 
-            payback: { value: document.getElementById('payback-value'), text: document.getElementById('payback-text') },
-            capex: { value: document.getElementById('capex-value'), text: document.getElementById('capex-text') },
-            opex: { value: document.getElementById('opex-value'), text: document.getElementById('opex-text') },
-            netBenefit: { value: document.getElementById('net-benefit-value'), text: document.getElementById('net-benefit-text') },
+            roi: { card: document.getElementById('roi-card'), value: document.getElementById('roi-value'), text: document.getElementById('roi-text'), rating: document.getElementById('roi-rating') }, 
+            tco: { card: document.getElementById('tco-card'), value: document.getElementById('tco-value'), text: document.getElementById('tco-text') }, 
+            payback: { card: document.getElementById('payback-card'), value: document.getElementById('payback-value'), text: document.getElementById('payback-text'), rating: document.getElementById('payback-rating') },
+            capex: { card: document.getElementById('capex-card'), value: document.getElementById('capex-value'), text: document.getElementById('capex-text') },
+            opex: { card: document.getElementById('opex-card'), value: document.getElementById('opex-value'), text: document.getElementById('opex-text') },
+            netBenefit: { card: document.getElementById('net-benefit-card'), value: document.getElementById('net-benefit-value'), text: document.getElementById('net-benefit-text'), rating: document.getElementById('net-benefit-rating') },
             analysis: {
                 tcoBreakdown: document.getElementById('tcoBreakdown-text'),
                 tcoComponent: document.getElementById('tcoComponent-text'),
@@ -675,10 +689,22 @@ Versión: 16.8 (08/10/2025)
     function setupEventListeners() {
         ui.buttons.completa.addEventListener('click', () => setScenario('completa'));
         ui.buttons.byod.addEventListener('click', () => setScenario('byod'));
-        Object.values(ui.inputs).forEach(input => input.addEventListener('input', calculate));
+        
+        ['apsIndoor', 'apsOutdoor', 'customerLTV', 'internetCost'].forEach(id => {
+            ui.inputs[id].addEventListener('input', calculate);
+        });
+
+        ui.inputs.leadsPerAp.slider.addEventListener('input', (e) => {
+            ui.inputs.leadsPerAp.value.textContent = e.target.value;
+            calculate();
+        });
+        ui.inputs.conversionRate.slider.addEventListener('input', (e) => {
+            ui.inputs.conversionRate.value.textContent = e.target.value;
+            calculate();
+        });
+
         ui.financing.slider.addEventListener('input', () => { ui.financing.valueLabel.textContent = ui.financing.slider.value; calculate(); });
 
-        // Corrected Event Listeners for Chart Flips using event delegation
         document.getElementById('dashboard').addEventListener('click', function(e) {
             const flipTrigger = e.target.closest('.flip-trigger');
             const backTrigger = e.target.closest('.flip-back-trigger');
@@ -726,7 +752,9 @@ Versión: 16.8 (08/10/2025)
                 apsOutdoor: parseInt(ui.inputs.apsOutdoor.value) || 0,
                 customerLTV: parseFloat(ui.inputs.customerLTV.value) || 0,
                 internetCost: parseFloat(ui.inputs.internetCost.value) || 0,
-                financingTerm: parseInt(ui.financing.slider.value, 10) || 0
+                financingTerm: parseInt(ui.financing.slider.value, 10) || 0,
+                leadsPerAp: parseInt(ui.inputs.leadsPerAp.slider.value) || 0,
+                conversionRate: (parseInt(ui.inputs.conversionRate.slider.value) || 0) / 100
             };
 
             const totalAps = values.apsIndoor + values.apsOutdoor;
@@ -755,7 +783,7 @@ Versión: 16.8 (08/10/2025)
             }
             
             const tco = capex + totalOpex + financingCost;
-            const newCustomersMonthly = totalAps * ROI_PARAMS.LEADS_PER_AP * ROI_PARAMS.CONVERSION_RATE;
+            const newCustomersMonthly = totalAps * values.leadsPerAp * values.conversionRate;
             const monthlyRevenue = newCustomersMonthly * values.customerLTV;
             const totalRevenue = monthlyRevenue * 36;
             const netBenefit = totalRevenue - tco;
@@ -801,9 +829,9 @@ Versión: 16.8 (08/10/2025)
         const results = [];
         const totalOpexSim = monthlyOpex * 36;
         for (let i = 0; i < simulations; i++) {
-            const ltvVar = values.customerLTV * (0.8 + Math.random() * 0.4); // +/- 20%
-            const convRateVar = ROI_PARAMS.CONVERSION_RATE * (0.8 + Math.random() * 0.4); // +/- 20%
-            const leadsPerApVar = ROI_PARAMS.LEADS_PER_AP * (0.8 + Math.random() * 0.4);
+            const ltvVar = values.customerLTV * (0.8 + Math.random() * 0.4);
+            const convRateVar = values.conversionRate * (0.8 + Math.random() * 0.4);
+            const leadsPerApVar = values.leadsPerAp * (0.8 + Math.random() * 0.4);
             const newCustMonthVar = totalAps * leadsPerApVar * convRateVar;
             const totalRevVar = newCustMonthVar * 36 * ltvVar;
             const tcoVar = capex + totalOpexSim + financingCost;
@@ -824,17 +852,54 @@ Versión: 16.8 (08/10/2025)
         ui.outputs.opex.value.textContent = formatCurrency(d.totalOpex);
         ui.outputs.netBenefit.value.textContent = formatCurrency(d.netBenefit);
 
-        if(d.financingTerm > 0 && d.paybackPeriod > 0){
-            ui.outputs.payback.text.innerHTML = `Al optar por el financiamiento a <strong>${d.financingTerm} meses</strong>, el desembolso inicial es $0. Esto protege su liquidez y permite que el punto de equilibrio se alcance en solo <strong>${d.paybackPeriod} meses</strong>.`;
-        } else if (d.paybackPeriod > 0) {
-            ui.outputs.payback.text.textContent = `La inversión inicial se recupera y la solución empieza a generar ganancias netas en el mes ${d.paybackPeriod}.`;
-        } else {
-            ui.outputs.payback.text.textContent = 'Bajo este escenario, los ingresos generados no logran cubrir los costos totales en el período de 36 meses.';
-        }
-        
+        updateKpiRatings(d);
         updateAnalysisTexts(d);
         updateCharts(d);
     }
+
+    function updateKpiRatings(d) {
+        const setRating = (el, rating, ratingText, color, explanation) => {
+            const cardFront = el.card.querySelector('.flip-card-front');
+            cardFront.className = 'flip-card-front text-center ' + rating;
+            el.rating.textContent = ratingText;
+            el.rating.style.color = color;
+            el.text.innerHTML = explanation;
+        };
+
+        // ROI Rating
+        if (d.roi < 0) {
+            setRating(ui.outputs.roi, 'rating-bad', 'Resultado Malo', '#F87171', 'El proyecto no es rentable en 36 meses; los costos superan los ingresos.');
+        } else if (d.roi <= 0.5) {
+            setRating(ui.outputs.roi, 'rating-regular', 'Resultado Regular', '#F97316', 'La rentabilidad es positiva pero baja. Se recomienda optimizar las variables de negocio para mejorar el retorno.');
+        } else if (d.roi <= 1.5) {
+            setRating(ui.outputs.roi, 'rating-good', 'Resultado Bueno', '#4ADE80', 'La inversión genera un retorno sólido y saludable sobre el costo total, indicando un proyecto financieramente viable.');
+        } else {
+            setRating(ui.outputs.roi, 'rating-excellent', 'Resultado Excepcional', '#2DD4BF', 'Un ROI superior al 150% indica una oportunidad de alta rentabilidad con un potencial de ganancia muy significativo.');
+        }
+
+        // Payback Rating
+        if (d.paybackPeriod <= 0 || d.paybackPeriod > 35) {
+            setRating(ui.outputs.payback, 'rating-bad', 'Resultado Malo', '#F87171', 'La inversión no se recupera en el período de 3 años, lo que representa un riesgo financiero alto.');
+        } else if (d.paybackPeriod > 18) {
+            setRating(ui.outputs.payback, 'rating-regular', 'Resultado Regular', '#F97316', 'La recuperación de la inversión toma más de un año y medio. Se debe considerar el impacto en el flujo de caja a largo plazo.');
+        } else if (d.paybackPeriod > 11) {
+            setRating(ui.outputs.payback, 'rating-good', 'Resultado Bueno', '#4ADE80', 'La inversión se recupera en un plazo razonable (entre 12 y 18 meses), equilibrando riesgo y velocidad de retorno.');
+        } else {
+            setRating(ui.outputs.payback, 'rating-excellent', 'Resultado Excepcional', '#2DD4BF', 'Una recuperación en menos de un año indica una altísima velocidad de retorno. La inversión es segura y genera ganancias rápidamente.');
+        }
+        
+        // Net Benefit Rating
+        if (d.netBenefit <= 0) {
+            setRating(ui.outputs.netBenefit, 'rating-bad', 'Resultado Malo', '#F87171', 'El proyecto genera una pérdida neta. Los costos totales superan los ingresos generados durante el período.');
+        } else if (d.netBenefit <= d.capex) {
+            setRating(ui.outputs.netBenefit, 'rating-regular', 'Resultado Regular', '#F97316', 'La ganancia neta es positiva, pero no logra superar el monto de la inversión inicial (CAPEX).');
+        } else if (d.netBenefit <= d.capex * 2) {
+             setRating(ui.outputs.netBenefit, 'rating-good', 'Resultado Bueno', '#4ADE80', 'El proyecto genera una ganancia neta saludable, superando el valor de la inversión inicial.');
+        } else {
+            setRating(ui.outputs.netBenefit, 'rating-excellent', 'Resultado Excepcional', '#2DD4BF', 'La ganancia neta es más del doble de la inversión inicial, indicando un proyecto de muy alto rendimiento.');
+        }
+    }
+
 
     function updateAnalysisTexts(d) {
         ui.outputs.analysis.tcoBreakdown.innerHTML = `
@@ -987,6 +1052,8 @@ PARÁMETROS DE ENTRADA:
 ----------------------
 - Infraestructura: ${d.totalAps} APs (${d.apsIndoor} Interiores, ${d.apsOutdoor} Exteriores)
 - Valor de Vida del Cliente (LTV): ${formatCurrency(d.customerLTV)}
+- Leads por AP al Mes: ${d.leadsPerAp}
+- Tasa de Conversión: ${(d.conversionRate * 100).toFixed(0)}%
 - Costo Mensual de Internet: ${formatCurrency(d.internetCost)}
 ${d.scenario === 'completa' ? `- Plazo de Financiamiento: ${d.financingTerm} meses` : ''}
 
