@@ -4,17 +4,27 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 32.0 (10/10/2025)
+- Título: Dinamismo Visual en Secciones Estratégicas
+- Cambios:
+  1.  Interactividad 3D en "La Ventaja AGT": Se transformó la sección en una
+      tarjeta 3D interactiva con una imagen de cabecera para un mayor
+      impacto visual.
+  2.  Interactividad 3D en "Ideal para Venezuela": Las tres tarjetas de esta
+      sección ahora son interactivas, cada una con su propia imagen y un
+      análisis detallado en el reverso.
+  3.  Actualización de Logo Zoho Zia: Se integró el logo oficial de Zoho Zia,
+      reemplazando el ícono genérico para mantener la coherencia de marca.
+
 Versión: 31.0 (10/10/2025)
 - Título: Integración de Contenido Estratégico
 - Cambios:
   1.  Se añadió la sección "La Ventaja AGT" para posicionar la oferta como una
-      estrategia de negocio completa, no solo una herramienta.
+      estrategia de negocio completa.
   2.  Se incorporó la sección "¿Por qué esta solución es ideal para Venezuela?"
-      para conectar directamente con las realidades del mercado local.
+      para conectar con las realidades del mercado local.
   3.  Se agregó a "Zia (IA)" en el ecosistema Zoho para destacar las
-      capacidades de inteligencia artificial y análisis predictivo.
-  4.  Se reforzó el concepto de "automatización" en la sección "El Viaje del Dato"
-      para clarificar que el marketing se activa sin intervención manual.
+      capacidades de inteligencia artificial.
 
 Versión: 30.0 (10/10/2025)
 - Título: Refinamiento Final de Gráfico en Reporte PDF
@@ -24,16 +34,6 @@ Versión: 30.0 (10/10/2025)
      configuración de "alta fidelidad" para impresión.
   2. PDF - Optimización de Logo: Se afinó el cálculo de la proporción del
      logo para garantizar que se muestre nítido y sin distorsión.
-
-Versión: 29.0 (10/10/2025)
-- Título: Versión Final de Reporte PDF Profesional
-- Cambios:
-  1. PDF - Gráfico Profesional: Se implementó una lógica para renderizar
-     el gráfico del reporte con un estilo profesional para impresión.
-  2. PDF - Logo Corregido y Actualizado: Se actualizó la URL del logo y se
-     ajustó el código para que siempre respete su proporción original.
-  3. PDF - Legibilidad de Texto: Se cambió la alineación de los párrafos a
-     izquierda para una lectura más cómoda y profesional.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -167,6 +167,7 @@ Versión: 29.0 (10/10/2025)
             border: 2px solid #334155; /* Slate 700 */
             padding: 1.5rem;
             transition: border-color 0.5s ease;
+            overflow: hidden; /* To contain rounded images */
         }
         .flip-card-back {
             transform: rotateY(180deg);
@@ -249,11 +250,23 @@ Versión: 29.0 (10/10/2025)
 
         <!-- AGT ADVANTAGE SECTION -->
         <section class="mb-20">
-             <div class="card border-l-4 border-orange-500 bg-slate-800/50 max-w-4xl mx-auto text-center">
-                <h2 class="text-2xl font-bold text-orange-400 mb-3">La Ventaja AGT: Más que una Herramienta, una Estrategia de Negocio</h2>
-                <p class="text-slate-300">Mientras otros ofrecen un portal de WiFi, AGT entrega un ecosistema de cliente completo y pre-integrado. No solo capturamos los datos; los ponemos a trabajar para usted <span class="font-bold">automáticamente</span> a través de Zoho CRM, generando ventas y midiendo el retorno de su inversión desde el primer día.</p>
+            <div class="flip-card hover-flip-card max-w-4xl mx-auto" style="min-height: 350px;">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front card !p-0">
+                        <img src="https://i.imgur.com/C1mP9Ab.jpg" alt="Estrategia de Negocio" class="w-full h-48 object-cover">
+                        <div class="p-6 text-center">
+                            <h2 class="text-2xl font-bold text-orange-400 mb-3">La Ventaja AGT: Estrategia, no solo Herramientas</h2>
+                            <p class="text-slate-300">Descubra la diferencia entre un proveedor de software y un socio estratégico.</p>
+                        </div>
+                    </div>
+                    <div class="flip-card-back card border-l-4 border-orange-500">
+                        <h3 class="font-bold text-lg mb-2 text-orange-400">Nuestra Filosofía</h3>
+                        <p class="text-sm text-slate-300">Mientras otros venden un portal de WiFi, AGT entrega un ecosistema de cliente completo, pre-integrado y listo para generar valor. No solo capturamos los datos; los convertimos en ventas automatizadas y medibles a través de Zoho CRM. Nuestra ventaja es la sinergia: una solución cohesiva que trabaja para usted desde el primer día, transformando su inversión en un motor de crecimiento predecible.</p>
+                    </div>
+                </div>
             </div>
         </section>
+
 
         <!-- DATA JOURNEY SECTION -->
         <section class="mb-20">
@@ -333,21 +346,57 @@ Versión: 29.0 (10/10/2025)
         <section class="mb-20">
             <h2 class="section-title">¿Por qué esta solución es ideal para Venezuela?</h2>
             <p class="section-subtitle">Una estrategia diseñada para las realidades y oportunidades del mercado venezolano.</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                <div class="card text-center border-t-4 border-orange-500">
-                    <i data-lucide="rocket" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
-                    <h3 class="font-bold text-xl mb-2">Responde a la Digitalización</h3>
-                    <p class="text-slate-400">Es el primer paso ideal para la transformación digital de una Pyme. Automatiza procesos de marketing y ventas, permitiendo hacer más con menos presupuesto.</p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                
+                <div class="flip-card hover-flip-card" style="min-height: 420px;">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card !p-0 text-center">
+                            <img src="https://i.imgur.com/v82v7z1.jpg" alt="Digitalización Pyme" class="w-full h-40 object-cover">
+                            <div class="p-6">
+                                <i data-lucide="rocket" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Responde a la Digitalización</h3>
+                                <p class="text-slate-400">El primer paso ideal para la transformación digital de una Pyme.</p>
+                            </div>
+                        </div>
+                        <div class="flip-card-back card">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Hacer Más con Menos</h3>
+                            <p class="text-sm text-slate-300">En un entorno donde la eficiencia es clave, esta solución automatiza tareas de marketing y ventas que consumirían horas de trabajo. Le permite competir con empresas más grandes sin necesidad de un gran equipo, optimizando su presupuesto y enfocando sus recursos en crecer.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card text-center border-t-4 border-orange-500">
-                    <i data-lucide="shield-check" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
-                    <h3 class="font-bold text-xl mb-2">Construye Activos Propios</h3>
-                    <p class="text-slate-400">En una economía incierta, su base de datos de clientes es su activo más valioso. Reduzca la dependencia de la publicidad externa y comuníquese directamente con su público.</p>
+
+                <div class="flip-card hover-flip-card" style="min-height: 420px;">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card !p-0 text-center">
+                             <img src="https://i.imgur.com/Z8s3iYd.jpg" alt="Base de Datos de Clientes" class="w-full h-40 object-cover">
+                            <div class="p-6">
+                                <i data-lucide="shield-check" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Construye Activos Propios</h3>
+                                <p class="text-slate-400">Su base de datos de clientes es su activo más valioso y resiliente.</p>
+                            </div>
+                        </div>
+                        <div class="flip-card-back card">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Independencia y Control</h3>
+                            <p class="text-sm text-slate-300">En una economía volátil, depender de la publicidad en redes sociales es un riesgo. Esta solución le permite construir una base de datos de clientes (First-Party Data) que es 100% suya. Es un activo que no se devalúa y le da un canal de comunicación directo y de bajo costo con su público.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card text-center border-t-4 border-orange-500">
-                    <i data-lucide="dollar-sign" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
-                    <h3 class="font-bold text-xl mb-2">Supera Barreras de Costo</h3>
-                    <p class="text-slate-400">Con hardware costo-efectivo y modelos de adquisición flexibles, la barrera de entrada es baja, protegiendo el flujo de caja de su negocio mientras invierte en crecimiento.</p>
+
+                <div class="flip-card hover-flip-card" style="min-height: 420px;">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card !p-0 text-center">
+                             <img src="https://i.imgur.com/T5g1z2p.jpg" alt="Crecimiento Financiero" class="w-full h-40 object-cover">
+                            <div class="p-6">
+                                <i data-lucide="dollar-sign" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Supera Barreras de Costo</h3>
+                                <p class="text-slate-400">Una inversión inteligente con modelos de adquisición flexibles.</p>
+                            </div>
+                        </div>
+                        <div class="flip-card-back card">
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Flujo de Caja Protegido</h3>
+                             <p class="text-sm text-slate-300">Entendemos la importancia de proteger el flujo de caja. Por eso, la solución se basa en hardware costo-efectivo y ofrecemos modelos de financiamiento que eliminan la necesidad de un gran desembolso inicial, permitiéndole invertir en crecimiento de forma sostenible.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -412,7 +461,7 @@ Versión: 29.0 (10/10/2025)
                  <div class="flip-card hover-flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card items-center text-center">
-                            <i data-lucide="brain-circuit" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
+                            <img src="https://i.imgur.com/BxwjUbN.png" alt="Zoho Zia" class="h-12 mx-auto mb-4"/>
                             <h3 class="font-bold text-lg mb-2">Zia (IA)</h3>
                             <p class="text-sm text-slate-400">Su asistente de inteligencia artificial.</p>
                         </div>
