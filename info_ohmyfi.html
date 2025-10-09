@@ -1,18 +1,16 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 24.0 (09/10/2025)
+- Mejora de Interactividad y Dinamismo Visual:
+  1.  Se convirtieron las tarjetas de la sección "Ecosistema Zoho" en interactivas con efecto 3D para detallar los beneficios de cada aplicación.
+  2.  Se transformó la sección estática de "Marcas Globales" en un riel animado con los logos a full color para una presentación más dinámica y profesional.
+
 Versión: 23.0 (09/10/2025)
-- Pulido Visual Final:
-  1.  Se reemplazaron todos los logos de marcador de posición con los enlaces directos proporcionados, reparando las imágenes rotas en las secciones "Ecosistema Zoho" y "Marcas Globales".
-  2.  Se actualizó la numeración a la versión final del proyecto.
+- Pulido Visual Final: Se reemplazaron todos los logos de marcador de posición con los enlaces directos proporcionados, reparando las imágenes rotas.
 
 Versión: 22.0 (09/10/2025)
-- Corrección y Pulido Final de UX:
-  1.  Se rediseñó la sección "El Flujo de Datos" para utilizar las tarjetas 3D interactivas, restaurando la coherencia visual y funcional de la infografía.
-  2.  Se corrigió el etiquetado del control de versiones para reflejar la secuencia correcta de cambios.
-
-Versión: 21.0 (09/10/2025)
-- Versión de Consultoría: Se enriqueció el informe PDF con logo, introducción y cierre. Se añadieron las secciones estratégicas "Flujo de Datos Inteligente" y "Ecosistema Zoho". Se corrigió el desbordamiento en el panel de control.
+- Corrección y Pulido Final de UX: Se rediseñó la sección "El Flujo de Datos" para utilizar las tarjetas 3D interactivas, restaurando la coherencia visual.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -39,6 +37,7 @@ Versión: 21.0 (09/10/2025)
             font-family: 'Inter', sans-serif;
             background-color: var(--agt-dark);
             color: var(--agt-text);
+            overflow-x: hidden; /* Prevent horizontal scroll from marquee */
         }
         .section-title {
             font-size: 2.25rem;
@@ -165,6 +164,38 @@ Versión: 21.0 (09/10/2025)
         .rating-regular { border-color: #F97316; /* orange-500 */ }
         .rating-good { border-color: #4ADE80; /* green-400 */ }
         .rating-excellent { border-color: #2DD4BF; /* cyan-400 */ }
+
+        /* Logo Reel Animation */
+        .logo-reel-container {
+            width: 100%;
+            overflow: hidden;
+            padding: 2rem 0;
+            position: relative;
+            -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+        }
+        .logo-reel {
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            will-change: transform;
+            animation: scroll 40s linear infinite;
+        }
+        .logo-reel:hover {
+            animation-play-state: paused;
+        }
+        .logo-reel img {
+            height: 4rem; /* 64px */
+            margin: 0 2.5rem; /* 40px */
+            transition: transform 0.3s;
+        }
+        .logo-reel img:hover {
+            transform: scale(1.1);
+        }
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
 
         @media (min-width: 768px) {
             .chart-flip-card {
@@ -296,25 +327,57 @@ Versión: 21.0 (09/10/2025)
             <h2 class="section-title">El Ecosistema Zoho CRM Plus: Su Centro de Operaciones</h2>
             <p class="section-subtitle">Ohmyfi es la puerta de entrada. Zoho CRM Plus es el motor que convierte los datos en relaciones y ventas.</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="card text-center">
-                    <img src="https://i.imgur.com/vGUbfh4.png" alt="Zoho CRM" class="h-12 mx-auto mb-4"/>
-                    <h3 class="font-bold text-lg mb-2">Zoho CRM</h3>
-                    <p class="text-sm text-slate-400">El núcleo donde vive el perfil de su cliente. Unifica todas las interacciones en una vista 360°.</p>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card text-center">
+                            <img src="https://i.imgur.com/vGUbfh4.png" alt="Zoho CRM" class="h-12 mx-auto mb-4"/>
+                            <h3 class="font-bold text-lg mb-2">Zoho CRM</h3>
+                            <p class="text-sm text-slate-400">El núcleo donde vive el perfil de su cliente.</p>
+                        </div>
+                        <div class="flip-card-back text-center">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Beneficio Principal</h3>
+                            <p class="text-sm text-slate-300">Unifica todas las interacciones del cliente (visitas físicas, compras, clics en emails) en una vista 360°, permitiendo una personalización sin precedentes.</p>
+                        </div>
+                    </div>
                 </div>
-                 <div class="card text-center">
-                    <img src="https://i.imgur.com/p0X7vdu.png" alt="Zoho Campaigns" class="h-12 mx-auto mb-4"/>
-                    <h3 class="font-bold text-lg mb-2">Zoho Campaigns</h3>
-                    <p class="text-sm text-slate-400">Le permite enviar campañas de email y SMS automatizadas para fomentar la re-compra y la fidelización.</p>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card text-center">
+                            <img src="https://i.imgur.com/p0X7vdu.png" alt="Zoho Campaigns" class="h-12 mx-auto mb-4"/>
+                            <h3 class="font-bold text-lg mb-2">Zoho Campaigns</h3>
+                            <p class="text-sm text-slate-400">Su herramienta de Email y SMS Marketing.</p>
+                        </div>
+                        <div class="flip-card-back text-center">
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Beneficio Principal</h3>
+                             <p class="text-sm text-slate-300">Envíe campañas automáticas basadas en el comportamiento. Ejemplo: "Te extrañamos, vuelve y obtén un 10% de descuento".</p>
+                        </div>
+                    </div>
                 </div>
-                 <div class="card text-center">
-                    <img src="https://i.imgur.com/UlKNamV.png" alt="Zoho SalesIQ" class="h-12 mx-auto mb-4"/>
-                    <h3 class="font-bold text-lg mb-2">Zoho SalesIQ</h3>
-                    <p class="text-sm text-slate-400">Interactúe con los visitantes de su web en tiempo real y ofrezca promociones vía chat basadas en sus visitas físicas.</p>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card text-center">
+                            <img src="https://i.imgur.com/UlKNamV.png" alt="Zoho SalesIQ" class="h-12 mx-auto mb-4"/>
+                            <h3 class="font-bold text-lg mb-2">Zoho SalesIQ</h3>
+                            <p class="text-sm text-slate-400">Chat en vivo y seguimiento de visitantes.</p>
+                        </div>
+                         <div class="flip-card-back text-center">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Beneficio Principal</h3>
+                            <p class="text-sm text-slate-300">Conecte el mundo físico y digital. Identifique a un cliente que visitó su local y ahora navega su web para ofrecerle una promoción por chat en tiempo real.</p>
+                        </div>
+                    </div>
                 </div>
-                 <div class="card text-center">
-                    <img src="https://i.imgur.com/5hDHBht.png" alt="Zoho Analytics" class="h-12 mx-auto mb-4"/>
-                    <h3 class="font-bold text-lg mb-2">Zoho Analytics</h3>
-                    <p class="text-sm text-slate-400">Crea dashboards para medir el impacto real de sus campañas, atribuyendo ventas al WiFi Marketing y calculando el ROI.</p>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card text-center">
+                            <img src="https://i.imgur.com/5hDHBht.png" alt="Zoho Analytics" class="h-12 mx-auto mb-4"/>
+                            <h3 class="font-bold text-lg mb-2">Zoho Analytics</h3>
+                            <p class="text-sm text-slate-400">Inteligencia de Negocios y reportería.</p>
+                        </div>
+                        <div class="flip-card-back text-center">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Beneficio Principal</h3>
+                            <p class="text-sm text-slate-300">Cree dashboards que midan el impacto real de sus campañas de WiFi Marketing, atribuyendo ventas a interacciones específicas y calculando el ROI con precisión.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -322,13 +385,19 @@ Versión: 21.0 (09/10/2025)
         <!-- SOCIAL PROOF SECTION -->
         <section class="mb-20">
              <h2 class="section-title">Marcas Globales Confían en la Tecnología</h2>
-             <div class="card">
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 items-center">
-                    <img src="https://i.imgur.com/I7i00PR.png" alt="Starbucks Logo" class="mx-auto h-16 grayscale opacity-60 hover:opacity-100 transition-opacity">
-                    <img src="https://i.imgur.com/N7TPBc7.jpeg" alt="Hard Rock Cafe Logo" class="mx-auto h-12 grayscale opacity-60 hover:opacity-100 transition-opacity">
-                    <img src="https://i.imgur.com/nWat6TK.png" alt="Subway Logo" class="mx-auto h-10 grayscale opacity-60 hover:opacity-100 transition-opacity">
-                    <img src="https://i.imgur.com/0c7CCzU.png" alt="Cinnabon Logo" class="mx-auto h-16 grayscale opacity-60 hover:opacity-100 transition-opacity">
-                    <img src="https://i.imgur.com/KeMScND.png" alt="Avianca Logo" class="mx-auto h-10 grayscale opacity-60 hover:opacity-100 transition-opacity">
+             <div class="card logo-reel-container">
+                <div class="logo-reel">
+                    <img src="https://i.imgur.com/I7i00PR.png" alt="Starbucks Logo">
+                    <img src="https://i.imgur.com/N7TPBc7.jpeg" alt="Hard Rock Cafe Logo">
+                    <img src="https://i.imgur.com/nWat6TK.png" alt="Subway Logo">
+                    <img src="https://i.imgur.com/0c7CCzU.png" alt="Cinnabon Logo">
+                    <img src="https://i.imgur.com/KeMScND.png" alt="Avianca Logo">
+                    <!-- Duplicated for infinite scroll -->
+                    <img src="https://i.imgur.com/I7i00PR.png" alt="Starbucks Logo">
+                    <img src="https://i.imgur.com/N7TPBc7.jpeg" alt="Hard Rock Cafe Logo">
+                    <img src="https://i.imgur.com/nWat6TK.png" alt="Subway Logo">
+                    <img src="https://i.imgur.com/0c7CCzU.png" alt="Cinnabon Logo">
+                    <img src="https://i.imgur.com/KeMScND.png" alt="Avianca Logo">
                 </div>
             </div>
         </section>
@@ -738,7 +807,7 @@ Versión: 21.0 (09/10/2025)
     </div>
 
 <script>
-    // V19.0 CALCULATION ENGINE - Final Version with Full Interactivity and Content
+    // V23.0 CALCULATION ENGINE - Final Version with Full Interactivity and Content
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
@@ -1267,5 +1336,4 @@ INDICADORES CLAVE (KPI):
 </script>
 </body>
 </html>
-
 
