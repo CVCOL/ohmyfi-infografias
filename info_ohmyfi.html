@@ -1,17 +1,16 @@
 <!--
 CONTROL DE VERSIONES
 =====================
+Versión: 22.0 (09/10/2025)
+- Corrección y Pulido Final de UX:
+  1.  Se rediseñó la sección "El Flujo de Datos" para utilizar las tarjetas 3D interactivas, restaurando la coherencia visual y funcional de la infografía.
+  2.  Se corrigió el etiquetado del control de versiones para reflejar la secuencia correcta de cambios.
+
 Versión: 21.0 (09/10/2025)
-- Versión Final de Consultoría:
-  1.  Se enriqueció el informe PDF para incluir el logo de AGT, una introducción con el objetivo del informe y un cierre con agradecimiento y próximos pasos.
-  2.  Se rediseñó la sección "El Viaje del Dato" como un diagrama de flujo dinámico y se añadió la sección estratégica "El Ecosistema Zoho CRM Plus".
-  3.  Se implementó interactividad 3D en las tarjetas del panel de control y se corrigió el desbordamiento de contenido en la tarjeta de "Métricas".
+- Versión de Consultoría: Se enriqueció el informe PDF con logo, introducción y cierre. Se añadieron las secciones estratégicas "Flujo de Datos Inteligente" y "Ecosistema Zoho". Se corrigió el desbordamiento en el panel de control.
 
 Versión: 20.0 (08/10/2025)
-- Plataforma de Modelado de Negocio: Se reintrodujeron los controles para "Leads" y "Conversión" como sliders. Se implementó un sistema de calificación visual ("Semáforo") en los KPIs, con análisis dinámicos en el reverso de cada tarjeta.
-
-Versión: 19.0 (08/10/2025)
-- Inteligencia de Contenido y UX: Se añadieron secciones de "Gasto vs. Activo" y "Prueba Social". Se implementó interactividad 3D en el panel de control.
+- Plataforma de Modelado de Negocio: Se reintrodujeron los controles para "Leads" y "Conversión". Se implementó el sistema de calificación visual ("Semáforo") en los KPIs.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -190,48 +189,76 @@ Versión: 19.0 (08/10/2025)
             <p class="section-subtitle">Descubra cómo la solución OhmyFi + Zoho CRM, implementada por AGT, convierte su red de invitados en un motor de inteligencia de negocios y crecimiento para el mercado venezolano.</p>
         </header>
 
-        <!-- DATA JOURNEY SECTION - Redesigned -->
+        <!-- DATA JOURNEY SECTION -->
         <section class="mb-20">
-            <h2 class="section-title">El Flujo de Datos Inteligente</h2>
-            <p class="section-subtitle">Este no es un simple Wi-Fi. Es un ciclo automatizado de adquisición y conversión de clientes.</p>
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-center space-y-8 md:space-y-0 md:space-x-4">
-                <!-- Step 1 -->
-                <div class="flex flex-col items-center text-center max-w-[200px] mx-auto">
-                    <div class="bg-slate-800 rounded-full p-4 mb-3 border-2 border-orange-500">
-                        <i data-lucide="wifi" class="w-10 h-10 text-orange-500"></i>
+            <h2 class="section-title">El Viaje del Dato: De Conexión a Conversión</h2>
+            <p class="section-subtitle">Visualice el flujo de valor. Así es como convertimos una simple conexión Wi-Fi en una relación rentable y medible con sus clientes.</p>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
+                
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card text-center">
+                             <i data-lucide="wifi" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
+                             <h3 class="font-bold text-lg mb-2">1. Conexión</h3>
+                             <p class="text-sm text-slate-400">El cliente se conecta al Wi-Fi gratuito a través de un portal cautivo personalizado.</p>
+                        </div>
+                        <div class="flip-card-back text-center">
+                             <h3 class="font-bold text-lg mb-2 text-orange-400">Portal de Marca</h3>
+                             <p class="text-sm text-slate-300">El primer contacto es clave. Creamos un portal de acceso con su identidad de marca que ofrece una experiencia de conexión segura y profesional.</p>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-lg">1. Conexión y Captura</h3>
-                    <p class="text-sm text-slate-400">El cliente se conecta al Wi-Fi a través de un portal de marca, entregando sus datos con consentimiento.</p>
                 </div>
-                <i data-lucide="arrow-right" class="w-10 h-10 text-slate-600 hidden md:block"></i>
-                <i data-lucide="arrow-down" class="w-10 h-10 text-slate-600 md:hidden mx-auto"></i>
-                <!-- Step 2 -->
-                <div class="flex flex-col items-center text-center max-w-[200px] mx-auto">
-                    <div class="bg-slate-800 rounded-full p-4 mb-3 border-2 border-orange-500">
-                         <i data-lucide="users" class="w-10 h-10 text-orange-500"></i>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card text-center">
+                            <i data-lucide="database" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
+                            <h3 class="font-bold text-lg mb-2">2. Captura</h3>
+                            <p class="text-sm text-slate-400">Se capturan datos de primera mano (First-Party Data) con consentimiento explícito.</p>
+                        </div>
+                        <div class="flip-card-back text-center">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Activo de Datos</h3>
+                            <p class="text-sm text-slate-300">Los "First-Party Data" son su activo más valioso: precisos, relevantes y obtenidos con consentimiento para una personalización efectiva y legal.</p>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-lg">2. Perfilamiento 360°</h3>
-                    <p class="text-sm text-slate-400">El dato viaja a Zoho CRM, donde se crea o enriquece el perfil del cliente con su comportamiento físico.</p>
                 </div>
-                 <i data-lucide="arrow-right" class="w-10 h-10 text-slate-600 hidden md:block"></i>
-                 <i data-lucide="arrow-down" class="w-10 h-10 text-slate-600 md:hidden mx-auto"></i>
-                <!-- Step 3 -->
-                <div class="flex flex-col items-center text-center max-w-[200px] mx-auto">
-                    <div class="bg-slate-800 rounded-full p-4 mb-3 border-2 border-orange-500">
-                         <i data-lucide="send" class="w-10 h-10 text-orange-500"></i>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card text-center">
+                            <i data-lucide="users" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
+                            <h3 class="font-bold text-lg mb-2">3. Perfilamiento</h3>
+                            <p class="text-sm text-slate-400">El perfil del cliente se crea o actualiza automáticamente en Zoho CRM.</p>
+                        </div>
+                         <div class="flip-card-back text-center">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Inteligencia 360°</h3>
+                            <p class="text-sm text-slate-300">La integración nativa con Zoho CRM enriquece el perfil del cliente, unificando su comportamiento online y offline para una visión completa.</p>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-lg">3. Marketing Automatizado</h3>
-                    <p class="text-sm text-slate-400">Zoho Campaigns y SalesIQ activan secuencias de email, SMS o chat personalizadas según la visita.</p>
                 </div>
-                 <i data-lucide="arrow-right" class="w-10 h-10 text-slate-600 hidden md:block"></i>
-                 <i data-lucide="arrow-down" class="w-10 h-10 text-slate-600 md:hidden mx-auto"></i>
-                <!-- Step 4 -->
-                <div class="flex flex-col items-center text-center max-w-[200px] mx-auto">
-                    <div class="bg-slate-800 rounded-full p-4 mb-3 border-2 border-orange-500">
-                         <i data-lucide="dollar-sign" class="w-10 h-10 text-orange-500"></i>
+                 <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card text-center">
+                            <i data-lucide="send" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
+                            <h3 class="font-bold text-lg mb-2">4. Activación</h3>
+                            <p class="text-sm text-slate-400">Se disparan campañas de marketing automatizadas y personalizadas.</p>
+                        </div>
+                        <div class="flip-card-back text-center">
+                           <h3 class="font-bold text-lg mb-2 text-orange-400">Marketing de Precisión</h3>
+                           <p class="text-sm text-slate-300">La automatización permite impactar al cliente correcto en el momento oportuno con ofertas relevantes que impulsan la conversión.</p>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-lg">4. Venta y Medición</h3>
-                    <p class="text-sm text-slate-400">La venta se atribuye a la campaña de Wi-Fi Marketing, cerrando el ciclo y demostrando el ROI en Zoho Analytics.</p>
+                </div>
+                <div class="flip-card hover-flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front card text-center">
+                            <i data-lucide="bar-chart-2" class="w-12 h-12 mb-4 text-orange-500 mx-auto"></i>
+                            <h3 class="font-bold text-lg mb-2">5. Medición</h3>
+                            <p class="text-sm text-slate-400">Se mide el ROI, LTV y el impacto real de cada interacción en las ventas.</p>
+                        </div>
+                        <div class="flip-card-back text-center">
+                            <h3 class="font-bold text-lg mb-2 text-orange-400">Cierre del Ciclo</h3>
+                            <p class="text-sm text-slate-300">La solución permite atribuir ventas a las campañas de WiFi Marketing, demostrando el valor tangible y el ROI. Dejamos de adivinar y empezamos a medir.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
