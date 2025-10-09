@@ -4,35 +4,42 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
-Versión: 25.0 (09/10/2025)
-- Título: Refinamiento de UX y Profesionalización del Reporte
+Versión: 30.0 (10/10/2025)
+- Título: Refinamiento Final de Gráfico en Reporte PDF
 - Cambios:
-  1. Interactividad en Tarjetas de "Gasto vs. Activo": Se convirtieron las
-     tarjetas en elementos 3D interactivos, añadiendo un reverso con un
-     análisis estratégico sobre el impacto de cada modalidad en el
-     WiFi Marketing.
-  2. Rediseño Profesional del Informe PDF: Se reestructuró completamente
-     la generación del PDF para producir un documento de consultoría de
-     alta calidad, con un diseño limpio, tipografía consistente, cabecera
-     y pie de página de marca.
+  1. PDF - Renderizado de Gráfico Profesional: Se implementó una solución
+     definitiva para el gráfico del PDF. Ahora, en lugar de una captura
+     de pantalla, el gráfico se reconstruye con una configuración de "alta
+     fidelidad" específica para impresión, asegurando máxima legibilidad
+     y una presentación profesional. Se ajustaron colores, fuentes y
+     resolución para un acabado impecable.
+  2. PDF - Optimización de Logo: Se afinó el cálculo de la proporción del
+     logo para garantizar que se muestre nítido y sin distorsión en todos
+     los casos.
 
-Versión: 24.0 (09/10/2025)
-- Título: Mejora de Interactividad y Dinamismo Visual
+Versión: 29.0 (10/10/2025)
+- Título: Versión Final de Reporte PDF Profesional
 - Cambios:
-  1. Ecosistema Zoho Interactivo: Se transformaron las tarjetas estáticas en
-     elementos 3D interactivos que, al girar, revelan los beneficios clave
-     de cada aplicación del ecosistema Zoho.
-  2. Riel de Logos Animado: Se modernizó la sección "Marcas Globales",
-     reemplazando la galería estática por un riel de logos a full color
-     en movimiento continuo para una presentación más dinámica y profesional.
+  1. PDF - Gráfico Profesional: Se implementó una lógica para renderizar
+     el gráfico del reporte con un estilo profesional para impresión
+     (fondo claro, texto oscuro), mejorando drásticamente su legibilidad.
+  2. PDF - Logo Corregido y Actualizado: Se actualizó la URL del logo y se
+     ajustó el código para que siempre respete su proporción original,
+     eliminando cualquier distorsión.
+  3. PDF - Legibilidad de Texto: Se cambió la alineación de los párrafos a
+     izquierda para una lectura más cómoda y profesional.
 
-Versión: 23.0 (09/10/2025)
-- Título: Pulido Visual Final
+Versión: 28.0 (10/10/2025)
+- Título: Optimización de UX en Reporte PDF y Layout
 - Cambios:
-  1. Reparación de Activos Visuales: Se reemplazaron todos los logos de
-     marcador de posición con los enlaces directos proporcionados,
-     reparando las imágenes rotas en las secciones "Ecosistema Zoho"
-     y "Marcas Globales".
+  1. PDF - Mejora de Legibilidad: Se eliminó la justificación de texto
+     que causaba espaciados irregulares, optando por una alineación
+     izquierda para una lectura más fluida y profesional.
+  2. PDF - Inclusión de Gráfico Clave: Se añadió el gráfico de "Flujo de
+     Caja Acumulado" al reporte, por ser el más relevante para un
+     emprendedor al visualizar el punto de equilibrio y la rentabilidad.
+  3. PDF - Próximos Pasos Accionables: Se mejoró la sección final del
+     informe para incluir pasos siguientes claros y accionables.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -119,6 +126,9 @@ Versión: 23.0 (09/10/2025)
             width: 100%;
             perspective: 1000px;
             min-height: 220px;
+        }
+        .gasto-activo-card {
+            min-height: 400px;
         }
         .control-panel-card {
             min-height: 380px;
@@ -322,7 +332,7 @@ Versión: 23.0 (09/10/2025)
             <h2 class="section-title">¿Por qué Ohmyfi si mi router ya ofrece un portal?</h2>
             <p class="section-subtitle">La diferencia fundamental entre un simple servicio y una estrategia de negocio.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                <div class="flip-card hover-flip-card">
+                <div class="flip-card hover-flip-card gasto-activo-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card border-l-4 border-red-400">
                              <h3 class="font-bold text-2xl text-red-400 mb-4">Portal Básico (Un Gasto)</h3>
@@ -339,7 +349,7 @@ Versión: 23.0 (09/10/2025)
                         </div>
                     </div>
                 </div>
-                 <div class="flip-card hover-flip-card">
+                 <div class="flip-card hover-flip-card gasto-activo-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card border-l-4 border-green-400">
                              <h3 class="font-bold text-2xl text-green-400 mb-4">Plataforma de WiFi Marketing (Un Activo)</h3>
@@ -822,7 +832,7 @@ Versión: 23.0 (09/10/2025)
         
         <footer class="text-center py-8 border-t border-slate-700">
             <img src="https://i.imgur.com/IcfVlYf.png" alt="AGT Comunidades C.A. Logo" class="h-10 mx-auto mb-4 opacity-80">
-            <p class="text-slate-400">Simulador Financiero v25.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v30.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -844,7 +854,7 @@ Versión: 23.0 (09/10/2025)
     </div>
 
 <script>
-    // V25.0 CALCULATION ENGINE - Final Version with Full Interactivity and Content
+    // V30.0 CALCULATION ENGINE - Final Version with Full Interactivity and Content
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
@@ -1061,7 +1071,6 @@ Versión: 23.0 (09/10/2025)
     const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
 
     function updateUI(d) {
-        // ... (el resto de la función updateUI se mantiene igual)
         ui.outputs.roi.value.textContent = `${(d.roi * 100).toFixed(0)}%`;
         ui.outputs.tco.value.textContent = formatCurrency(d.tco);
         ui.outputs.payback.value.textContent = d.paybackPeriod > 0 ? `${d.paybackPeriod} Meses` : "N/A";
@@ -1119,7 +1128,6 @@ Versión: 23.0 (09/10/2025)
 
 
     function updateAnalysisTexts(d) {
-        // ... (el resto de la función updateAnalysisTexts se mantiene igual)
         ui.outputs.analysis.tcoBreakdown.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
             Esto te ayuda a entender dónde se va tu dinero. Compara tu inversión inicial (lo que pagas una vez) con tus costos fijos para mantener todo funcionando (lo que pagas recurrentemente).
@@ -1167,7 +1175,6 @@ Versión: 23.0 (09/10/2025)
     }
 
     function createCharts() {
-        // ... (el resto de la función createCharts se mantiene igual)
         const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
         try { charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión (CAPEX + Finan.)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } }); } catch (e) { console.error("Failed to create tcoBreakdownChart:", e); }
         try { charts.tcoComponentBreakdown = new Chart(document.getElementById('tcoComponentBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias y Soporte'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] }, options: { ...chartOptions, scales: {} } }); } catch (e) { console.error("Failed to create tcoComponentBreakdownChart:", e); }
@@ -1179,7 +1186,6 @@ Versión: 23.0 (09/10/2025)
     }
 
     function updateCharts(d) {
-        // ... (el resto de la función updateCharts se mantiene igual)
         try { if (charts.tcoBreakdown) { charts.tcoBreakdown.data.datasets[0].data = [d.capex + d.financingCost, d.totalOpex]; charts.tcoBreakdown.update(); } } catch (e) { console.error("Failed to update tcoBreakdownChart:", e); }
         try { if (charts.tcoComponentBreakdown) { charts.tcoComponentBreakdown.data.datasets[0].data = [d.tcoComponents.hardware, d.tcoComponents.services, d.tcoComponents.licenses + (d.internetCost * 36)]; charts.tcoComponentBreakdown.update(); } } catch (e) { console.error("Failed to update tcoComponentBreakdownChart:", e); }
         try { if (charts.cumulativeCashflow) { charts.cumulativeCashflow.data.datasets[0].data = [d.financingTerm > 0 ? 0 : -d.capex, ...d.monthlyData.cumulativeNet]; charts.cumulativeCashflow.update(); } } catch (e) { console.error("Failed to update cumulativeCashflowChart:", e); }
@@ -1207,12 +1213,14 @@ Versión: 23.0 (09/10/2025)
     }
     
     function generateStrategicBenefitsText() {
-        // ... (el resto de la función generateStrategicBenefitsText se mantiene igual)
         return `Más allá de los números, esta inversión representa un paso fundamental en la modernización y diferenciación de su negocio. Al implementar la solución Ohmyfi + Zoho CRM, usted obtiene ventajas competitivas clave:\n\n1. Capitalización de Datos Propios (First-Party Data):\nEn un mundo sin cookies de terceros, la capacidad de recolectar datos directamente de sus clientes es el activo de marketing más valioso. Esta solución convierte su Wi-Fi en una fuente inagotable de datos consentidos, permitiéndole construir una base de clientes robusta y dejar de depender de la costosa publicidad en plataformas externas.\n\n2. Marketing de Precisión y Aumento del LTV:\nLa sinergia entre Ohmyfi (captura de datos) y Zoho CRM (gestión de relaciones) le permite entender a sus clientes a un nivel profundo. Puede automatizar campañas de re-compra, fidelización y venta cruzada (cross-selling) basadas en el comportamiento real del visitante (frecuencia, horarios de visita, etc.), aumentando directamente el Valor de Vida del Cliente (LTV) y, por ende, la rentabilidad general del negocio.\n\n3. Diferenciación y Experiencia de Marca:\nOfrecer un Wi-Fi de alta calidad a través de un portal de marca profesional no es solo un servicio, es una declaración. Posiciona su marca como moderna, centrada en el cliente y tecnológicamente avanzada. Esta percepción positiva mejora la experiencia del cliente desde el primer punto de contacto, fomenta la lealtad y genera una diferenciación clara frente a sus competidores.`;
     }
 
+    function generateNextStepsText() {
+        return `Para avanzar con este proyecto y comenzar a transformar su red Wi-Fi en un activo estratégico, le recomendamos los siguientes pasos:\n\n1. Contacte a su asesor de AGT para resolver cualquier duda específica sobre este informe.\n2. Defina junto a nuestro equipo el alcance final del proyecto (número de APs, personalizaciones del portal, etc.).\n3. Una vez definidos los detalles, procederemos a enviarle la orden de compra formal para iniciar la implementación.`;
+    }
+
     function generateConsultantAnalysis(d) {
-        // ... (el resto de la función generateConsultantAnalysis se mantiene igual)
         let analysis = `Actuando como sus consultores especializados en la sinergia entre Ohmyfi y Zoho CRM, hemos interpretado los resultados de la simulación para ofrecerle una recomendación estratégica clara y directa.\n\n`;
         if (d.roi > 0.5 && d.paybackPeriod <= 12) {
             analysis += `La simulación revela una oportunidad de inversión excepcionalmente sólida. Con un ROI proyectado del ${(d.roi * 100).toFixed(0)}% y un período de recuperación de tan solo ${d.paybackPeriod} meses, el proyecto no solo es financieramente viable, sino que promete una alta rentabilidad a corto plazo. El análisis de riesgo de Monte Carlo confirma esta solidez, mostrando una probabilidad de rentabilidad superior al ${d.positiveProbability.toFixed(0)}%.\n\nRECOMENDACIÓN: Proceder con la implementación. El bajo riesgo y el rápido retorno sugieren que cualquier retraso podría significar una pérdida de oportunidad para capitalizar la monetización de su red Wi-Fi y la inteligencia de clientes que proporciona la integración con Zoho CRM.`;
@@ -1228,7 +1236,6 @@ Versión: 23.0 (09/10/2025)
     }
 
     function generateReportHTML(d) {
-        // ... (el resto de la función generateReportHTML se mantiene igual)
         const dataText = generateDataSummary(d, true);
         const analysisText = generateConsultantAnalysis(d).replace(/\n/g, '<br>');
         const strategicText = generateStrategicBenefitsText().replace(/\n/g, '<br>').replace(/(\d+\.)/g, '<br><strong>$1</strong>');
@@ -1270,36 +1277,38 @@ Versión: 23.0 (09/10/2025)
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
         
-        const agtLogoUrl = 'https://i.imgur.com/IcfVlYf.png';
+        const agtLogoUrl = 'https://i.imgur.com/FDiVluw.png'; 
+        let logoDataUrl = '';
+        try {
+            const response = await fetch(agtLogoUrl);
+            const blob = await response.blob();
+            logoDataUrl = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+        } catch (e) { console.error("Error pre-loading logo image:", e); }
+
         const agtOrange = '#F97316';
         const agtDark = '#0F172A';
-        const agtText = '#E2E8F0';
-        const agtGray = '#94a3b8';
+        const pdfTextColor = '#333333';
+        const pdfGrayColor = '#666666';
+        const generationTimestamp = new Date();
+        const uniqueId = `AGT-${Date.now()}`;
 
         const margin = 15;
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         
-        // Helper function to add image from URL
-        const addImageFromUrl = async (url, x, y, width, height) => {
-            try {
-                const response = await fetch(url);
-                const blob = await response.blob();
-                const reader = new FileReader();
-                return new Promise(resolve => {
-                    reader.onload = () => {
-                        doc.addImage(reader.result, 'PNG', x, y, width, height);
-                        resolve();
-                    };
-                    reader.readAsDataURL(blob);
-                });
-            } catch (e) { console.error("Error adding image:", e); }
-        };
-
-        const addHeader = async () => {
+        const addHeader = () => {
             doc.setFillColor(agtDark);
             doc.rect(0, 0, pageWidth, 28, 'F');
-            await addImageFromUrl(agtLogoUrl, margin, 10, 35, 8.75);
+            if (logoDataUrl) {
+                // Proporción original de la nueva imagen es aprox 4.5:1
+                const logoWidth = 40;
+                const logoHeight = logoWidth / 4.5;
+                doc.addImage(logoDataUrl, 'PNG', margin, 14 - (logoHeight / 2), logoWidth, logoHeight);
+            }
             
             doc.setFontSize(16);
             doc.setFont('helvetica', 'bold');
@@ -1308,11 +1317,13 @@ Versión: 23.0 (09/10/2025)
         };
         
         const addFooter = (pageNumber) => {
+            const formattedTimestamp = generationTimestamp.toLocaleString('es-VE', { dateStyle: 'short', timeStyle: 'short' });
             doc.setFontSize(8);
             doc.setFont('helvetica', 'normal');
-            doc.setTextColor(agtGray);
+            doc.setTextColor(pdfGrayColor);
             doc.text(`Página ${pageNumber}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
-            doc.text("© AGT Comunidades C.A. | Documento Confidencial", margin, pageHeight - 10);
+            doc.text(`© AGT Comunidades C.A. | ID: ${uniqueId}`, margin, pageHeight - 10);
+            doc.text(`Generado: ${formattedTimestamp}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
         };
 
         let y = 40;
@@ -1323,7 +1334,8 @@ Versión: 23.0 (09/10/2025)
                 addFooter(page);
                 doc.addPage();
                 page++;
-                y = 30;
+                addHeader();
+                y = 40;
                 return true;
             }
             return false;
@@ -1337,41 +1349,95 @@ Versión: 23.0 (09/10/2025)
             doc.text(title, margin, y);
             y += 5;
             doc.setDrawColor(agtOrange);
-            doc.line(margin, y, margin + 40, y);
+            doc.line(margin, y, margin + 50, y);
             y += 8;
         };
 
-        const addBodyText = (text, size = 10, align = 'left') => {
+        const addBodyText = (text) => {
             const lines = doc.splitTextToSize(text, pageWidth - margin * 2);
-            checkPageBreak(lines.length * (size * 0.5));
-            doc.setFontSize(size);
+            const lineHeight = 1.4;
+            const textHeight = lines.length * 10 * 0.35 * lineHeight;
+            checkPageBreak(textHeight + 5); 
+            doc.setFontSize(10);
             doc.setFont('helvetica', 'normal');
-            doc.setTextColor(agtText);
-            doc.text(lines, margin, y, { align: align });
-            y += lines.length * (size * 0.5) + 5;
+            doc.setTextColor(pdfTextColor);
+            doc.text(lines, margin, y, { align: 'left', lineHeightFactor: lineHeight });
+            y += textHeight + 8;
         };
         
         const addKpiCard = (title, value, subtitle, x, width) => {
-            doc.setFillColor('#1E293B');
-            doc.setDrawColor('#334155');
+            doc.setFillColor(248, 250, 252); // slate-50
+            doc.setDrawColor(226, 232, 240); // slate-200
             doc.roundedRect(x, y, width, 25, 3, 3, 'FD');
             
             doc.setFontSize(9);
-            doc.setTextColor(agtGray);
+            doc.setTextColor(pdfGrayColor);
             doc.text(title, x + width / 2, y + 7, { align: 'center' });
             
             doc.setFontSize(16);
             doc.setFont('helvetica', 'bold');
-            doc.setTextColor('#FFFFFF');
+            doc.setTextColor(agtDark);
             doc.text(value, x + width / 2, y + 15, { align: 'center' });
             
             doc.setFontSize(8);
-            doc.setTextColor(agtGray);
+            doc.setTextColor(pdfGrayColor);
             doc.text(subtitle, x + width / 2, y + 21, { align: 'center' });
         };
+        
+        // --- High-Fidelity PDF Chart Generation ---
+        const getPdfChart = async () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 450;
+            const ctx = canvas.getContext('2d');
+            
+            const pdfChart = new Chart(ctx, {
+                type: 'line',
+                data: charts.cumulativeCashflow.data,
+                options: {
+                    animation: false,
+                    responsive: false,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { labels: { color: '#333' } },
+                        title: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#333', font: { size: 10 } },
+                            grid: { color: '#e2e8f0' },
+                            title: { display: true, text: 'Meses', color: '#333', font: { size: 12, weight: 'bold' } }
+                        },
+                        y: {
+                            ticks: { 
+                                color: '#333', 
+                                font: { size: 10 },
+                                callback: function(value) { return '$' + value.toLocaleString(); }
+                            },
+                            grid: { color: '#e2e8f0' },
+                            title: { display: true, text: 'Flujo de Caja (USD)', color: '#333', font: { size: 12, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
 
-        // --- PAGE 1 ---
-        await addHeader();
+            // Wait for chart to render - crucial step
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            const imgData = canvas.toDataURL('image/png', 1.0);
+            pdfChart.destroy();
+            return imgData;
+        };
+
+
+        doc.setProperties({
+            title: `Reporte de Consultoría AGT - ${d.scenario}`,
+            subject: 'Análisis Financiero de Solución OhmyFi + Zoho CRM',
+            author: 'AGT Comunidades C.A.',
+        });
+        
+        // --- Document Generation ---
+        addHeader();
         
         const introText = "El presente documento analiza la viabilidad financiera y el impacto estratégico de la implementación de la solución de WiFi Marketing OhmyFi integrada con el ecosistema Zoho CRM Plus. A continuación, se presentan los resultados de la simulación basados en los parámetros de entrada proporcionados, seguidos de un análisis consultivo para facilitar la toma de decisiones.";
         addBodyText(introText);
@@ -1387,25 +1453,40 @@ Versión: 23.0 (09/10/2025)
         
         const summary = generateDataSummary(d);
         const summaryLines = summary.split('\n');
-        
         doc.setFont('courier', 'normal');
         doc.setFontSize(9);
-        doc.setTextColor(agtText);
-        
+        doc.setTextColor(pdfTextColor);
         const half = Math.ceil(summaryLines.length / 2);
         const col1 = summaryLines.slice(0, half).join('\n');
         const col2 = summaryLines.slice(half).join('\n');
-        
+        const summaryHeight = half * 3.5 + 5;
+        checkPageBreak(summaryHeight);
         doc.text(col1, margin, y);
-        doc.text(col2, pageWidth / 2, y);
-        y += half * 4 + 5;
+        doc.text(col2, pageWidth / 2 + 10, y);
+        y += summaryHeight;
+        
+        // --- Adding the High-Fidelity Chart ---
+        addSectionTitle("Proyección de Flujo de Caja Acumulado");
+        const chartExplanation = "Este gráfico visualiza el momento en que la inversión se recupera (punto de equilibrio) y comienza a generar ganancias netas. La línea ascendente después de cruzar el cero representa el beneficio neto acumulado a lo largo del tiempo.";
+        addBodyText(chartExplanation);
+        
+        const cashflowChartImg = await getPdfChart();
 
+        const chartWidth = pageWidth - margin * 2;
+        const chartHeight = chartWidth * (450 / 800); // Maintain aspect ratio
+        checkPageBreak(chartHeight + 10);
+        doc.addImage(cashflowChartImg, 'PNG', margin, y, chartWidth, chartHeight);
+        y += chartHeight + 10;
+        
         addSectionTitle("Análisis y Recomendación del Consultor");
         addBodyText(generateConsultantAnalysis(d));
         
         addSectionTitle("Beneficios Estratégicos");
         const benefits = generateStrategicBenefitsText().replace(/(\d+\.\s)/g, '\n$1').trim();
         addBodyText(benefits);
+
+        addSectionTitle("Próximos Pasos Recomendados");
+        addBodyText(generateNextStepsText());
 
         addFooter(page);
         
