@@ -4,6 +4,16 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 36.1 (10/10/2025)
+- Título: Refinamiento Narrativo del Caso de Éxito Local
+- Cambios:
+  1.  Se reintrodujo la imagen del mapa de cobertura en la sección del caso de
+      éxito de City Park, que se había omitido accidentalmente.
+  2.  Se reestructuró la sub-sección de "Evidencia Visual" a un formato de
+      tres columnas (Resultados, Cobertura, Infraestructura) para contar
+      una historia más clara y potente sobre la eficiencia de la solución.
+  3.  Se actualizó el pie de página a la versión 36.1.
+
 Versión: 36.0 (10/10/2025)
 - Título: Correcciones Finales y Reintegración de Evidencia
 - Cambios:
@@ -28,17 +38,6 @@ Versión: 35.9 (10/10/2025)
   3.  Se convirtieron las tarjetas de la sección "Escalabilidad Comprobada"
       (Movistar Arena y Compensar) en flip-cards interactivas, añadiendo
       explicaciones detalladas en el reverso sobre por qué son casos de éxito.
-
-Versión: 35.8 (10/10/2025)
-- Título: Rediseño de Caso de Éxito Local con KPIs Interactivos
-- Cambios:
-  1.  Se rediseñó la sección "Caso de Éxito Local" para destacar los KPIs
-      clave extraídos del análisis de datos (Conexiones, Nuevos Clientes,
-      Tasa de Recurrencia).
-  2.  Se implementaron los nuevos KPIs como tarjetas interactivas (flip-cards)
-      con explicaciones en el reverso, manteniendo la consistencia visual.
-  3.  Se integraron las nuevas imágenes de evidencia (Resultados e
-      Infraestructura) en un layout de dos columnas.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -461,15 +460,22 @@ Versión: 35.8 (10/10/2025)
 
             <!-- Visual Evidence Sub-section -->
             <div class="max-w-6xl mx-auto mt-10">
-                <h3 class="text-xl font-bold text-center mb-6 text-orange-400">Evidencia Visual del Caso de Éxito</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <h3 class="text-xl font-bold text-center mb-6 text-orange-400">Evidencia Visual: La Historia Completa</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="card bg-slate-800/50">
-                        <h4 class="font-bold text-lg mb-4">Tablero de Resultados Reales</h4>
-                        <img src="https://i.imgur.com/qh6c159.png" alt="Tablero de resultados de City Park" class="rounded-lg">
+                        <h4 class="font-bold text-lg mb-2">Resultados Reales</h4>
+                        <img src="https://i.imgur.com/qh6c159.png" alt="Tablero de resultados de City Park" class="rounded-lg mb-3">
+                        <p class="text-sm text-slate-400">Muestra el **QUÉ**: El crecimiento sostenido en la captura de datos.</p>
                     </div>
                     <div class="card bg-slate-800/50">
-                        <h4 class="font-bold text-lg mb-4">Infraestructura Mínima, Máximo Impacto</h4>
-                        <img src="https://i.imgur.com/kkM8Tte.png" alt="Infraestructura física en City Park" class="rounded-lg">
+                        <h4 class="font-bold text-lg mb-2">Cobertura Estratégica</h4>
+                        <img src="https://i.imgur.com/yZyTtxZ.png" alt="Mapa de cobertura de City Park" class="rounded-lg mb-3">
+                        <p class="text-sm text-slate-400">Muestra el **DÓNDE**: El área de alto tráfico cubierta por la solución.</p>
+                    </div>
+                    <div class="card bg-slate-800/50">
+                        <h4 class="font-bold text-lg mb-2">Inversión Eficiente</h4>
+                        <img src="https://i.imgur.com/kkM8Tte.png" alt="Infraestructura física en City Park" class="rounded-lg mb-3">
+                        <p class="text-sm text-slate-400">Muestra el **CON QUÉ**: La infraestructura mínima para lograr los resultados.</p>
                     </div>
                 </div>
             </div>
