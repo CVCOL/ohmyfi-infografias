@@ -4,40 +4,35 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 36.2 (10/10/2025)
+- Título: Optimización Narrativa y Corrección Definitiva de Animación
+- Cambios:
+  1.  Se invirtió el orden de la sección "Caso de Éxito Local" para mostrar
+      primero la evidencia visual (imágenes) y luego el análisis de datos
+      (KPIs y gráficos), mejorando el flujo narrativo.
+  2.  Se reescribieron los textos de la sección "Evidencia Visual" para que
+      sean más claros, naturales y persuasivos.
+  3.  Se implementó una corrección de CSS definitiva para el error de
+      animación en las tarjetas de "Escalabilidad", aislándola del flujo
+      del documento para evitar solapamientos.
+  4.  Se actualizó el pie de página a la versión 36.2.
+
 Versión: 36.1 (10/10/2025)
 - Título: Refinamiento Narrativo del Caso de Éxito Local
 - Cambios:
   1.  Se reintrodujo la imagen del mapa de cobertura en la sección del caso de
-      éxito de City Park, que se había omitido accidentalmente.
+      éxito de City Park.
   2.  Se reestructuró la sub-sección de "Evidencia Visual" a un formato de
-      tres columnas (Resultados, Cobertura, Infraestructura) para contar
-      una historia más clara y potente sobre la eficiencia de la solución.
-  3.  Se actualizó el pie de página a la versión 36.1.
+      tres columnas (Resultados, Cobertura, Infraestructura).
 
 Versión: 36.0 (10/10/2025)
 - Título: Correcciones Finales y Reintegración de Evidencia
 - Cambios:
   1.  Se corrigió el error de animación en las tarjetas de "Escalabilidad
-      Comprobada", asegurando que giren sobre su eje sin desplazar el
-      contenido de la página.
+      Comprobada".
   2.  Se reintegraron las imágenes de evidencia visual (Tablero de
       Resultados e Infraestructura) en la sección del caso de éxito de
-      City Park para completar la narrativa.
-  3.  Se actualizó el pie de página a la versión 36.0, marcando el
-      cierre de este ciclo de desarrollo.
-
-Versión: 35.9 (10/10/2025)
-- Título: Análisis Profundo de Caso de Éxito y Mejoras de Interacción
-- Cambios:
-  1.  Se enriqueció la sección "Caso de Éxito Local" con dos nuevos gráficos
-      generados a partir de los datos reales: "Evolución de Clientes (Nuevos vs.
-      Recurrentes)" y "Patrón de Tráfico Semanal".
-  2.  Se añadió una tarjeta de "Análisis Financiero del Caso Real" para City
-      Park, calculando TCO, ROI y Payback y conectando el simulador con un
-      ejemplo tangible para PYMEs.
-  3.  Se convirtieron las tarjetas de la sección "Escalabilidad Comprobada"
-      (Movistar Arena y Compensar) en flip-cards interactivas, añadiendo
-      explicaciones detalladas en el reverso sobre por qué son casos de éxito.
+      City Park.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -125,8 +120,13 @@ Versión: 35.9 (10/10/2025)
             perspective: 1000px;
             min-height: 220px;
         }
-        .gasto-activo-card {
-            min-height: 400px;
+        .stable-flip-card {
+            position: relative;
+            height: 400px;
+        }
+        .stable-flip-card .flip-card-inner {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
         }
         .control-panel-card {
             min-height: 380px;
@@ -409,6 +409,27 @@ Versión: 35.9 (10/10/2025)
             <h2 class="section-title">Caso de Éxito Local: Resultados Reales en City Park Margarita</h2>
             <p class="section-subtitle">Análisis profundo de nuestra implementación piloto en Venezuela.</p>
             
+            <!-- Visual Evidence Sub-section -->
+            <div class="max-w-6xl mx-auto mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="card bg-slate-800/50">
+                        <h4 class="font-bold text-lg mb-2 text-orange-400">Resultados Reales</h4>
+                        <img src="https://i.imgur.com/qh6c159.png" alt="Tablero de resultados de City Park" class="rounded-lg mb-3">
+                        <p class="text-sm text-slate-400">Visualiza el crecimiento constante. Cada conexión es un nuevo cliente potencial entrando en tu ecosistema de ventas.</p>
+                    </div>
+                    <div class="card bg-slate-800/50">
+                        <h4 class="font-bold text-lg mb-2 text-orange-400">Cobertura Estratégica</h4>
+                        <img src="https://i.imgur.com/yZyTtxZ.png" alt="Mapa de cobertura de City Park" class="rounded-lg mb-3">
+                        <p class="text-sm text-slate-400">Con solo dos equipos logramos una cobertura total de las zonas de mayor afluencia. Esto es planificar para maximizar el retorno de tu inversión.</p>
+                    </div>
+                    <div class="card bg-slate-800/50">
+                        <h4 class="font-bold text-lg mb-2 text-orange-400">Inversión Eficiente</h4>
+                        <img src="https://i.imgur.com/kkM8Tte.png" alt="Infraestructura física en City Park" class="rounded-lg mb-3">
+                        <p class="text-sm text-slate-400">Este es todo el hardware necesario. Una solución potente y discreta que demuestra que no necesitas una gran inversión para obtener grandes resultados.</p>
+                    </div>
+                </div>
+            </div>
+            
             <!-- KPIs -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-10">
                 <div class="flip-card kpi-flip-card hover-flip-card" style="min-height: 150px;">
@@ -455,28 +476,6 @@ Versión: 35.9 (10/10/2025)
                         <div><h5 class="text-sm font-semibold text-slate-400">Retorno (ROI) a 36m</h5><p id="citypark-roi" class="text-3xl font-extrabold text-green-400">0%</p></div>
                         <div><h5 class="text-sm font-semibold text-slate-400">Recuperación (Payback)</h5><p id="citypark-payback" class="text-2xl font-bold text-blue-400">0 meses</p></div>
                      </div>
-                </div>
-            </div>
-
-            <!-- Visual Evidence Sub-section -->
-            <div class="max-w-6xl mx-auto mt-10">
-                <h3 class="text-xl font-bold text-center mb-6 text-orange-400">Evidencia Visual: La Historia Completa</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="card bg-slate-800/50">
-                        <h4 class="font-bold text-lg mb-2">Resultados Reales</h4>
-                        <img src="https://i.imgur.com/qh6c159.png" alt="Tablero de resultados de City Park" class="rounded-lg mb-3">
-                        <p class="text-sm text-slate-400">Muestra el **QUÉ**: El crecimiento sostenido en la captura de datos.</p>
-                    </div>
-                    <div class="card bg-slate-800/50">
-                        <h4 class="font-bold text-lg mb-2">Cobertura Estratégica</h4>
-                        <img src="https://i.imgur.com/yZyTtxZ.png" alt="Mapa de cobertura de City Park" class="rounded-lg mb-3">
-                        <p class="text-sm text-slate-400">Muestra el **DÓNDE**: El área de alto tráfico cubierta por la solución.</p>
-                    </div>
-                    <div class="card bg-slate-800/50">
-                        <h4 class="font-bold text-lg mb-2">Inversión Eficiente</h4>
-                        <img src="https://i.imgur.com/kkM8Tte.png" alt="Infraestructura física en City Park" class="rounded-lg mb-3">
-                        <p class="text-sm text-slate-400">Muestra el **CON QUÉ**: La infraestructura mínima para lograr los resultados.</p>
-                    </div>
                 </div>
             </div>
         </section>
@@ -580,7 +579,7 @@ Versión: 35.9 (10/10/2025)
             <p class="section-subtitle">La misma tecnología de clase mundial que impulsa a grandes corporaciones en Latinoamérica, a su alcance.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                 
-                <div class="flip-card hover-flip-card h-[400px]">
+                <div class="flip-card hover-flip-card stable-flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card !p-0 overflow-hidden relative flex flex-col justify-end text-white">
                             <img src="https://i.imgur.com/1pRG5Pu.jpeg" alt="Panorámica del Movistar Arena Bogotá" class="absolute inset-0 w-full h-full object-cover z-0">
@@ -595,7 +594,7 @@ Versión: 35.9 (10/10/2025)
                     </div>
                 </div>
 
-                <div class="flip-card hover-flip-card h-[400px]">
+                <div class="flip-card hover-flip-card stable-flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card flex flex-col items-center text-center justify-center">
                             <img src="https://i.imgur.com/JApuUhS.png" alt="Logo Compensar" class="h-20 mb-6">
@@ -1008,7 +1007,7 @@ Versión: 35.9 (10/10/2025)
         
         <footer class="text-center py-8 border-t border-slate-700">
             <img src="https://i.imgur.com/IcfVlYf.png" alt="AGT Comunidades C.A. Logo" class="h-10 mx-auto mb-4 opacity-80">
-            <p class="text-slate-400">Simulador Financiero v36.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v36.2 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -1030,7 +1029,7 @@ Versión: 35.9 (10/10/2025)
     </div>
 
 <script>
-    // V36.0 - Final corrections and evidence reintegration
+    // V36.2 - Narrative optimization and animation fix
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
