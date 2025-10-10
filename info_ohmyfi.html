@@ -4,15 +4,25 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 35.0 (10/10/2025)
+- Título: Solución Definitiva de Layout y Contexto de Sección
+- Cambios:
+  1.  Se añadió un título explícito ("Nuestra Ventaja Estratégica") para dar
+      contexto a la sección "La Ventaja AGT".
+  2.  Se implementó un layout de CSS Grid robusto y explícito en la tarjeta
+      "La Ventaja AGT", definiendo filas de tamaño fijo para la imagen y
+      automático para el texto, solucionando de forma definitiva el error
+      de colapso de contenido.
+
 Versión: 34.0 (10/10/2025)
 - Título: Corrección Final de Layout e Integración de Nuevos Activos
 - Cambios:
-  1.  Solución Definitiva de Layout: Se reestructuró la tarjeta "La Ventaja AGT"
+  1.  Solución de Layout: Se reestructuró la tarjeta "La Ventaja AGT"
       con un layout de Flexbox simplificado para garantizar su correcta
-      visualización en todos los casos, solucionando el error persistente.
+      visualización.
   2.  Actualización de Imágenes: Se reemplazaron las imágenes de la sección
       "¿Por qué esta solución es ideal para Venezuela?" con las nuevas URLs
-      proporcionadas por el cliente para un mayor impacto visual.
+      proporcionadas por el cliente.
 
 Versión: 33.0 (10/10/2025)
 - Título: Corrección Definitiva de Layout en Tarjeta Interactiva
@@ -20,15 +30,6 @@ Versión: 33.0 (10/10/2025)
   1.  Solución de Layout en "La Ventaja AGT": Se reemplazó el layout de Flexbox
       por CSS Grid en la tarjeta "La Ventaja AGT" para crear una estructura
       más robusta y prevenir el colapso del contenido.
-
-Versión: 32.0 (10/10/2025)
-- Título: Dinamismo Visual en Secciones Estratégicas
-- Cambios:
-  1.  Interactividad 3D en "La Ventaja AGT": Se transformó la sección en una
-      tarjeta 3D interactiva con una imagen de cabecera.
-  2.  Interactividad 3D en "Ideal para Venezuela": Las tres tarjetas de esta
-      sección ahora son interactivas, cada una con su imagen y análisis.
-  3.  Actualización de Logo Zoho Zia: Se integró el logo oficial de Zoho Zia.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -166,6 +167,7 @@ Versión: 32.0 (10/10/2025)
         }
         .flip-card-back {
             transform: rotateY(180deg);
+            justify-content: center;
         }
         .flip-trigger {
             position: absolute;
@@ -245,13 +247,12 @@ Versión: 32.0 (10/10/2025)
 
         <!-- AGT ADVANTAGE SECTION -->
         <section class="mb-20">
+            <h2 class="section-title">Nuestra Ventaja Estratégica</h2>
             <div class="flip-card hover-flip-card max-w-4xl mx-auto" style="min-height: 350px;">
                 <div class="flip-card-inner">
-                    <div class="flip-card-front card !p-0 flex flex-col">
-                        <div class="h-48 flex-shrink-0">
-                            <img src="https://i.imgur.com/C1mP9Ab.jpg" alt="Estrategia de Negocio" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-6 text-center flex-grow flex flex-col justify-center">
+                    <div class="flip-card-front card !p-0" style="display: grid; grid-template-rows: 192px auto;">
+                        <img src="https://i.imgur.com/C1mP9Ab.jpg" alt="Estrategia de Negocio" class="w-full h-full object-cover rounded-t-lg">
+                        <div class="p-6 text-center flex flex-col justify-center">
                             <h2 class="text-2xl font-bold text-orange-400 mb-3">La Ventaja AGT: Estrategia, no solo Herramientas</h2>
                             <p class="text-slate-300">Descubra la diferencia entre un proveedor de software y un socio estratégico.</p>
                         </div>
