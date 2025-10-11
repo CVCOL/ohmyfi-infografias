@@ -4,20 +4,31 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 38.0 (11/10/2025)
+- Título: Rediseño Profesional y Corrección de Legibilidad del Reporte PDF
+- Cambios:
+  1.  (PDF/DISEÑO) Se rediseñó la sección "Validación Global, Regional y
+      Local" con un layout de columnas profesional, mejorando la
+      presentación de la prueba social.
+  2.  (PDF/DISEÑO) Se maquetó la sección de KPIs en cajas de análisis
+      individuales con fondos y bordes sutiles para mejorar la jerarquía
+      visual y la legibilidad.
+  3.  (PDF/TÉCNICO) Se corrigió la función de generación de gráficos. Ahora
+      se aplican estilos de alto contraste (texto oscuro sobre fondo
+      blanco) al generar la imagen para el PDF, solucionando el problema
+      de ilegibilidad en los ejes y leyendas.
+  4.  Se actualizó el pie de página a la versión 38.0.
+
 Versión: 37.9 (11/10/2025)
 - Título: Transformación del Reporte a Documento de Decisión Estratégica
 - Cambios:
   1.  (PDF) Se reestructuró completamente el reporte PDF para seguir una
       narrativa de consultoría estratégica.
   2.  (PDF) Se añadió una nueva primera página que establece la
-      credibilidad de la tecnología, mencionando casos de éxito globales
-      (Starbucks), regionales (Movistar Arena, Compensar) y locales
-      (City Park).
+      credibilidad de la tecnología, mencionando casos de éxito.
   3.  (PDF) Se creó una nueva sección dedicada a explicar cada KPI
-      principal (ROI, Payback, TCO, etc.) con un lenguaje de consultor
-      experto, aclarando su significado y relevancia para el negocio.
-  4.  (PDF) Se añadió una reflexión final que posiciona la solución como
-      una herramienta estratégica para el mercado venezolano y resalta el
+      principal con un lenguaje de consultor experto.
+  4.  (PDF) Se añadió una reflexión final que posiciona la solución y el
       valor del soporte local de AGT Comunidades C.A.
   5.  Se actualizó el pie de página a la versión 37.9.
 
@@ -31,20 +42,8 @@ Versión: 37.8 (11/10/2025)
       Rentabilidad" para educar al usuario sobre su rol en la monetización
       del activo de datos.
   3.  (LÓGICA GRÁFICO) Se corrigió el punto de inicio del gráfico "Flujo de
-      Caja Acumulado" para reflejar un desembolso inicial de cero cuando
-      se aplica financiamiento.
+      Caja Acumulado".
   4.  Se actualizó el pie de página a la versión 37.8.
-
-Versión: 37.7 (11/10/2025)
-- Título: Corrección de Flujo de Caja y Educación Financiera
-- Cambios:
-  1.  (LÓGICA) Se corrigió el gráfico "Evolución de Costos Mensuales" para
-      que el CAPEX desaparezca correctamente al aplicar financiamiento.
-  2.  (UX/Contenido) Se actualizó la explicación en la tarjeta "Costos y
-      Financiamiento" para introducir el concepto de Apalancamiento.
-  3.  (PDF) Se añadió una nueva sección al reporte PDF para desarrollar
-      formalmente el concepto de Apalancamiento Financiero.
-  4.  Se actualizó el pie de página a la versión 37.7.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -1008,7 +1007,7 @@ Versión: 37.7 (11/10/2025)
         
         <footer class="text-center py-8 border-t border-slate-700">
             <img src="https://i.imgur.com/IcfVlYf.png" alt="AGT Comunidades C.A. Logo" class="h-10 mx-auto mb-4 opacity-80">
-            <p class="text-slate-400">Simulador Financiero v37.9 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v38.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -1030,7 +1029,7 @@ Versión: 37.7 (11/10/2025)
     </div>
 
 <script>
-    // V37.9 - Strategic PDF Transformation
+    // V38.0 - Professional PDF Redesign & Legibility Fix
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
@@ -1551,7 +1550,7 @@ Versión: 37.7 (11/10/2025)
         return summary;
     }
     
-    // --- PDF Generation v37.9 ---
+    // --- PDF Generation v38.0 ---
     function generatePdfIntroStory() {
         return "Los resultados que verá a continuación no son una teoría. Se basan en una tecnología de clase mundial probada por marcas líderes a nivel global, validada en entornos de alta exigencia en Latinoamérica y adaptada con éxito al mercado venezolano.\n\nEsta simulación es una proyección informada, anclada en la realidad de implementaciones exitosas y diseñada para darle una visión clara del potencial que esta solución representa para su negocio.";
     }
@@ -1612,7 +1611,6 @@ Versión: 37.7 (11/10/2025)
             starbucks: 'https://i.imgur.com/I7i00PR.png',
             hardrock: 'https://i.imgur.com/N7TPBc7.jpeg',
             subway: 'https://i.imgur.com/nWat6TK.png',
-            compensar: 'https://i.imgur.com/zwbuV63.png',
             movistar: 'https://i.imgur.com/MKqAF4J.png',
             citypark: 'https://i.imgur.com/qh6c159.png'
         };
@@ -1700,8 +1698,8 @@ Versión: 37.7 (11/10/2025)
             y += 8;
         };
 
-        const addBodyText = (text) => {
-            const lines = doc.splitTextToSize(text, pageWidth - margin * 2);
+        const addBodyText = (text, maxWidth = pageWidth - margin * 2) => {
+            const lines = doc.splitTextToSize(text, maxWidth);
             const lineHeight = 1.4;
             const textHeight = lines.length * 10 * 0.35 * lineHeight;
             checkPageBreak(textHeight + 5); 
@@ -1712,12 +1710,54 @@ Versión: 37.7 (11/10/2025)
             y += textHeight + 8;
         };
         
-        const getPdfChart = async (chartInstance) => {
-             if (!chartInstance) return null;
-            const originalAnimation = chartInstance.options.animation;
-            chartInstance.options.animation = false;
-            const imgData = chartInstance.toBase64Image('image/png', 1.0);
-            chartInstance.options.animation = originalAnimation;
+        const getPdfChart = async (chartInstance, data) => {
+            if (!chartInstance) return null;
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 450;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const pdfChartOptions = {
+                animation: false,
+                responsive: false,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { labels: { color: pdfTextColor, font: { size: 12 } } },
+                },
+                scales: {
+                    x: {
+                        ticks: { color: pdfTextColor, font: { size: 10 } },
+                        grid: { color: '#e2e8f0' },
+                        title: { display: true, text: 'Meses', color: pdfTextColor, font: { size: 12, weight: 'bold' } }
+                    },
+                    y: {
+                        ticks: { 
+                            color: pdfTextColor, 
+                            font: { size: 10 },
+                            callback: function(value) { return '$' + value.toLocaleString(); }
+                        },
+                        grid: { color: '#e2e8f0' },
+                        title: { display: true, text: 'Flujo de Caja (USD)', color: pdfTextColor, font: { size: 12, weight: 'bold' } },
+                        zeroLineColor: agtOrange,
+                        zeroLineWidth: 2
+                    }
+                }
+            };
+            
+            const pdfChart = new Chart(ctx, {
+                type: 'line',
+                data: chartInstance.data,
+                options: pdfChartOptions
+            });
+
+            await new Promise(resolve => setTimeout(resolve, 200)); 
+            
+            const imgData = canvas.toDataURL('image/png', 1.0);
+            pdfChart.destroy();
             return imgData;
         };
 
@@ -1731,51 +1771,36 @@ Versión: 37.7 (11/10/2025)
         addHeader("Una Oportunidad Basada en Resultados");
         addBodyText(generatePdfIntroStory());
         
-        addSectionTitle("Validación Global, Regional y Local", pdfTextColor);
-        
-        const cardWidth = (pageWidth - margin * 2 - 10) / 2;
-        const cardHeight = 60;
-        
-        // Card 1: Global
-        doc.setFillColor(248, 250, 252); // slate-50
-        doc.roundedRect(margin, y, cardWidth, cardHeight, 3, 3, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(agtOrange);
-        doc.text("Confianza Global", margin + 10, y + 10);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(pdfTextColor);
-        doc.setFontSize(9);
-        doc.text("Marcas líderes mundiales utilizan esta tecnología para potenciar la experiencia de cliente.", margin + 10, y + 18, { maxWidth: cardWidth - 20 });
-        if(loadedAssets.starbucks) doc.addImage(loadedAssets.starbucks, 'PNG', margin + 10, y + 35, 20, 20);
-        if(loadedAssets.hardrock) doc.addImage(loadedAssets.hardrock, 'PNG', margin + 35, y + 35, 20, 20);
-        
-        // Card 2: Regional
-        doc.roundedRect(margin + cardWidth + 10, y, cardWidth, cardHeight, 3, 3, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(agtOrange);
-        doc.text("Escala Regional", margin + cardWidth + 20, y + 10);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(pdfTextColor);
-        doc.setFontSize(9);
-        doc.text("Probada en entornos de alta densidad y redes multi-sede en Latinoamérica.", margin + cardWidth + 20, y + 18, { maxWidth: cardWidth - 20 });
-        if(loadedAssets.movistar) doc.addImage(loadedAssets.movistar, 'PNG', margin + cardWidth + 20, y + 35, 20, 20, '', 'FAST');
-        if(loadedAssets.compensar) doc.addImage(loadedAssets.compensar, 'PNG', margin + cardWidth + 45, y + 35, 20, 20, '', 'FAST');
+        addSectionTitle("Validación de la Tecnología", pdfTextColor);
+        y+=5;
 
-        y += cardHeight + 10;
+        const colWidth = (pageWidth - margin * 2 - 20) / 3;
+        const colX = [margin, margin + colWidth + 10, margin + 2 * (colWidth + 10)];
+        const startY = y;
         
-        // Card 3: Local
-        doc.roundedRect(margin, y, pageWidth - margin*2, cardHeight, 3, 3, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(agtOrange);
-        doc.text("Éxito Local (Venezuela)", margin + 10, y + 10);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(pdfTextColor);
-        doc.setFontSize(9);
-        const cityParkText = "Nuestra implementación en City Park (Margarita) validó el modelo en el mercado venezolano, logrando +6,800 nuevos clientes y una tasa de recurrencia del 37% en pocos meses, demostrando el potencial real y tangible.";
-        if(loadedAssets.citypark) doc.addImage(loadedAssets.citypark, 'PNG', pageWidth - margin - 50, y + 15, 40, 30, '', 'FAST');
-        doc.text(cityParkText, margin + 10, y + 18, { maxWidth: pageWidth - margin*2 - 60 });
-        
-        y += cardHeight + 10;
+        // Column 1: Global
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(agtDark);
+        doc.text("Confianza Global", colX[0], y);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(pdfGrayColor);
+        doc.text("Marcas líderes mundiales utilizan esta tecnología para potenciar la experiencia de cliente.", colX[0], y + 7, { maxWidth: colWidth });
+        if(loadedAssets.starbucks) doc.addImage(loadedAssets.starbucks, 'PNG', colX[0], y + 25, 20, 20);
+        if(loadedAssets.hardrock) doc.addImage(loadedAssets.hardrock, 'PNG', colX[0] + 25, y + 25, 20, 20);
+
+        // Column 2: Regional
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(agtDark);
+        doc.text("Escala Regional", colX[1], y);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(pdfGrayColor);
+        doc.text("Probada en entornos de alta densidad (Movistar Arena) y redes multi-sede (Compensar) en Latinoamérica.", colX[1], y + 7, { maxWidth: colWidth });
+        if(loadedAssets.movistar) doc.addImage(loadedAssets.movistar, 'PNG', colX[1], y + 25, 25, 12, '', 'FAST');
+
+        // Column 3: Local
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(agtDark);
+        doc.text("Éxito Local", colX[2], y);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(pdfGrayColor);
+        doc.text("Nuestra implementación en City Park (Margarita) validó el modelo en Venezuela, logrando +6,800 nuevos clientes y una recurrencia del 37%.", colX[2], y + 7, { maxWidth: colWidth });
+        if(loadedAssets.citypark) doc.addImage(loadedAssets.citypark, 'PNG', colX[2], y + 25, 25, 15, '', 'FAST');
+
+        y += 60;
         
         // --- PAGE 2: KPI Explanations ---
         addFooter(page);
@@ -1786,20 +1811,33 @@ Versión: 37.7 (11/10/2025)
         
         const kpiData = generatePdfKpiExplanations(d);
         kpiData.kpis.forEach(kpi => {
-            checkPageBreak(40);
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(agtOrange);
-            doc.text(kpi.name, margin, y);
+            const textLines = doc.splitTextToSize(kpi.explanation, pageWidth - margin * 2 - 20);
+            const kpiBoxHeight = 15 + textLines.length * 4;
+            checkPageBreak(kpiBoxHeight + 10);
+            
+            doc.setFillColor(248, 250, 252); // slate-50
+            doc.setDrawColor(226, 232, 240); // slate-200
+            doc.roundedRect(margin, y, pageWidth - margin * 2, kpiBoxHeight, 3, 3, 'FD');
+            
+            doc.setDrawColor(agtOrange);
+            doc.line(margin, y, margin + 10, y);
 
-            doc.setFontSize(18);
+            doc.setFontSize(11);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(agtDark);
-            doc.text(kpi.value, pageWidth - margin, y, { align: 'right' });
+            doc.text(kpi.name, margin + 5, y + 10);
 
-            y += 8;
-            addBodyText(kpi.explanation);
-            y += 2;
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(agtOrange);
+            doc.text(kpi.value, pageWidth - margin - 5, y + 10, { align: 'right' });
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(pdfGrayColor);
+            doc.text(textLines, margin + 5, y + 20);
+
+            y += kpiBoxHeight + 7;
         });
 
         // --- Subsequent Pages ---
@@ -1859,4 +1897,3 @@ Versión: 37.7 (11/10/2025)
 </script>
 </body>
 </html>
-
