@@ -4,46 +4,38 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 38.1 (11/10/2025)
+- Título: Rediseño Final y Optimización de Layout del Reporte PDF
+- Cambios:
+  1.  (PDF/DISEÑO) Se rediseñó la sección "Validación" a un formato de filas,
+      dando mayor protagonismo a las imágenes y los datos.
+  2.  (PDF/CONTENIDO) Se expandió el caso de "City Park" para incluir
+      sus KPIs de impacto (+6,800 clientes, 37% recurrencia) de forma
+      destacada, reforzando el mensaje de éxito local.
+  3.  (PDF/DISEÑO) Se reemplazaron las cajas de KPIs por una tabla de 2
+      columnas, solucionando problemas de desbordamiento de texto.
+  4.  (PDF/DISEÑO) Se añadió un salto de página antes del "Análisis del
+      Consultor" para mejorar la estructura y el orden del documento.
+  5.  Se actualizó el pie de página a la versión 38.1.
+
 Versión: 38.0 (11/10/2025)
 - Título: Rediseño Profesional y Corrección de Legibilidad del Reporte PDF
 - Cambios:
   1.  (PDF/DISEÑO) Se rediseñó la sección "Validación Global, Regional y
-      Local" con un layout de columnas profesional, mejorando la
-      presentación de la prueba social.
+      Local" con un layout de columnas profesional.
   2.  (PDF/DISEÑO) Se maquetó la sección de KPIs en cajas de análisis
-      individuales con fondos y bordes sutiles para mejorar la jerarquía
-      visual y la legibilidad.
-  3.  (PDF/TÉCNICO) Se corrigió la función de generación de gráficos. Ahora
-      se aplican estilos de alto contraste (texto oscuro sobre fondo
-      blanco) al generar la imagen para el PDF, solucionando el problema
-      de ilegibilidad en los ejes y leyendas.
+      individuales para mejorar la jerarquía visual.
+  3.  (PDF/TÉCNICO) Se corrigió la función de generación de gráficos para
+      asegurar la legibilidad en el PDF.
   4.  Se actualizó el pie de página a la versión 38.0.
 
 Versión: 37.9 (11/10/2025)
 - Título: Transformación del Reporte a Documento de Decisión Estratégica
 - Cambios:
-  1.  (PDF) Se reestructuró completamente el reporte PDF para seguir una
-      narrativa de consultoría estratégica.
-  2.  (PDF) Se añadió una nueva primera página que establece la
-      credibilidad de la tecnología, mencionando casos de éxito.
-  3.  (PDF) Se creó una nueva sección dedicada a explicar cada KPI
-      principal con un lenguaje de consultor experto.
-  4.  (PDF) Se añadió una reflexión final que posiciona la solución y el
-      valor del soporte local de AGT Comunidades C.A.
-  5.  Se actualizó el pie de página a la versión 37.9.
-
-Versión: 37.8 (11/10/2025)
-- Título: Corrección Final de Lógica de Payback y Refinamiento de Narrativa
-- Cambios:
-  1.  (LÓGICA CRÍTICA) Se ajustó la fórmula de cálculo del "Período de
-      Recuperación (Payback)" para que se mida contra los costos totales
-      acumulados (TCO progresivo).
-  2.  (NARRATIVA) Se refinó el texto del "Nivel 2: Potencial de
-      Rentabilidad" para educar al usuario sobre su rol en la monetización
-      del activo de datos.
-  3.  (LÓGICA GRÁFICO) Se corrigió el punto de inicio del gráfico "Flujo de
-      Caja Acumulado".
-  4.  Se actualizó el pie de página a la versión 37.8.
+  1.  (PDF) Se reestructuró el reporte PDF para seguir una narrativa de
+      consultoría estratégica, añadiendo una introducción con casos de
+      éxito, explicaciones detalladas de KPIs y una reflexión final.
+  2.  Se actualizó el pie de página a la versión 37.9.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -54,6 +46,7 @@ Versión: 37.8 (11/10/2025)
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@3.5.23/dist/jspdf.plugin.autotable.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
