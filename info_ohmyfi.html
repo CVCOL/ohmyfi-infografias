@@ -17,33 +17,33 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 37.7 (11/10/2025)
+- Título: Restauración Visual y Evolución Analítica Definitiva
+- Cambios:
+  1.  Se restauró la estructura visual del dashboard basándose en la v36.9,
+      con una sección de KPIs y una grilla de gráficos 2x2 para mantener
+      la coherencia visual del proyecto.
+  2.  Se integraron los 6 KPIs de negocio en una grilla compacta y balanceada (2x3)
+      para presentar el panorama completo sin romper el diseño.
+  3.  Se implementaron los gráficos de nivel de consultoría (Punto de Equilibrio,
+      Cascada de ROI, Desglose de TCO, Simulación Monte Carlo) en la
+      grilla 2x2.
+  4.  Se confirmó la corrección del error de renderizado de gráficos.
+  5.  Se actualizó el pie de página a la versión 37.7.
+
 Versión: 37.6 (11/10/2025)
 - Título: Rediseño del Dashboard a Nivel de Consultoría y Corrección de Errores
 - Cambios:
-  1.  Se rediseñó por completo el dashboard financiero, unificando todos los
-      KPIs en un único panel para una narrativa de usuario coherente.
-  2.  Se reemplazaron los gráficos de análisis por un conjunto de nivel de
-      consultoría, incluyendo: Evolución Financiera (Punto de Equilibrio),
-      Componentes del ROI (Cascada), Desglose de TCO y Simulación Monte Carlo.
-  3.  Se corrigió el error crítico que causaba un bucle infinito en el
-      renderizado de los gráficos al cambiar los datos.
-  4.  Se actualizó el glosario y el reporte PDF para reflejar los nuevos
-      análisis. Se actualizó el pie de página a la versión 37.6.
+  1.  Se rediseñó el dashboard financiero para una narrativa de consultoría.
+  2.  Se implementaron gráficos avanzados (Cascada de ROI, Monte Carlo).
+  3.  Se corrigió el error de renderizado infinito de los gráficos.
 
 Versión: 37.5 (11/10/2025)
 - Título: Corrección de Regresión del Dashboard y Fusión Final
 - Cambios:
   1.  Se restauró el dashboard completo del simulador a partir de la v36.9.
   2.  Se fusionó con éxito el motor de cálculo evolucionado (v37.4).
-  3.  Se corrigió la regresión funcional que impedía la visualización
-      del análisis financiero.
-
-Versión: 37.4 (11/10/2025)
-- Título: Fusión Final de Motor de Cálculo y Dashboard Completo
-- Cambios:
-  1.  Se restauró el dashboard completo del simulador.
-  2.  Se implementó con éxito el nuevo motor de cálculo.
-  3.  Se actualizaron el panel de control, el glosario y el reporte PDF.
+  3.  Se corrigió la regresión funcional del análisis financiero.
 
     -->
     <style>
@@ -86,7 +86,7 @@ Versión: 37.4 (11/10/2025)
             border-radius: 0.75rem;
             padding: 1.5rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            height: 400px;
+            height: 400px; /* Consistent height for charts */
         }
         .input-card {
             perspective: 1000px;
@@ -153,8 +153,8 @@ Versión: 37.4 (11/10/2025)
 
         <!-- Simulation Input Section -->
         <section class="mt-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Input Cards remain the same as v37.5 -->
+             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Input Cards -->
                 <div class="input-card" id="card-aps">
                     <div class="input-card-inner">
                         <div class="card-face p-6 flex flex-col justify-between">
@@ -258,11 +258,10 @@ Versión: 37.4 (11/10/2025)
             </div>
         </section>
 
-        <!-- NEW Financial Dashboard Section -->
+        <!-- Financial Dashboard Section v37.7 -->
         <section id="financial-results" class="mt-12">
-            <h3 class="text-2xl font-extrabold text-gray-800 mb-6 text-center">Análisis Financiero Integral</h3>
             
-            <!-- Unified KPI Dashboard -->
+            <!-- KPIs in a compact 2x3 grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="kpi-card"><h4 class="kpi-title">Ahorro Anual vs. Publicidad</h4><p class="kpi-value" id="ad-saving-value">$0</p></div>
                 <div class="kpi-card"><h4 class="kpi-title">Clientes Leales Identificados</h4><p class="kpi-value" id="loyal-customers-value">0</p></div>
@@ -272,9 +271,9 @@ Versión: 37.4 (11/10/2025)
                 <div class="kpi-card"><h4 class="kpi-title">Costo Total (TCO)</h4><p class="kpi-value" id="tco-value">$0</p></div>
             </div>
 
-            <!-- Deep Financial Analysis Charts -->
-            <div class="mt-10">
-                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Análisis Financiero Profundo</h3>
+            <!-- 2x2 Chart Grid -->
+            <div class="mt-8">
+                 <h3 class="text-xl font-bold text-gray-800 mb-4">Análisis Financiero Profundo</h3>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="chart-container">
                         <h5 class="font-bold text-center text-gray-700 mb-2">Evolución Financiera (Punto de Equilibrio)</h5>
@@ -285,7 +284,7 @@ Versión: 37.4 (11/10/2025)
                         <canvas id="roi-waterfall-chart"></canvas>
                     </div>
                     <div class="chart-container">
-                        <h5 class="font-bold text-center text-gray-700 mb-2">Desglose del Costo Total (TCO)</h5>
+                        <h5 class="font-bold text-center text-gray-700 mb-2">Desglose del Costo Total (por Componente)</h5>
                         <canvas id="tco-doughnut-chart"></canvas>
                     </div>
                     <div class="chart-container">
@@ -304,14 +303,10 @@ Versión: 37.4 (11/10/2025)
 
         <!-- Glossary Modal -->
         <div id="glossary-modal" class="modal">
-             <div class="modal-content">
+            <div class="modal-content">
                 <span class="close-button" id="close-glossary">&times;</span>
                 <h2 class="text-2xl font-bold mb-4">Glosario de Términos de Consultoría</h2>
                 <dl class="space-y-4">
-                    <div>
-                        <dt class="font-semibold text-gray-800">KPIs (Key Performance Indicators)</dt>
-                        <dd class="text-gray-600 ml-4">Son los 6 indicadores clave que resumen la viabilidad y el atractivo de la inversión desde una perspectiva de negocio.</dd>
-                    </div>
                     <div>
                         <dt class="font-semibold text-gray-800">Evolución Financiera (Punto de Equilibrio)</dt>
                         <dd class="text-gray-600 ml-4">Este gráfico muestra la interacción mensual entre ingresos y costos. El punto clave es donde la línea de "Flujo de Caja Acumulado" cruza el cero, indicando el momento exacto en que la inversión se ha pagado por completo (Payback).</dd>
@@ -321,7 +316,7 @@ Versión: 37.4 (11/10/2025)
                         <dd class="text-gray-600 ml-4">Un análisis visual que descompone cómo se construye el ROI. Muestra cómo los ingresos y ahorros (barras verdes) contribuyen positivamente, mientras que los costos (barras rojas) restan valor, para llegar al Beneficio Neto final.</dd>
                     </div>
                      <div>
-                        <dt class="font-semibold text-gray-800">Desglose del TCO</dt>
+                        <dt class="font-semibold text-gray-800">Desglose del TCO (por Componente)</dt>
                         <dd class="text-gray-600 ml-4">Ofrece una visión transparente de la estructura de costos totales durante 3 años, dividida en sus componentes principales: Hardware (inversión inicial), Licencias (costo recurrente del software) y Mantenimiento/Servicios.</dd>
                     </div>
                     <div>
@@ -337,7 +332,7 @@ Versión: 37.4 (11/10/2025)
     <footer class="bg-gray-800 text-white mt-16">
         <div class="container mx-auto px-6 py-4 text-center">
             <p>&copy; 2025 AGT - Advanced Growth Technologies. Todos los derechos reservados.</p>
-            <p class="text-sm text-gray-400 mt-1">Simulador Financiero OhmyFi - Versión <span id="footer-version">37.6</span></p>
+            <p class="text-sm text-gray-400 mt-1">Simulador Financiero OhmyFi - Versión <span id="footer-version">37.7</span></p>
         </div>
     </footer>
 
@@ -558,9 +553,9 @@ Versión: 37.4 (11/10/2025)
                 }]
             },
             options: {
-                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                responsive: true, maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: { x: { beginAtZero: true } }
+                scales: { x: { beginAtZero: true, ticks: { callback: (value) => formatCurrency(value) } } }
             }
         };
         createOrUpdateChart('roi-waterfall-chart', config);
@@ -646,7 +641,7 @@ Versión: 37.4 (11/10/2025)
         document.getElementById(cardId).classList.toggle('card-flipped');
     }
 
-    // --- PDF GENERATION LOGIC (Simplified for brevity) ---
+    // --- PDF GENERATION LOGIC (Placeholder) ---
     async function generatePdfReport() {
         alert("La generación de PDF se está actualizando para incluir los nuevos gráficos. Esta función estará disponible en la próxima versión.");
     }
