@@ -4,6 +4,16 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 36.9 (10/10/2025)
+- Título: Mejora de Usabilidad en Simulador Financiero
+- Cambios:
+  1.  Se cambió la interacción de las tarjetas de entrada de datos del
+      simulador de `hover` a `click` para mejorar la usabilidad.
+  2.  Se añadieron íconos de información y botones de "volver" para
+      controlar la rotación de las tarjetas, creando una experiencia
+      de usuario más consistente.
+  3.  Se actualizó el pie de página a la versión 36.9.
+
 Versión: 36.8 (10/10/2025)
 - Título: Actualización de Activos Gráficos en Casos de Éxito
 - Cambios:
@@ -21,17 +31,6 @@ Versión: 36.7 (10/10/2025)
   2.  Se unificó el diseño de las tarjetas (Movistar Arena y Compensar)
       para presentar la información de forma clara, directa y simétrica.
   3.  Se actualizó el pie de página a la versión 36.7.
-
-Versión: 36.6 (10/10/2025)
-- Título: Corrección Crítica de Gráficos y Falla de Animación
-- Cambios:
-  1.  Se restauró el contenido HTML de las tarjetas de KPI (CAPEX y OPEX)
-      en el simulador, solucionando un error que impedía la ejecución
-      del script y la renderización de todos los gráficos.
-  2.  Se aplicó una corrección de CSS de alta especificidad para
-      solucionar definitivamente la falla de animación en las tarjetas de
-      "Escalabilidad", garantizando que giren en su propio eje.
-  3.  Se actualizó el pie de página a la versión 36.6.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -137,13 +136,13 @@ Versión: 36.6 (10/10/2025)
             transform-style: preserve-3d;
         }
         
-        /* HOVER flip for KPI cards */
+        /* HOVER flip for non-interactive cards */
         .hover-flip-card:hover .flip-card-inner {
             transform: rotateY(180deg);
         }
 
-        /* CLICK flip for chart cards */
-        .chart-flip-card.is-flipped .flip-card-inner {
+        /* CLICK flip for interactive cards */
+        .flip-card.is-flipped .flip-card-inner {
             transform: rotateY(180deg);
         }
 
@@ -602,11 +601,12 @@ Versión: 36.6 (10/10/2025)
             </div>
 
             <!-- Panel de Control Horizontal -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div id="control-panel" class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <!-- Panel 1: Infraestructura -->
-                <div class="flip-card hover-flip-card control-panel-card">
+                <div class="flip-card control-panel-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card bg-slate-800/50">
+                            <i data-lucide="info" class="flip-trigger"></i>
                             <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
                                 <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">1</span>
                                 Infraestructura
@@ -625,14 +625,16 @@ Versión: 36.6 (10/10/2025)
                         <div class="flip-card-back">
                             <h3 class="font-bold text-lg mb-2 text-orange-400">¿Qué son los APs?</h3>
                             <p class="text-sm text-slate-300">Los Access Points (APs) son los dispositivos que emiten la señal Wi-Fi. Se necesitan diferentes tipos para cubrir áreas internas (como salones) y externas (como terrazas), garantizando una conexión perfecta en todo su local.</p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Panel 2: Métricas de Negocio -->
-                 <div class="flip-card hover-flip-card control-panel-card">
+                 <div class="flip-card control-panel-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card bg-slate-800/50">
+                            <i data-lucide="info" class="flip-trigger"></i>
                             <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
                                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">2</span>
                                Métricas de Negocio
@@ -661,14 +663,16 @@ Versión: 36.6 (10/10/2025)
                                 <br><br>
                                 <strong class="text-slate-100">Tasa de Conversión:</strong> Es el porcentaje de esos leads que, gracias a sus campañas de marketing, se convierten en una venta real.
                             </p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Panel 3: Costos y Financiamiento -->
-                <div class="flip-card hover-flip-card control-panel-card">
+                <div class="flip-card control-panel-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card bg-slate-800/50">
+                            <i data-lucide="info" class="flip-trigger"></i>
                              <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
                                <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">3</span>
                                Costos y Financiamiento
@@ -691,6 +695,7 @@ Versión: 36.6 (10/10/2025)
                                 <br><br>
                                 <strong class="text-slate-100">Financiamiento:</strong> Es una herramienta opcional para adquirir la solución sin un gran desembolso inicial, protegiendo su flujo de caja a cambio de un pequeño costo financiero.
                             </p>
+                            <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
                         </div>
                     </div>
                 </div>
@@ -1095,17 +1100,17 @@ Versión: 36.6 (10/10/2025)
 
         ui.financing.slider.addEventListener('input', () => { ui.financing.valueLabel.textContent = ui.financing.slider.value; calculate(); });
 
-        document.getElementById('dashboard').addEventListener('click', function(e) {
+        document.getElementById('simulator').addEventListener('click', function(e) {
             const flipTrigger = e.target.closest('.flip-trigger');
             const backTrigger = e.target.closest('.flip-back-trigger');
 
             if (flipTrigger) {
                 e.stopPropagation();
-                flipTrigger.closest('.chart-flip-card').classList.add('is-flipped');
+                flipTrigger.closest('.flip-card').classList.toggle('is-flipped');
             }
             if (backTrigger) {
                 e.stopPropagation();
-                backTrigger.closest('.chart-flip-card').classList.remove('is-flipped');
+                backTrigger.closest('.flip-card').classList.remove('is-flipped');
             }
         });
         
