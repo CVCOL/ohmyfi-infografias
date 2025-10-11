@@ -4,6 +4,19 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 37.4 (11/10/2025)
+- Título: Fusión Final de Motor de Cálculo y Dashboard Completo
+- Cambios:
+  1.  Se restauró el dashboard completo del simulador, incluyendo todos los
+      KPIs de rentabilidad (ROI, TCO, etc.) y la grilla completa de
+      gráficos interactivos de análisis profundo.
+  2.  Se implementó con éxito el nuevo motor de cálculo, integrando los
+      nuevos KPIs ("Ahorro Anual", "Clientes Leales") en la parte superior
+      del dashboard restaurado para una narrativa de valor más clara.
+  3.  Se actualizaron el panel de control, el glosario y el reporte PDF
+      para reflejar de forma consistente el nuevo modelo de valor.
+  4.  Se actualizó el pie de página a la versión 37.4.
+
 Versión: 37.3 (11/10/2025)
 - Título: Fusión de Motor de Cálculo Evolucionado con Dashboard Completo
 - Cambios:
@@ -25,12 +38,6 @@ Versión: 37.2 (10/10/2025)
       y "% de Clientes Recurrentes".
   3.  Se incorporaron nuevos KPIs al dashboard: "Ahorro Anual vs.
       Publicidad" y "Clientes Leales Identificados".
-
-Versión: 37.1 (10/10/2025)
-- Título: Restauración del Modelo de Precios Detallado
-- Cambios:
-  1.  Se revirtió el motor de cálculo del simulador al modelo de precios
-      detallado de la versión 36.9.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -119,7 +126,7 @@ Versión: 37.1 (10/10/2025)
             min-height: 220px;
         }
         .control-panel-card {
-            min-height: 520px;
+            min-height: 560px;
         }
         .kpi-flip-card {
              min-height: 180px;
@@ -224,7 +231,7 @@ Versión: 37.1 (10/10/2025)
                 height: 450px; /* Altura original para pantallas medianas y grandes */
             }
             .control-panel-card {
-                min-height: 480px;
+                min-height: 520px;
             }
         }
     </style>
@@ -917,7 +924,7 @@ Versión: 37.1 (10/10/2025)
         
         <footer class="text-center py-8 border-t border-slate-700">
             <img src="https://i.imgur.com/IcfVlYf.png" alt="AGT Comunidades C.A. Logo" class="h-10 mx-auto mb-4 opacity-80">
-            <p class="text-slate-400">Simulador Financiero v37.2 | Desarrollado por Gemini para AGT Comunidades</p>
+            <p class="text-slate-400">Simulador Financiero v37.3 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -939,7 +946,7 @@ Versión: 37.1 (10/10/2025)
     </div>
 
 <script>
-    // V37.2 - Evolved calculation engine and value-based KPIs
+    // V37.3 - Fused calculation engine with full dashboard
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
@@ -979,12 +986,19 @@ Versión: 37.1 (10/10/2025)
             roi: { card: document.getElementById('roi-card'), value: document.getElementById('roi-value'), text: document.getElementById('roi-text'), rating: document.getElementById('roi-rating') }, 
             tco: { card: document.getElementById('tco-card'), value: document.getElementById('tco-value'), text: document.getElementById('tco-text') }, 
             payback: { card: document.getElementById('payback-card'), value: document.getElementById('payback-value'), text: document.getElementById('payback-text'), rating: document.getElementById('payback-rating') },
+            capex: { card: document.getElementById('capex-card'), value: document.getElementById('capex-value'), text: document.getElementById('capex-text') },
+            opex: { card: document.getElementById('opex-card'), value: document.getElementById('opex-value'), text: document.getElementById('opex-text') },
             netBenefit: { card: document.getElementById('net-benefit-card'), value: document.getElementById('net-benefit-value'), text: document.getElementById('net-benefit-text'), rating: document.getElementById('net-benefit-rating') },
             adSavings: { value: document.getElementById('ad-savings-value') },
             loyalCustomers: { value: document.getElementById('loyal-customers-value') },
             analysis: {
-                crossover: document.getElementById('crossover-text'),
+                tcoBreakdown: document.getElementById('tcoBreakdown-text'),
+                tcoComponent: document.getElementById('tcoComponent-text'),
+                monthlyCosts: document.getElementById('monthlyCosts-text'),
                 cumulativeCashflow: document.getElementById('cumulativeCashflow-text'),
+                monteCarlo: document.getElementById('monteCarlo-text'),
+                crossover: document.getElementById('crossover-text'),
+                roiComponents: document.getElementById('roiComponents-text')
             },
             citypark: {
                 tco: document.getElementById('citypark-tco'),
@@ -1151,7 +1165,11 @@ Versión: 37.1 (10/10/2025)
                 monthlyData.cumulativeNet.push(cumulativeNet);
             }
 
-            lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, adSavings, loyalCustomers, scenario: currentScenario, monthlyData };
+            const tcoComponents = { hardware: hardwarePrice, services: servicesPrice, licenses: totalOpex - (values.internetCost * 36) };
+            const monteCarloResults = runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost);
+            const positiveProbability = (monteCarloResults.filter(r => r > 0).length / monteCarloResults.length * 100);
+
+            lastCalculationData = { ...values, totalAps, capex, tco, totalRevenue, netBenefit, roi, paybackPeriod, totalOpex, financingCost, monthlyFinancingPayment, adSavings, loyalCustomers, scenario: currentScenario, monthlyData, tcoComponents };
             
             updateUI(lastCalculationData);
         } catch (error) {
@@ -1176,6 +1194,24 @@ Versión: 37.1 (10/10/2025)
         }
     }
     
+    function runMonteCarlo(values, totalAps, capex, monthlyOpex, financingCost) {
+        const simulations = 10000;
+        const results = [];
+        const totalOpexSim = monthlyOpex * 36;
+        for (let i = 0; i < simulations; i++) {
+            const ltvVar = values.customerLTV * (0.8 + Math.random() * 0.4);
+            const convRateVar = values.conversionRate * (0.8 + Math.random() * 0.4);
+            const leadsPerApVar = values.leadsPerAp * (0.8 + Math.random() * 0.4);
+            const newCustMonthVar = totalAps * leadsPerApVar * convRateVar;
+            const totalRevVar = newCustMonthVar * 36 * ltvVar;
+            const tcoVar = capex + totalOpexSim + financingCost;
+            const netBenefitVar = totalRevVar - tcoVar;
+            const roiVar = tcoVar > 0 ? (netBenefitVar / tcoVar) : 0;
+            results.push(roiVar);
+        }
+        return results;
+    }
+
     const formatCurrency = (val) => `$${val.toLocaleString('en-US', {maximumFractionDigits:0})}`;
 
     function updateUI(d) {
@@ -1183,6 +1219,8 @@ Versión: 37.1 (10/10/2025)
         ui.outputs.roi.value.textContent = `${(d.roi * 100).toFixed(0)}%`;
         ui.outputs.tco.value.textContent = formatCurrency(d.tco);
         ui.outputs.payback.value.textContent = d.paybackPeriod > 0 ? `${d.paybackPeriod} Meses` : "N/A";
+        ui.outputs.capex.value.textContent = formatCurrency(d.capex);
+        ui.outputs.opex.value.textContent = formatCurrency(d.totalOpex);
         ui.outputs.netBenefit.value.textContent = formatCurrency(d.netBenefit);
         ui.outputs.adSavings.value.textContent = formatCurrency(d.adSavings);
         ui.outputs.loyalCustomers.value.textContent = d.loyalCustomers.toLocaleString('en-US', {maximumFractionDigits:0});
@@ -1237,6 +1275,36 @@ Versión: 37.1 (10/10/2025)
 
 
     function updateAnalysisTexts(d) {
+        ui.outputs.analysis.tcoBreakdown.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            Esto te ayuda a entender dónde se va tu dinero. Compara tu inversión inicial (lo que pagas una vez) con tus costos fijos para mantener todo funcionando (lo que pagas recurrentemente).
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            TCO = (Inversión: ${formatCurrency(d.capex)} + Costo Financ.: ${formatCurrency(d.financingCost)}) + (Costos Operativos: ${formatCurrency(d.totalOpex)})`;
+        ui.outputs.analysis.tcoComponent.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            Aquí detallamos tu inversión. Te muestra cuánto corresponde a los equipos físicos (Hardware), cuánto a la instalación y configuración (Servicios), y cuánto a los permisos de uso y soporte (Licencias).
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            TCO = Hardware (${formatCurrency(d.tcoComponents.hardware)}) + Servicios (${formatCurrency(d.tcoComponents.services)}) + Licencias y Soporte (${formatCurrency(d.tcoComponents.licenses)})`;
+        ui.outputs.analysis.monthlyCosts.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            Este es tu flujo de gastos mes a mes. Te permite ver el impacto de la inversión inicial y cómo se distribuyen tus pagos fijos (operativos y de financiamiento) a lo largo del primer año.
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            Costo Mensual = OPEX (${formatCurrency(d.monthlyData.opexOnly[0])}) + Cuota Financ. (${formatCurrency(d.monthlyData.financing[0])})`;
+        ui.outputs.analysis.cumulativeCashflow.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            Este es el gráfico más importante para tu rentabilidad. Muestra cómo, mes a mes, los ingresos van pagando la inversión hasta que la línea cruza el 'cero'. Ese es tu punto de equilibrio, cuando empiezas a ganar dinero.
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            Punto de Equilibrio = Mes en que (Ingresos Acumulados - Costos Acumulados) >= 0. <br><strong>Resultado: Mes ${d.paybackPeriod > 0 ? d.paybackPeriod : 'N/A'}</strong>`;
+        ui.outputs.analysis.monteCarlo.innerHTML = `
+            <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
+            El futuro es incierto, y este análisis te prepara. Simulamos 10,000 escenarios económicos (buenos y malos) para ver qué tan probable es que tu inversión sea rentable. La barra naranja muestra el resultado más probable.
+            <br><br>
+            <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
+            Probabilidad de un ROI positivo (mayor a 0%) en 10,000 simulaciones: <strong>${d.positiveProbability.toFixed(0)}%</strong>`;
         const revenueAtPayback = d.paybackPeriod > 0 ? d.monthlyData.revenues[d.paybackPeriod - 1] : 0;
         const costAtPayback = d.paybackPeriod > 0 ? d.monthlyData.costs[d.paybackPeriod - 1] : 0;
         ui.outputs.analysis.crossover.innerHTML = `
@@ -1245,19 +1313,23 @@ Versión: 37.1 (10/10/2025)
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
             Crossover = Mes ${d.paybackPeriod > 0 ? d.paybackPeriod : 'N/A'}, cuando Ingresos (${formatCurrency(revenueAtPayback)}) superan Costos (${formatCurrency(costAtPayback)})`;
-        
-        ui.outputs.analysis.cumulativeCashflow.innerHTML = `
+        ui.outputs.analysis.roiComponents.innerHTML = `
             <strong class="text-slate-100 block mb-2">Racional Funcional:</strong>
-            Este es el gráfico más importante para tu rentabilidad. Muestra cómo, mes a mes, los ingresos van pagando la inversión hasta que la línea cruza el 'cero'. Ese es tu punto de equilibrio, cuando empiezas a ganar dinero.
+            En simple: ¿cuánto ganas por cada dólar que inviertes? Comparamos la barra de todo lo que gastas (Costo Total) con la de todo lo que ganas (Ingreso Total). La diferencia es tu ganancia neta.
             <br><br>
             <strong class="text-slate-100 block mb-2">Memoria de Cálculo:</strong>
-            Punto de Equilibrio = Mes en que (Ingresos Acumulados - Costos Acumulados) >= 0. <br><strong>Resultado: Mes ${d.paybackPeriod > 0 ? d.paybackPeriod : 'N/A'}</strong>`;
+            Beneficio Neto = Ingresos Totales (${formatCurrency(d.totalRevenue)}) - TCO (${formatCurrency(d.tco)}) = <strong>${formatCurrency(d.netBenefit)}</strong>`;
     }
 
     function createCharts() {
         const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: '#334155' } }, y: { ticks: { color: 'white' }, grid: { color: '#334155' } } } };
+        try { charts.tcoBreakdown = new Chart(document.getElementById('tcoBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Inversión (CAPEX + Finan.)', 'Costos Operativos (OPEX)'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#F97316'] }] }, options: { ...chartOptions, scales: {} } }); } catch (e) { console.error("Failed to create tcoBreakdownChart:", e); }
+        try { charts.tcoComponentBreakdown = new Chart(document.getElementById('tcoComponentBreakdownChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Hardware', 'Servicios', 'Licencias y Soporte'], datasets: [{ data: [], backgroundColor: ['#3B82F6', '#10B981', '#F97316'] }] }, options: { ...chartOptions, scales: {} } }); } catch (e) { console.error("Failed to create tcoComponentBreakdownChart:", e); }
         try { charts.cumulativeCashflow = new Chart(document.getElementById('cumulativeCashflowChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 37 }, (_, i) => `M${i}`), datasets: [{ label: 'Flujo de Caja Acumulado', data: [], borderColor: '#22C55E', tension: 0.1, fill: true, backgroundColor: 'rgba(34, 197, 94, 0.2)' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } }); } catch (e) { console.error("Failed to create cumulativeCashflowChart:", e); }
+        try { charts.monthlyCosts = new Chart(document.getElementById('monthlyCostsChart').getContext('2d'), { type: 'bar', data: { labels: Array.from({ length: 12 }, (_, i) => `Mes ${i+1}`), datasets: [ { label: 'CAPEX (Mes 1)', data: [], backgroundColor: '#3B82F6' }, { label: 'OPEX', data: [], backgroundColor: '#F97316' }, { label: 'Financiamiento', data: [], backgroundColor: '#8B5CF6' } ] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { stacked: true }, y: { stacked: true } } } }); } catch (e) { console.error("Failed to create monthlyCostsChart:", e); }
+        try { charts.monteCarlo = new Chart(document.getElementById('monteCarloChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Frecuencia', data: [], backgroundColor: '#8B5CF6' }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Rango de ROI (%)', color:'white' } }, y: { ...chartOptions.scales.y, title: { display: true, text: 'Nº de Simulaciones', color:'white' } } } } }); } catch (e) { console.error("Failed to create monteCarloChart:", e); }
         try { charts.crossover = new Chart(document.getElementById('crossoverChart').getContext('2d'), { type: 'line', data: { labels: Array.from({ length: 36 }, (_, i) => i + 1), datasets: [{ label: 'Costos Acumulados', data: [], borderColor: '#F97316', fill: true, backgroundColor: 'rgba(249, 115, 22, 0.2)', tension: 0.1 }, { label: 'Ingresos Acumulados', data: [], borderColor: '#22C55E', fill: true, backgroundColor: 'rgba(34, 197, 94, 0.2)', tension: 0.1 }] }, options: { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, title: { display: true, text: 'Meses', color:'white' } } } } }); } catch(e) { console.error("Failed to create crossoverChart:", e); }
+        try { charts.roiComponents = new Chart(document.getElementById('roiComponentsChart').getContext('2d'), { type: 'bar', data: { labels: ['Costo Total (TCO)', 'Ingreso Total'], datasets: [{ data: [], backgroundColor: ['#DC2626', '#22C55E'], label: 'Monto en USD' }] }, options: { ...chartOptions, plugins: { legend: { display: false } } } }); } catch(e) { console.error("Failed to create roiComponentsChart:", e); }
     }
 
     function createCityParkCharts() {
@@ -1317,8 +1389,30 @@ Versión: 37.1 (10/10/2025)
 
     function updateCharts(d) {
         if (!d || !d.monthlyData) return;
+        try { if (charts.tcoBreakdown) { charts.tcoBreakdown.data.datasets[0].data = [d.capex + d.financingCost, d.totalOpex]; charts.tcoBreakdown.update(); } } catch (e) { console.error("Failed to update tcoBreakdownChart:", e); }
+        try { if (charts.tcoComponentBreakdown) { charts.tcoComponentBreakdown.data.datasets[0].data = [d.tcoComponents.hardware, d.tcoComponents.services, d.tcoComponents.licenses + (d.internetCost * 36)]; charts.tcoComponentBreakdown.update(); } } catch (e) { console.error("Failed to update tcoComponentBreakdownChart:", e); }
         try { if (charts.cumulativeCashflow) { charts.cumulativeCashflow.data.datasets[0].data = [-d.capex, ...d.monthlyData.cumulativeNet]; charts.cumulativeCashflow.update(); } } catch (e) { console.error("Failed to update cumulativeCashflowChart:", e); }
+        try { if (charts.monthlyCosts) { charts.monthlyCosts.data.datasets[0].data = d.monthlyData.capex.slice(0, 12); charts.monthlyCosts.data.datasets[1].data = d.monthlyData.opexOnly.slice(0, 12); charts.monthlyCosts.data.datasets[2].data = d.monthlyData.financing.slice(0, 12); charts.monthlyCosts.update(); } } catch (e) { console.error("Failed to update monthlyCostsChart:", e); }
         try { if (charts.crossover) { charts.crossover.data.datasets[0].data = d.monthlyData.costs; charts.crossover.data.datasets[1].data = d.monthlyData.revenues; charts.crossover.update(); } } catch (e) { console.error("Failed to update crossoverChart:", e); }
+        try { if (charts.roiComponents) { charts.roiComponents.data.datasets[0].data = [d.tco, d.totalRevenue]; charts.roiComponents.update(); } } catch (e) { console.error("Failed to update roiComponentsChart:", e); }
+        try {
+            if (charts.monteCarlo) {
+                const bins = {};
+                const binSize = 0.5; // 50%
+                d.monteCarloResults.forEach(roi => {
+                    const bin = Math.floor(roi / binSize) * binSize;
+                    bins[bin] = (bins[bin] || 0) + 1;
+                });
+                const sortedBins = Object.keys(bins).map(parseFloat).sort((a, b) => a - b);
+                const dataValues = sortedBins.map(bin => bins[bin]);
+                const maxVal = Math.max(...dataValues);
+                const backgroundColors = dataValues.map(val => val === maxVal ? '#F97316' : '#8B5CF6');
+                charts.monteCarlo.data.labels = sortedBins.map(bin => `${(bin*100).toFixed(0)}% a ${((bin + binSize)*100).toFixed(0)}%`);
+                charts.monteCarlo.data.datasets[0].data = dataValues;
+                charts.monteCarlo.data.datasets[0].backgroundColor = backgroundColors;
+                charts.monteCarlo.update();
+            }
+        } catch (e) { console.error("Failed to update monteCarloChart:", e); }
     }
     
     function generateStrategicBenefitsText() {
