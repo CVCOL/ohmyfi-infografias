@@ -4,21 +4,6 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
-Versión: 37.2 (10/10/2025)
-- Título: Evolución del Motor de Cálculo y KPIs de Valor de Activo
-- Cambios:
-  1.  Se evolucionó el motor de cálculo para separar el valor del activo
-      de datos (creado por OhmyFi) del potencial de ingresos (activado
-      por la estrategia).
-  2.  Se añadieron nuevos inputs al simulador: "Costo por Lead de Mercado"
-      y "% de Clientes Recurrentes", con valores por defecto basados
-      en métricas reales.
-  3.  Se incorporaron dos nuevos KPIs al dashboard: "Ahorro Anual vs.
-      Publicidad" y "Clientes Leales Identificados", para demostrar
-      el valor inmediato de la plataforma.
-  4.  Se actualizaron el glosario y la lógica del reporte PDF para
-      reflejar estas nuevas y potentes métricas.
-
 Versión: 37.1 (10/10/2025)
 - Título: Restauración del Modelo de Precios Detallado
 - Cambios:
@@ -35,6 +20,14 @@ Versión: 37.0 (10/10/2025)
       solicitado. Esto resultó en proyecciones de ROI
       más favorables.
   2.  Se actualizó el pie de página a la versión 37.0.
+
+Versión: 36.9 (10/10/2025)
+- Título: Mejora de Usabilidad en Simulador Financiero
+- Cambios:
+  1.  Se cambió la interacción de las tarjetas de entrada de datos del
+      simulador de `hover` a `click` para mejorar la usabilidad.
+  2.  Se añadieron íconos de información y botones de "volver" para
+      controlar la rotación de las tarjetas.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -123,7 +116,7 @@ Versión: 37.0 (10/10/2025)
             min-height: 220px;
         }
         .control-panel-card {
-            min-height: 520px;
+            min-height: 380px;
         }
         .kpi-flip-card {
              min-height: 180px;
@@ -228,7 +221,7 @@ Versión: 37.0 (10/10/2025)
                 height: 450px; /* Altura original para pantallas medianas y grandes */
             }
             .control-panel-card {
-                min-height: 480px;
+                min-height: 340px;
             }
         }
     </style>
