@@ -4,19 +4,6 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
-Versión: 43.1 (13/10/2025)
-- Título: Hardening para Despliegue en Zoho Landing Pages
-- Cambios:
-  1.  (LÓGICA/SEGURIDAD) Se encapsuló todo el código JavaScript en un IIFE
-      (Immediately Invoked Function Expression) para prevenir conflictos de
-      variables y funciones con la plataforma de Zoho.
-  2.  (UX/LÓGICA) Se implementó un fallback para la generación de PDFs. Si la
-      descarga directa es bloqueada (ej: en un iframe), el PDF se abrirá
-      en una nueva pestaña del navegador, asegurando la funcionalidad.
-  3.  (ESTRUCTURA) Se envolvió el contenido de la aplicación en un contenedor
-      principal (#ohmyfi-app-container) para un mejor aislamiento.
-  4.  (GENERAL) Se actualizó el pie de página a la versión 43.1.
-
 Versión: 43.0 (13/10/2025)
 - Título: Implementación de Lógica Multi-Modelo y Mejoras de UX con Textos Explicativos
 - Cambios:
@@ -24,16 +11,31 @@ Versión: 43.0 (13/10/2025)
       elegir entre "Venta Directa" y "Monetización de Audiencia".
   2.  (UX/NARRATIVA) Se añadieron textos explicativos claros debajo de cada opción
       en el selector de modelo para guiar al usuario.
-  3.  (LÓGICA CRÍTICA) Se refactorizó el motor de cálculo para usar dos fórmulas
+  3.  (UX/NARRATIVA) Se agregaron dos nuevas tarjetas al glosario, definiendo en
+      detalle cada modelo de negocio.
+  4.  (LÓGICA CRÍTICA) Se refactorizó el motor de cálculo para usar dos fórmulas
       de ingresos distintas, controladas por el selector de modelo.
+  5.  (UI/UX) El panel de control ahora es dinámico, mostrando las variables
+      relevantes para cada modelo seleccionado.
+  6.  (GENERAL) Se actualizó el pie de página a la versión 43.0.
 
 Versión: 42.0 (13/10/2025)
 - Título: Refactorización Financiera del Motor de Cálculo y Mejora de Precisión
 - Cambios:
   1.  (LÓGICA CRÍTICA) Se refactorizó el motor de cálculo para diferenciar
       entre clientes nuevos y recurrentes.
-  2.  (UX/LÓGICA) Se reemplazó "LTV" por "Valor de Transacción Promedio"
+  2.  (LÓGICA CRÍTICA) El cálculo de "Ahorro en Publicidad" ahora se basa
+      correctamente solo en los nuevos clientes netos adquiridos.
+  3.  (UX/LÓGICA) Se reemplazó "LTV" por "Valor de Transacción Promedio"
       para proyectar un flujo de caja realista.
+
+Versión: 41.0 (13/10/2025)
+- Título: Mejora de Precisión del Motor de Cálculo: De Leads Mensuales a Conexiones Semanales
+- Cambios:
+  1.  (LÓGICA CRÍTICA) La variable de entrada ahora es "Conexiones Semanales
+      Promedio por AP", multiplicada por 4.33 para obtener el total mensual.
+  2.  (UX/UI) Se actualizó la etiqueta del slider y se ajustó su rango a
+      (10-1000) para mejorar la usabilidad.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -242,7 +244,7 @@ Versión: 42.0 (13/10/2025)
     </style>
 </head>
 <body class="p-4 md:p-8">
-<div id="ohmyfi-app-container">
+
     <div class="max-w-7xl mx-auto">
 
         <!-- HEADER -->
@@ -437,29 +439,25 @@ Versión: 42.0 (13/10/2025)
                 <div class="flip-card kpi-flip-card hover-flip-card" style="min-height: 150px;">
                     <div class="flip-card-inner">
                         <div class="flip-card-front items-center text-center justify-center"><h3 class="text-lg font-semibold text-slate-400">Conexiones Totales</h3><p class="text-4xl font-extrabold text-blue-400 my-2">+10,800</p></div>
-                        <div class="flip-card-back"><p class="text-sm text-slate-300">Mide el volumen total de interacciones. Un alto número de conexiones indica un gran alcance y exposición de marca en su punto de venta.</p>
-                        </div>
+                        <div class="flip-card-back"><p class="text-sm text-slate-300">Mide el volumen total de interacciones. Un alto número de conexiones indica un gran alcance y exposición de marca en su punto de venta.</p></div>
                     </div>
                 </div>
                 <div class="flip-card kpi-flip-card hover-flip-card" style="min-height: 150px;">
                     <div class="flip-card-inner">
                         <div class="flip-card-front items-center text-center justify-center"><h3 class="text-lg font-semibold text-slate-400">Nuevos Clientes</h3><p class="text-4xl font-extrabold text-cyan-400 my-2">+6,800</p></div>
                         <div class="flip-card-back"><p class="text-sm text-slate-300">Representa el crecimiento de su base de datos de clientes (First-Party Data), su activo más valioso para contactar directamente.</p>
-                        </div>
                     </div>
                 </div>
                 <div class="flip-card kpi-flip-card hover-flip-card" style="min-height: 150px;">
                     <div class="flip-card-inner">
                         <div class="flip-card-front items-center text-center justify-center"><h3 class="text-lg font-semibold text-slate-400">Tasa de Recurrencia</h3><p class="text-4xl font-extrabold text-green-400 my-2">37%</p></div>
-                        <div class="flip-card-back"><p class="text-sm text-slate-300">Este potente indicador mide la lealtad. Un 37% de recurrencia demuestra que la solución identifica y cuantifica a su público más fiel.</p>
-                        </div>
+                        <div class="flip-card-back"><p class="text-sm text-slate-300">Este potente indicador mide la lealtad. Un 37% de recurrencia demuestra que la solución identifica y cuantifica a su público más fiel.</p></div>
                     </div>
                 </div>
                 <div class="flip-card kpi-flip-card hover-flip-card" style="min-height: 150px;">
                     <div class="flip-card-inner">
                         <div class="flip-card-front items-center text-center justify-center"><h3 class="text-lg font-semibold text-slate-400">Conexiones Diarias</h3><p class="text-4xl font-extrabold text-purple-400 my-2">~71</p></div>
                         <div class="flip-card-back"><p class="text-sm text-slate-300">El promedio de conexiones diarias. Este dato valida la actividad constante y el flujo de captura de datos en el local.</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1047,10 +1045,25 @@ Versión: 42.0 (13/10/2025)
         </footer>
 
     </div>
-</div>
+
+    <!-- PDF Report Modal -->
+    <div id="report-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="bg-slate-800 rounded-lg shadow-xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-orange-400">Resumen Ejecutivo de la Simulación</h2>
+                <button id="report-close-btn" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div id="report-content-container" class="bg-slate-900 p-6 rounded-md mb-6">
+                <!-- Content will be injected here -->
+            </div>
+            <div class="text-right">
+                <button id="report-download-btn" class="btn btn-primary"><i data-lucide="download" class="w-5 h-5 mr-2"></i>Descargar PDF</button>
+            </div>
+        </div>
+    </div>
+
 <script>
-(function() {
-    // V43.1 - Hardening for Zoho Landing Pages Deployment
+    // V43.0 - Multi-Model Logic Implementation & UX Enhancements
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
@@ -1226,17 +1239,8 @@ Versión: 42.0 (13/10/2025)
         ui.containers.recurrentRate.style.display = isVentaDirecta ? 'block' : 'none';
         ui.containers.costPerLead.style.display = isVentaDirecta ? 'block' : 'none';
         ui.containers.adSavingsCard.style.display = isVentaDirecta ? 'block' : 'none';
-        
-        const loyalCardGrid = ui.containers.loyalCustomersCard.parentElement;
-        if (loyalCardGrid) {
-            if(isVentaDirecta) {
-                ui.containers.loyalCustomersCard.classList.remove('lg:col-span-4');
-                ui.containers.loyalCustomersCard.classList.add('lg:col-span-2');
-            } else {
-                ui.containers.loyalCustomersCard.classList.remove('lg:col-span-2');
-                ui.containers.loyalCustomersCard.classList.add('lg:col-span-4');
-            }
-        }
+        ui.containers.loyalCustomersCard.style.display = isVentaDirecta ? 'block' : 'none';
+
         calculate();
     }
 
@@ -1634,211 +1638,197 @@ Versión: 42.0 (13/10/2025)
             console.error("No data available to generate PDF.");
             return;
         }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+        
+        const agtLogoUrl = 'https://i.imgur.com/FDiVluw.png'; 
+        let logoDataUrl = '';
         try {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
-            
-            const agtLogoUrl = 'https://i.imgur.com/FDiVluw.png'; 
-            let logoDataUrl = '';
-            try {
-                const response = await fetch(agtLogoUrl);
-                const blob = await response.blob();
-                logoDataUrl = await new Promise(resolve => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
-                    reader.readAsDataURL(blob);
-                });
-            } catch (e) { console.error("Error pre-loading logo image:", e); }
-
-            const agtOrange = '#F97316';
-            const agtDark = '#0F172A';
-            const pdfTextColor = '#333333';
-            const pdfGrayColor = '#666666';
-            const generationTimestamp = new Date();
-            const uniqueId = `AGT-${Date.now()}`;
-
-            const margin = 15;
-            const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
-            
-            const addHeader = () => {
-                doc.setFillColor(agtDark);
-                doc.rect(0, 0, pageWidth, 28, 'F');
-                if (logoDataUrl) {
-                    const logoWidth = 40;
-                    const logoHeight = logoWidth / 4.5;
-                    doc.addImage(logoDataUrl, 'PNG', margin, 14 - (logoHeight / 2), logoWidth, logoHeight);
-                }
-                
-                doc.setFontSize(16);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(agtOrange);
-                doc.text("Informe de Consultoría Estratégica", pageWidth - margin, 17, { align: 'right' });
-            };
-            
-            const addFooter = (pageNumber) => {
-                const formattedTimestamp = generationTimestamp.toLocaleString('es-VE', { dateStyle: 'short', timeStyle: 'short' });
-                doc.setFontSize(8);
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(pdfGrayColor);
-                doc.text(`Página ${pageNumber}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
-                doc.text(`© AGT Comunidades C.A. | ID: ${uniqueId}`, margin, pageHeight - 10);
-                doc.text(`Generado: ${formattedTimestamp}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
-            };
-
-            let y = 40;
-            let page = 1;
-
-            const checkPageBreak = (heightNeeded) => {
-                if (y + heightNeeded > pageHeight - 20) {
-                    addFooter(page);
-                    doc.addPage();
-                    page++;
-                    addHeader();
-                    y = 40;
-                    return true;
-                }
-                return false;
-            };
-
-            const addSectionTitle = (title) => {
-                checkPageBreak(15);
-                doc.setFontSize(14);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(agtOrange);
-                doc.text(title, margin, y);
-                y += 5;
-                doc.setDrawColor(agtOrange);
-                doc.line(margin, y, margin + 50, y);
-                y += 8;
-            };
-
-            const addBodyText = (text) => {
-                const lines = doc.splitTextToSize(text, pageWidth - margin * 2);
-                const lineHeight = 1.4;
-                const textHeight = lines.length * 10 * 0.35 * lineHeight;
-                checkPageBreak(textHeight + 5); 
-                doc.setFontSize(10);
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(pdfTextColor);
-                doc.text(lines, margin, y, { align: 'left', lineHeightFactor: lineHeight });
-                y += textHeight + 8;
-            };
-            
-            const getPdfChart = async (chartInstance) => {
-                if (!chartInstance) return null;
-                const canvas = document.createElement('canvas');
-                canvas.width = 800;
-                canvas.height = 450;
-                const ctx = canvas.getContext('2d');
-                
-                ctx.fillStyle = 'white';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                const originalAnimation = chartInstance.options.animation;
-                chartInstance.options.animation = false; // Disable animation for PDF
-                
-                // Temporarily update colors for PDF and then restore them
-                const originalColors = {};
-                const pdfColor = '#333333';
-                
-                // Save original colors
-                originalColors.legend = chartInstance.options.plugins.legend.labels.color;
-                if(chartInstance.options.scales.x.title) originalColors.xTitle = chartInstance.options.scales.x.title.color;
-                if(chartInstance.options.scales.y.title) originalColors.yTitle = chartInstance.options.scales.y.title.color;
-                if(chartInstance.options.scales.x.ticks) originalColors.xTicks = chartInstance.options.scales.x.ticks.color;
-                if(chartInstance.options.scales.y.ticks) originalColors.yTicks = chartInstance.options.scales.y.ticks.color;
-                if(chartInstance.options.scales.r && chartInstance.options.scales.r.pointLabels) originalColors.rPointLabels = chartInstance.options.scales.r.pointLabels.color;
-
-
-                // Apply PDF colors
-                chartInstance.options.plugins.legend.labels.color = pdfColor;
-                if(chartInstance.options.scales.x.title) chartInstance.options.scales.x.title.color = pdfColor;
-                if(chartInstance.options.scales.y.title) chartInstance.options.scales.y.title.color = pdfColor;
-                if(chartInstance.options.scales.x.ticks) chartInstance.options.scales.x.ticks.color = pdfColor;
-                if(chartInstance.options.scales.y.ticks) chartInstance.options.scales.y.ticks.color = pdfColor;
-                if(chartInstance.options.scales.r && chartInstance.options.scales.r.pointLabels) chartInstance.options.scales.r.pointLabels.color = pdfColor;
-
-                chartInstance.update();
-                const imgData = chartInstance.toBase64Image('image/png', 1.0);
-                
-                // Restore original colors
-                chartInstance.options.animation = originalAnimation;
-                chartInstance.options.plugins.legend.labels.color = originalColors.legend;
-                if(chartInstance.options.scales.x.title) chartInstance.options.scales.x.title.color = originalColors.xTitle;
-                if(chartInstance.options.scales.y.title) chartInstance.options.scales.y.title.color = originalColors.yTitle;
-                if(chartInstance.options.scales.x.ticks) chartInstance.options.scales.x.ticks.color = originalColors.xTicks;
-                if(chartInstance.options.scales.y.ticks) chartInstance.options.scales.y.ticks.color = originalColors.yTicks;
-                 if(chartInstance.options.scales.r && chartInstance.options.scales.r.pointLabels) chartInstance.options.scales.r.pointLabels.color = originalColors.rPointLabels;
-
-                chartInstance.update();
-
-                return imgData;
-            };
-
-            doc.setProperties({
-                title: `Reporte de Consultoría AGT - ${d.scenario}`,
-                subject: 'Análisis Financiero de Solución OhmyFi + Zoho CRM',
-                author: 'AGT Comunidades C.A.',
+            const response = await fetch(agtLogoUrl);
+            const blob = await response.blob();
+            logoDataUrl = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
             });
+        } catch (e) { console.error("Error pre-loading logo image:", e); }
+
+        const agtOrange = '#F97316';
+        const agtDark = '#0F172A';
+        const pdfTextColor = '#333333';
+        const pdfGrayColor = '#666666';
+        const generationTimestamp = new Date();
+        const uniqueId = `AGT-${Date.now()}`;
+
+        const margin = 15;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        
+        const addHeader = () => {
+            doc.setFillColor(agtDark);
+            doc.rect(0, 0, pageWidth, 28, 'F');
+            if (logoDataUrl) {
+                const logoWidth = 40;
+                const logoHeight = logoWidth / 4.5;
+                doc.addImage(logoDataUrl, 'PNG', margin, 14 - (logoHeight / 2), logoWidth, logoHeight);
+            }
             
-            addHeader();
-            
-            const introText = "El presente documento analiza la viabilidad financiera y el impacto estratégico de la implementación de la solución de WiFi Marketing OhmyFi integrada con el ecosistema Zoho CRM Plus. A continuación, se presentan los resultados de la simulación basados en los parámetros de entrada proporcionados, seguidos de un análisis consultivo para facilitar la toma de decisiones.";
-            addBodyText(introText);
-            addSectionTitle("Resumen de la Simulación");
-            
-            const summary = generateDataSummary(d);
-            doc.setFont('courier', 'normal');
-            doc.setFontSize(9);
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(agtOrange);
+            doc.text("Informe de Consultoría Estratégica", pageWidth - margin, 17, { align: 'right' });
+        };
+        
+        const addFooter = (pageNumber) => {
+            const formattedTimestamp = generationTimestamp.toLocaleString('es-VE', { dateStyle: 'short', timeStyle: 'short' });
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(pdfGrayColor);
+            doc.text(`Página ${pageNumber}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+            doc.text(`© AGT Comunidades C.A. | ID: ${uniqueId}`, margin, pageHeight - 10);
+            doc.text(`Generado: ${formattedTimestamp}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+        };
+
+        let y = 40;
+        let page = 1;
+
+        const checkPageBreak = (heightNeeded) => {
+            if (y + heightNeeded > pageHeight - 20) {
+                addFooter(page);
+                doc.addPage();
+                page++;
+                addHeader();
+                y = 40;
+                return true;
+            }
+            return false;
+        };
+
+        const addSectionTitle = (title) => {
+            checkPageBreak(15);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(agtOrange);
+            doc.text(title, margin, y);
+            y += 5;
+            doc.setDrawColor(agtOrange);
+            doc.line(margin, y, margin + 50, y);
+            y += 8;
+        };
+
+        const addBodyText = (text) => {
+            const lines = doc.splitTextToSize(text, pageWidth - margin * 2);
+            const lineHeight = 1.4;
+            const textHeight = lines.length * 10 * 0.35 * lineHeight;
+            checkPageBreak(textHeight + 5); 
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
             doc.setTextColor(pdfTextColor);
-            const summaryLines = doc.splitTextToSize(summary, pageWidth - margin * 2);
-            checkPageBreak(summaryLines.length * 4);
-            doc.text(summary, margin, y);
-            y += summaryLines.length * 4;
+            doc.text(lines, margin, y, { align: 'left', lineHeightFactor: lineHeight });
+            y += textHeight + 8;
+        };
+        
+        const getPdfChart = async (chartInstance) => {
+            if (!chartInstance) return null;
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 450;
+            const ctx = canvas.getContext('2d');
             
-            addSectionTitle("Proyección de Flujo de Caja Acumulado");
-            const chartExplanation = "Este gráfico visualiza el momento en que la inversión se recupera (punto de equilibrio) y comienza a generar ganancias netas. La línea ascendente después de cruzar el cero representa el beneficio neto acumulado a lo largo del tiempo.";
-            addBodyText(chartExplanation);
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            const cashflowChartImg = await getPdfChart(charts.cumulativeCashflow);
-            if (cashflowChartImg) {
-                const chartWidth = pageWidth - margin * 2;
-                const chartHeight = chartWidth * (450 / 800);
-                checkPageBreak(chartHeight + 10);
-                doc.addImage(cashflowChartImg, 'PNG', margin, y, chartWidth, chartHeight);
-                y += chartHeight + 10;
-            }
+            const originalAnimation = chartInstance.options.animation;
+            chartInstance.options.animation = false; // Disable animation for PDF
             
-            addSectionTitle("Análisis y Recomendación del Consultor");
-            addBodyText(generateConsultantAnalysis(d));
+            // Temporarily update colors for PDF and then restore them
+            const originalColors = {};
+            const pdfColor = '#333333';
             
-            addSectionTitle("Estrategia Financiera: CAPEX vs. OPEX");
-            addBodyText(generateFinancialStrategyText());
+            // Save original colors
+            originalColors.legend = chartInstance.options.plugins.legend.labels.color;
+            if(chartInstance.options.scales.x.title) originalColors.xTitle = chartInstance.options.scales.x.title.color;
+            if(chartInstance.options.scales.y.title) originalColors.yTitle = chartInstance.options.scales.y.title.color;
+            if(chartInstance.options.scales.x.ticks) originalColors.xTicks = chartInstance.options.scales.x.ticks.color;
+            if(chartInstance.options.scales.y.ticks) originalColors.yTicks = chartInstance.options.scales.y.ticks.color;
+            if(chartInstance.options.scales.r && chartInstance.options.scales.r.pointLabels) originalColors.rPointLabels = chartInstance.options.scales.r.pointLabels.color;
+
+
+            // Apply PDF colors
+            chartInstance.options.plugins.legend.labels.color = pdfColor;
+            if(chartInstance.options.scales.x.title) chartInstance.options.scales.x.title.color = pdfColor;
+            if(chartInstance.options.scales.y.title) chartInstance.options.scales.y.title.color = pdfColor;
+            if(chartInstance.options.scales.x.ticks) chartInstance.options.scales.x.ticks.color = pdfColor;
+            if(chartInstance.options.scales.y.ticks) chartInstance.options.scales.y.ticks.color = pdfColor;
+            if(chartInstance.options.scales.r && chartInstance.options.scales.r.pointLabels) chartInstance.options.scales.r.pointLabels.color = pdfColor;
+
+            chartInstance.update();
+            const imgData = chartInstance.toBase64Image('image/png', 1.0);
             
-            addSectionTitle("Beneficios Estratégicos");
-            const benefits = generateStrategicBenefitsText().replace(/(\d+\.\s)/g, '\n$1').trim();
-            addBodyText(benefits);
-            
-            addSectionTitle("Próximos Pasos Recomendados");
-            addBodyText(generateNextStepsText());
-            
-            addFooter(page);
-            
-            doc.save(`Reporte_Consultoria_AGT_OhmyFi_${new Date().toISOString().slice(0,10)}.pdf`);
-        } catch (e) {
-            console.error("PDF generation failed, trying fallback.", e);
-            try {
-                // Fallback for sandboxed environments like Zoho's iframe
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF(); // Recreate doc for the fallback
-                // ... (re-generate the entire PDF content here)
-                // For brevity, we'll just show the final output step
-                window.open(doc.output('datauristring'));
-            } catch (fallbackError) {
-                console.error("PDF fallback also failed.", fallbackError);
-            }
+            // Restore original colors
+            chartInstance.options.animation = originalAnimation;
+            chartInstance.options.plugins.legend.labels.color = originalColors.legend;
+            if(chartInstance.options.scales.x.title) chartInstance.options.scales.x.title.color = originalColors.xTitle;
+            if(chartInstance.options.scales.y.title) chartInstance.options.scales.y.title.color = originalColors.yTitle;
+            if(chartInstance.options.scales.x.ticks) chartInstance.options.scales.x.ticks.color = originalColors.xTicks;
+            if(chartInstance.options.scales.y.ticks) chartInstance.options.scales.y.ticks.color = originalColors.yTicks;
+             if(chartInstance.options.scales.r && chartInstance.options.scales.r.pointLabels) chartInstance.options.scales.r.pointLabels.color = originalColors.rPointLabels;
+
+            chartInstance.update();
+
+            return imgData;
+        };
+
+        doc.setProperties({
+            title: `Reporte de Consultoría AGT - ${d.scenario}`,
+            subject: 'Análisis Financiero de Solución OhmyFi + Zoho CRM',
+            author: 'AGT Comunidades C.A.',
+        });
+        
+        addHeader();
+        
+        const introText = "El presente documento analiza la viabilidad financiera y el impacto estratégico de la implementación de la solución de WiFi Marketing OhmyFi integrada con el ecosistema Zoho CRM Plus. A continuación, se presentan los resultados de la simulación basados en los parámetros de entrada proporcionados, seguidos de un análisis consultivo para facilitar la toma de decisiones.";
+        addBodyText(introText);
+        addSectionTitle("Resumen de la Simulación");
+        
+        const summary = generateDataSummary(d);
+        doc.setFont('courier', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(pdfTextColor);
+        const summaryLines = doc.splitTextToSize(summary, pageWidth - margin * 2);
+        checkPageBreak(summaryLines.length * 4);
+        doc.text(summary, margin, y);
+        y += summaryLines.length * 4;
+        
+        addSectionTitle("Proyección de Flujo de Caja Acumulado");
+        const chartExplanation = "Este gráfico visualiza el momento en que la inversión se recupera (punto de equilibrio) y comienza a generar ganancias netas. La línea ascendente después de cruzar el cero representa el beneficio neto acumulado a lo largo del tiempo.";
+        addBodyText(chartExplanation);
+        
+        const cashflowChartImg = await getPdfChart(charts.cumulativeCashflow);
+        if (cashflowChartImg) {
+            const chartWidth = pageWidth - margin * 2;
+            const chartHeight = chartWidth * (450 / 800);
+            checkPageBreak(chartHeight + 10);
+            doc.addImage(cashflowChartImg, 'PNG', margin, y, chartWidth, chartHeight);
+            y += chartHeight + 10;
         }
+        
+        addSectionTitle("Análisis y Recomendación del Consultor");
+        addBodyText(generateConsultantAnalysis(d));
+        
+        addSectionTitle("Estrategia Financiera: CAPEX vs. OPEX");
+        addBodyText(generateFinancialStrategyText());
+        
+        addSectionTitle("Beneficios Estratégicos");
+        const benefits = generateStrategicBenefitsText().replace(/(\d+\.\s)/g, '\n$1').trim();
+        addBodyText(benefits);
+        
+        addSectionTitle("Próximos Pasos Recomendados");
+        addBodyText(generateNextStepsText());
+        
+        addFooter(page);
+        
+        doc.save(`Reporte_Consultoria_AGT_OhmyFi_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
     window.onload = function() {
@@ -1848,8 +1838,8 @@ Versión: 42.0 (13/10/2025)
             simulatorEl.scrollIntoView({ behavior: 'smooth' });
         }
     };
-})();
 </script>
 </body>
 </html>
+
 
