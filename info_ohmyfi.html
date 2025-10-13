@@ -4,18 +4,25 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
+Versión: 41.0 (13/10/2025)
+- Título: Mejora de Precisión del Motor de Cálculo: De Leads Mensuales a Conexiones Semanales
+- Cambios:
+  1.  (LÓGICA CRÍTICA) Se refactorizó el motor de cálculo. La variable de entrada
+      ahora es "Conexiones Semanales Promedio por AP", que se multiplica por 4.33
+      para obtener el total mensual, aumentando la precisión del modelo.
+  2.  (UX/UI) Se actualizó la etiqueta del slider a "Conexiones Semanales Promedio
+      por AP" y se ajustó su rango a (10-1000) para mejorar la usabilidad.
+  3.  (GENERAL) Se actualizó el pie de página a la versión 41.0.
+
 Versión: 40.0 (12/10/2025)
 - Título: Evolución de Interfaz a Sliders y Refactorización del Motor de Cálculo
 - Cambios:
-  1.  (UX/UI) Se migraron los campos de entrada numérica restantes (APs,
-      Costo por Lead, LTV, Costo de Internet) a sliders interactivos para
+  1.  (UX/UI) Se migraron los campos de entrada numérica a sliders interactivos para
       unificar y mejorar la experiencia de usuario.
   2.  (UI) Se estandarizó el formato de moneda a "USD" en toda la interfaz
       para mayor claridad y profesionalismo.
   3.  (LÓGICA/VERIFICACIÓN) Se confirmó que el motor de cálculo ya opera
-      bajo la fórmula transparente (Total APs * Leads por AP), cumpliendo
-      con el objetivo estratégico de credibilidad.
-  4.  (GENERAL) Se actualizó el pie de página a la versión 40.0.
+      bajo la fórmula transparente (Total APs * Leads por AP).
 
 Versión: 37.8 (11/10/2025)
 - Título: Corrección Final de Lógica de Payback y Refinamiento de Narrativa
@@ -24,21 +31,7 @@ Versión: 37.8 (11/10/2025)
       Recuperación (Payback)" para que se mida contra los costos totales
       acumulados (TCO progresivo) en lugar del CAPEX inicial.
   2.  (NARRATIVA) Se refinó el texto del "Nivel 2: Potencial de
-      Rentabilidad" para educar al usuario sobre cómo su propia estrategia
-      de marketing es la llave para monetizar el activo de datos.
-  3.  (LÓGICA GRÁFICO) Se corrigió el punto de inicio del gráfico "Flujo de
-      Caja Acumulado" para reflejar correctamente un desembolso inicial
-      de cero cuando se aplica financiamiento.
-
-Versión: 37.7 (11/10/2025)
-- Título: Corrección de Flujo de Caja y Educación Financiera
-- Cambios:
-  1.  (LÓGICA) Se corrigió el gráfico "Evolución de Costos Mensuales" para
-      que el CAPEX desaparezca correctamente al aplicar financiamiento.
-  2.  (UX/Contenido) Se actualizó la explicación en la tarjeta "Costos y
-      Financiamiento" para introducir el concepto de Apalancamiento.
-  3.  (PDF) Se añadió una nueva sección al reporte PDF para desarrollar
-      formalmente el concepto de Apalancamiento Financiero.
+      Rentabilidad" para educar al usuario sobre la monetización del activo de datos.
 -->
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
@@ -247,7 +240,7 @@ Versión: 37.7 (11/10/2025)
         <!-- HEADER -->
         <header class="mb-16 text-center">
             <img src="https://i.imgur.com/YjSq4q3.png" 
-                 alt="[Imagen de un equipo de profesionales analizando datos en un entorno tecnológico]"
+                 alt="Equipo de profesionales analizando datos en un entorno tecnológico"
                  class="w-full h-64 md:h-96 object-cover rounded-xl mb-8 opacity-75">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
                 Transforme su Wi-Fi de un <span class="text-red-400">Gasto</span> a un <span class="text-green-400">Activo Estratégico</span>
@@ -261,7 +254,7 @@ Versión: 37.7 (11/10/2025)
             <div class="max-w-4xl mx-auto card overflow-hidden !p-0">
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     <div class="relative min-h-[200px] md:min-h-0">
-                         <img src="https://i.imgur.com/jLaLigH.png" alt="[Imagen de una estrategia de negocio]" class="absolute h-full w-full object-cover">
+                         <img src="https://i.imgur.com/jLaLigH.png" alt="Estrategia de Negocio" class="absolute h-full w-full object-cover">
                     </div>
                     <div class="p-8 md:p-10 border-t md:border-t-0 md:border-l border-slate-700 flex flex-col justify-center">
                         <h3 class="text-2xl font-bold text-orange-400 mb-4">La Ventaja AGT: Estrategia, no solo Herramientas</h3>
@@ -355,7 +348,7 @@ Versión: 37.7 (11/10/2025)
                 <div class="flip-card hover-flip-card" style="min-height: 420px;">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card !p-0 text-center">
-                            <img src="https://i.imgur.com/yuXSOZw.png" alt="[Imagen de una digitalización Pyme]" class="w-full h-40 object-cover">
+                            <img src="https://i.imgur.com/yuXSOZw.png" alt="Digitalización Pyme" class="w-full h-40 object-cover">
                             <div class="p-6">
                                 <i data-lucide="rocket" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
                                 <h3 class="font-bold text-xl mb-2">Responde a la Digitalización</h3>
@@ -372,7 +365,7 @@ Versión: 37.7 (11/10/2025)
                 <div class="flip-card hover-flip-card" style="min-height: 420px;">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card !p-0 text-center">
-                             <img src="https://i.imgur.com/DSQtKM3.png" alt="[Imagen de una base de datos de clientes]" class="w-full h-40 object-cover">
+                             <img src="https://i.imgur.com/DSQtKM3.png" alt="Base de Datos de Clientes" class="w-full h-40 object-cover">
                             <div class="p-6">
                                 <i data-lucide="shield-check" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
                                 <h3 class="font-bold text-xl mb-2">Construye Activos Propios</h3>
@@ -389,7 +382,7 @@ Versión: 37.7 (11/10/2025)
                 <div class="flip-card hover-flip-card" style="min-height: 420px;">
                     <div class="flip-card-inner">
                         <div class="flip-card-front card !p-0 text-center">
-                             <img src="https://i.imgur.com/iYZNh0Z.png" alt="[Imagen de un crecimiento financiero]" class="w-full h-40 object-cover">
+                             <img src="https://i.imgur.com/iYZNh0Z.png" alt="Crecimiento Financiero" class="w-full h-40 object-cover">
                             <div class="p-6">
                                 <i data-lucide="dollar-sign" class="w-12 h-12 mx-auto text-orange-400 mb-4"></i>
                                 <h3 class="font-bold text-xl mb-2">Supera Barreras de Costo</h3>
@@ -415,17 +408,17 @@ Versión: 37.7 (11/10/2025)
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="card bg-slate-800/50">
                         <h4 class="font-bold text-lg mb-2 text-orange-400">Resultados Reales</h4>
-                        <img src="https://i.imgur.com/qh6c159.png" alt="[Imagen de un tablero de resultados de City Park]" class="rounded-lg mb-3">
+                        <img src="https://i.imgur.com/qh6c159.png" alt="Tablero de resultados de City Park" class="rounded-lg mb-3">
                         <p class="text-sm text-slate-400">Visualiza el crecimiento constante. Cada conexión es un nuevo cliente potencial entrando en tu ecosistema de ventas.</p>
                     </div>
                     <div class="card bg-slate-800/50">
                         <h4 class="font-bold text-lg mb-2 text-orange-400">Cobertura Estratégica</h4>
-                        <img src="https://i.imgur.com/yZyTtxZ.png" alt="[Imagen de un mapa de cobertura de City Park]" class="rounded-lg mb-3">
+                        <img src="https://i.imgur.com/yZyTtxZ.png" alt="Mapa de cobertura de City Park" class="rounded-lg mb-3">
                         <p class="text-sm text-slate-400">Con solo dos equipos logramos una cobertura total de las zonas de mayor afluencia. Esto es planificar para maximizar el retorno de tu inversión.</p>
                     </div>
                     <div class="card bg-slate-800/50">
                         <h4 class="font-bold text-lg mb-2 text-orange-400">Inversión Eficiente</h4>
-                        <img src="https://i.imgur.com/kkM8Tte.png" alt="[Imagen de una infraestructura física en City Park]" class="rounded-lg mb-3">
+                        <img src="https://i.imgur.com/kkM8Tte.png" alt="Infraestructura física en City Park" class="rounded-lg mb-3">
                         <p class="text-sm text-slate-400">Este es todo el hardware necesario. Una solución potente y discreta que demuestra que no necesitas una gran inversión para obtener grandes resultados.</p>
                     </div>
                 </div>
@@ -580,14 +573,14 @@ Versión: 37.7 (11/10/2025)
             <p class="section-subtitle">La misma tecnología de clase mundial que impulsa a grandes corporaciones en Latinoamérica, a su alcance.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                 <div class="card !p-0 overflow-hidden flex flex-col">
-                    <img src="https://i.imgur.com/MKqAF4J.png" alt="[Imagen de una panorámica del Movistar Arena Bogotá]" class="w-full h-48 object-cover">
+                    <img src="https://i.imgur.com/MKqAF4J.png" alt="Panorámica del Movistar Arena Bogotá" class="w-full h-48 object-cover">
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="font-bold text-xl mb-2">Rendimiento en Alta Densidad</h3>
                         <p class="text-sm text-slate-400 mb-4 flex-grow"><strong class="text-orange-400">¿Por qué es un caso de éxito?</strong> Demuestra la capacidad para gestionar miles de conexiones simultáneas en entornos de máxima exigencia, como un concierto, garantizando una robustez de clase mundial.</p>
                     </div>
                 </div>
                 <div class="card !p-0 overflow-hidden flex flex-col">
-                    <img src="https://i.imgur.com/zwbuV63.png" alt="[Imagen de la sede de Compensar]" class="w-full h-48 object-cover">
+                    <img src="https://i.imgur.com/zwbuV63.png" alt="Sede de Compensar" class="w-full h-48 object-cover">
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="font-bold text-xl mb-2">Gestión Centralizada Multi-Sede</h3>
                         <p class="text-sm text-slate-400 mb-4 flex-grow"><strong class="text-orange-400">¿Por qué es un caso de éxito?</strong> Valida la capacidad de administrar una extensa red de sucursales desde un único panel, asegurando una experiencia de marca unificada y una gestión simplificada para negocios en expansión.</p>
@@ -652,8 +645,8 @@ Versión: 37.7 (11/10/2025)
                             </h3>
                             <div class="space-y-4">
                                 <div>
-                                   <label for="leads-per-ap" class="block mb-2 text-sm font-medium">Leads por AP al Mes: <span id="leads-per-ap-value" class="font-bold text-orange-400">25</span></label>
-                                   <input type="range" id="leads-per-ap" min="5" max="100" value="25" step="5" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                                   <label for="leads-per-ap" class="block mb-2 text-sm font-medium">Conexiones Semanales Promedio por AP: <span id="leads-per-ap-value" class="font-bold text-orange-400">100</span></label>
+                                   <input type="range" id="leads-per-ap" min="10" max="1000" value="100" step="10" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
                                 </div>
                                 <div>
                                    <label for="recurrent-rate" class="block mb-2 text-sm font-medium">% Clientes Recurrentes: <span id="recurrent-rate-value" class="font-bold text-orange-400">37</span>%</label>
@@ -677,7 +670,7 @@ Versión: 37.7 (11/10/2025)
                          <div class="flip-card-back">
                             <h3 class="font-bold text-lg mb-2 text-orange-400">¿Qué significan estas métricas?</h3>
                             <p class="text-sm text-slate-300">
-                                <strong class="text-slate-100">Leads & Recurrentes:</strong> Miden la capacidad de la plataforma para capturar nuevos clientes y medir la lealtad de los existentes.
+                                <strong class="text-slate-100">Conexiones & Recurrentes:</strong> Miden el volumen de personas que usan su Wi-Fi y cuántos de ellos son clientes leales que regresan.
                                 <br><br>
                                 <strong class="text-slate-100">Costo por Lead:</strong> Es lo que le costaría adquirir un nuevo contacto por medios tradicionales (publicidad). Ohmyfi le permite obtenerlos a un costo mucho menor.
                                  <br><br>
@@ -723,7 +716,7 @@ Versión: 37.7 (11/10/2025)
             
             <div id="scenario-image-container" class="my-8">
                  <img id="scenario-image" src="https://i.imgur.com/taauS8h.png" 
-                     alt="[Imagen de un técnico instalando un punto de acceso Wi-Fi]"
+                     alt="Técnico instalando un punto de acceso Wi-Fi"
                      class="w-full h-auto max-h-96 object-cover rounded-lg transition-opacity duration-500">
             </div>
 
@@ -875,7 +868,7 @@ Versión: 37.7 (11/10/2025)
                     <div class="flip-card-inner">
                         <div class="flip-card-front items-center text-center justify-center">
                              <i data-lucide="info" class="flip-trigger"></i>
-                            <h3 class="font-bold mb-2">Desglose TCO (por Componente)</h3>
+                            <h3 class="font-bold text-lg mb-2">Desglose TCO (por Componente)</h3>
                             <canvas id="tcoComponentBreakdownChart"></canvas>
                         </div>
                         <div class="flip-card-back">
@@ -1001,8 +994,8 @@ Versión: 37.7 (11/10/2025)
         </section>
         
         <footer class="text-center py-8 border-t border-slate-700">
-            <img src="https://i.imgur.com/IcfVlYf.png" alt="[Logo de AGT Comunidades C.A.]" class="h-10 mx-auto mb-4 opacity-80">
-            <p class="text-slate-400">Simulador Financiero v40.0 | Desarrollado por Gemini para AGT Comunidades</p>
+            <img src="https://i.imgur.com/IcfVlYf.png" alt="AGT Comunidades C.A. Logo" class="h-10 mx-auto mb-4 opacity-80">
+            <p class="text-slate-400">Simulador Financiero v41.0 | Desarrollado por Gemini para AGT Comunidades</p>
         </footer>
 
     </div>
@@ -1024,7 +1017,7 @@ Versión: 37.7 (11/10/2025)
     </div>
 
 <script>
-    // V40.0 - UX/UI Evolution to Sliders & Calculation Engine Refactor
+    // V41.0 - Calculation Engine Precision Improvement: From Monthly Leads to Weekly Connections
     const PRICING = {
         CONTROLLER_COST: 179.00, AP_INDOOR_COST: 95.00, AP_OUTDOOR_COST: 144.00, HARDWARE_MARKUP: 0.25,
         AUX_COMPONENTS_FIXED: 850.00, INSTALL_FEE_PER_AP: 75.00, CONFIG_FEE_FIXED: 200.00, BYOD_CONFIG_FEE_FIXED: 1000.00,
@@ -1107,7 +1100,6 @@ Versión: 37.7 (11/10/2025)
             if (inputGroup && inputGroup.slider) {
                 inputGroup.slider.addEventListener('input', (e) => {
                     if (inputGroup.value) {
-                        // For LTV and Internet Cost, we append " USD"
                         if (id === 'customerLTV' || id === 'internetCost') {
                             inputGroup.value.textContent = `${e.target.value}`;
                         } else {
@@ -1209,7 +1201,11 @@ Versión: 37.7 (11/10/2025)
             }
             
             const tco = capex + totalOpex + financingCost;
-            const newLeadsMonthly = isCityPark ? (cityParkData.newUsers.reduce((a, b) => a + b, 0) / cityParkData.months.length) : (totalAps * values.leadsPerAp);
+            
+            const newLeadsMonthly = isCityPark 
+                ? (cityParkData.newUsers.reduce((a, b) => a + b, 0) / cityParkData.months.length) 
+                : (totalAps * values.leadsPerAp * 4.33);
+
             const monthlyRevenue = newLeadsMonthly * values.conversionRate * values.customerLTV;
             
             const totalRevenue = monthlyRevenue * 36;
@@ -1279,7 +1275,7 @@ Versión: 37.7 (11/10/2025)
             const ltvVar = values.customerLTV * (0.8 + Math.random() * 0.4);
             const convRateVar = values.conversionRate * (0.8 + Math.random() * 0.4);
             const leadsPerApVar = values.leadsPerAp * (0.8 + Math.random() * 0.4);
-            const newCustMonthVar = totalAps * leadsPerApVar * convRateVar;
+            const newCustMonthVar = totalAps * leadsPerApVar * 4.33 * convRateVar;
             const totalRevVar = newCustMonthVar * 36 * ltvVar;
             const tcoVar = capex + totalOpexSim + financingCost;
             const netBenefitVar = totalRevVar - tcoVar;
@@ -1298,9 +1294,13 @@ Versión: 37.7 (11/10/2025)
             financingTerm: 0,
             conversionRate: 0.05, // Conservative assumption
             recurrentRate: 0.37, // Real data
-            leadsPerAp: 71, // Real data approximation
+            leadsPerAp: 71, // This is daily, so we convert to weekly for consistency: 71 * 7 = ~500
             costPerLead: 1.5, // Assumption
         };
+        const weeklyLeads = params.leadsPerAp * 7;
+        const monthlyLeads = weeklyLeads * 4.33;
+        const monthlyRevenue = monthlyLeads * params.conversionRate * params.customerLTV;
+
         const results = calculate(true, params);
         if (results && ui.outputs.citypark.tco && ui.outputs.citypark.roi && ui.outputs.citypark.payback) {
             ui.outputs.citypark.tco.textContent = formatCurrency(results.tco);
@@ -1463,7 +1463,7 @@ Versión: 37.7 (11/10/2025)
                 charts.monteCarlo.update();
             }
         } catch (e) { console.error("Failed to update monteCarloChart:", e); }
-        try { if (charts.monthlyCosts) { charts.monthlyCosts.data.datasets[0].data = d.monthlyData.capex.slice(0, 12); charts.monthlyCosts.data.datasets[1].data = d.monthlyData.opexOnly.slice(0, 12); charts.monthlyCosts.data.datasets[2].data = d.monthlyData.financing.slice(0, 12); charts.monthlyCosts.update(); } } catch (e) { console.error("Failed to update monthlyCostsChart:", e); }
+        try { if (charts.monthlyCosts) { charts.monthlyCosts.data.datasets[0].data = d.monthlyData.capex.slice(0, 12); charts.monthlyCosts.data.datasets[1].data = d.monthlyData.opexOnly.slice(0, 12); charts.monthlyCosts.data.datasets[2].data = d.monthlyData.financing.slice(0, 12); charts.monthlyCosts.update(); } } catch (e) { console.error("Failed to create monthlyCostsChart:", e); }
     }
     
     function generateFinancialStrategyText() {
@@ -1513,7 +1513,7 @@ Versión: 37.7 (11/10/2025)
         let summary = `Escenario: ${scenarioText}\n${line}\n`;
         summary += `\nINPUTS:\n`;
         summary += `Infraestructura: ${d.totalAps} APs (${d.apsIndoor} Int, ${d.apsOutdoor} Ext)\n`;
-        summary += `Leads por AP al Mes: ${d.leadsPerAp}\n`;
+        summary += `Conexiones Semanales por AP: ${d.leadsPerAp}\n`;
         summary += `% Clientes Recurrentes: ${d.recurrentRate * 100}%\n`;
         summary += `Costo por Lead de Mercado: ${formatCurrency(d.costPerLead)}\n`;
         summary += `Valor de Vida del Cliente (LTV): ${formatCurrency(d.customerLTV)}\n`;
