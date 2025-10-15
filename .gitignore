@@ -1,0 +1,18 @@
+# Backups
+backup_*/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# Temporales
+*.tmp
+*~
+
+# Zoho WorkDrive
+.zw-*

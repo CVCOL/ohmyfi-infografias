@@ -1,0 +1,40 @@
+{
+  "current": "43.1",
+  "date": "2025-10-15",
+  "title": "Reorganización de Estructura y Sistema de Versionamiento Mejorado",
+  "author": "Edward Camacho / Claude",
+  "zoho_task": "ZP-REORGANIZACION",
+  "description": "Implementación de sistema de control de versiones profesional con archivo único de producción",
+  "changes": [
+    {
+      "category": "ESTRUCTURA",
+      "description": "Consolidación de 16 archivos HTML en un único index.html de producción"
+    },
+    {
+      "category": "VERSIONAMIENTO",
+      "description": "Implementación de VERSION.json y CHANGELOG.md para trazabilidad"
+    },
+    {
+      "category": "AUTOMATIZACIÓN",
+      "description": "Scripts de reorganización, validación y commit rápido"
+    },
+    {
+      "category": "LÓGICA/SEGURIDAD",
+      "description": "Encapsulación en IIFE para prevenir conflictos con Zoho (de v43.0)"
+    },
+    {
+      "category": "UX/LÓGICA",
+      "description": "Fallback para generación de PDFs en iframes (de v43.0)"
+    }
+  ],
+  "compatibility": {
+    "browsers": ["Chrome 90+", "Firefox 88+", "Safari 14+", "Edge 90+"],
+    "platforms": ["Zoho Landing Pages", "GitHub Pages"],
+    "dependencies": {
+      "tailwindcss": "CDN",
+      "chartjs": "3.x",
+      "jspdf": "2.5.1",
+      "lucide": "latest"
+    }
+  }
+}
