@@ -820,24 +820,26 @@ Versión: 42.0 (13/10/2025)
                 }
             });
         }
-        
-        if(ui.report.generateBtn) ui.report.generateBtn.addEventListener('click', () => { 
-            if(ui.report.contentContainer) ui.report.contentContainer.innerHTML = generateReportHTML(lastCalculationData);
-            if(ui.report.modal) ui.report.modal.classList.remove('opacity-0', 'pointer-events-none'); 
-        });
-        if(ui.report.closeBtn) ui.report.closeBtn.addEventListener('click', () => ui.report.modal.classList.add('opacity-0', 'pointer-events-none'));
-        if(ui.report.downloadBtn) ui.report.downloadBtn.addEventListener('click', () => downloadPDF(lastCalculationData));
+        // --- CONEXIÓN DEL BOTÓN PARA LLAMAR AL FORMULARIO ZOHO ---
+        if (ui.report.generateBtn) {ui.report.generateBtn.addEventListener('click', () => {
+        // Llama a la función para que inyecte el formulario
+        // con los datos más recientes de la simulación.
+        inyectarFormularioZoho();
+    });
+}
+        // --- FIN DE LA CONEXIÓN ---
         lucide.createIcons();
-        // Asegurar inicialización de iconos
-        setTimeout(() => {
-            try {
-                if (window.lucide && typeof window.lucide.createIcons === 'function') {
-                    window.lucide.createIcons();
-                }
-            } catch (err) {
-                console.warn('Retry lucide.createIcons():', err);
-            }
-        }, 300);
+       // Asegurar inicialización de iconos
+setTimeout(() => {
+    try {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            window.lucide.createIcons();
+        }
+    } catch (err) {
+        console.warn('Retry lucide.createIcons():', err);
+    }
+   }, 300);
+
     }
 
     function setScenario(scenario) {
@@ -1062,8 +1064,7 @@ Versión: 42.0 (13/10/2025)
         updateKpiRatings(d);
         updateAnalysisTexts(d);
         updateCharts(d);
-        // Al final de todo, justo antes de terminar la función, llama al cerebro:
-        inyectarFormularioZoho();
+       
     }
 
     function updateKpiRatings(d) {
