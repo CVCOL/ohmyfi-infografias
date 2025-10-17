@@ -4,7 +4,8 @@ CONTROL DE VERSIONES: Simulador Interactivo OhmyFi
 Este bloque registra la evolución del proyecto, manteniendo un historial
 de las últimas tres versiones estables para referencia rápida.
 
-Versión: 43.1 (13/10/2025)
+Versión: 44.0 (13/10/2025)
+Versión: 43.2 (13/10/2025)
 - Título: Hardening para Despliegue en Zoho Landing Pages
 - Cambios:
   1.  (LÓGICA/SEGURIDAD) Se encapsuló todo el código JavaScript en un IIFE
@@ -41,6 +42,7 @@ Versión: 42.0 (13/10/2025)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Análisis Interactivo de Valor: OhmyFi + Zoho en Venezuela</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -435,6 +437,8 @@ Versión: 42.0 (13/10/2025)
                         </div>
                     </div>
                 </div>
+                <div id="contenedor-formulario-zoho" class="mt-5 lg:col-span-4">
+    </div>
 
                 <!-- Level 2: Profitability Potential -->
                 <div class="lg:col-span-4 text-center my-4 pt-4 border-t border-slate-700">
@@ -1058,6 +1062,8 @@ Versión: 42.0 (13/10/2025)
         updateKpiRatings(d);
         updateAnalysisTexts(d);
         updateCharts(d);
+        // Al final de todo, justo antes de terminar la función, llama al cerebro:
+        inyectarFormularioZoho();
     }
 
     function updateKpiRatings(d) {
@@ -1524,7 +1530,7 @@ Versión: 42.0 (13/10/2025)
             simulatorEl.scrollIntoView({ behavior: 'smooth' });
         }
         
-        // Reintentar iconos después de cargar todo
+// Reintentar iconos después de cargar todo
         setTimeout(() => {
             try {
                 if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -1533,20 +1539,90 @@ Versión: 42.0 (13/10/2025)
             } catch(e) {
                 console.warn('lucide final retry:', e);
             }
-        }, 500);   
+        }, 500);
     };
-})();
+
+    /**
+     * =======================================================================
+     * MOTOR DE INYECCIÓN DEL FORMULARIO ZOHO (VERSIÓN FINAL Y CORREGIDA)
+     * Conecta el simulador con Zoho Forms usando los IDs correctos.
+     * =======================================================================
+     */
+    function inyectarFormularioZoho() {
+
+        // 1. LEE LOS RESULTADOS USANDO LOS IDs VALIDADOS DE TU HTML
+        const ahorroPublicidadTexto = document.getElementById('ad-savings-value')?.textContent.trim() || '$0';
+        const paybackTexto = document.getElementById('payback-value')?.textContent.trim() || 'N/A';
+        const roiTexto = document.getElementById('roi-value')?.textContent.trim() || '0%';
+        const beneficioNetoTexto = document.getElementById('net-benefit-value')?.textContent.trim() || '$0';
+
+        // 2. LIMPIA LOS DATOS PARA ENVIAR NÚMEROS PUROS A ZOHO
+        const ahorroPublicidadNumero = parseFloat(ahorroPublicidadTexto.replace(/[^0-9.-]+/g, "")) || 0;
+        const beneficioNetoNumero = parseFloat(beneficioNetoTexto.replace(/[^0-9.-]+/g, "")) || 0;
+        const roiNumero = parseFloat(roiTexto.replace(/[^0-9.-]+/g, "")) || 0;
+        const payback = paybackTexto;
+
+        // 3. CONSTRUYE LA URL DINÁMICA DEL FORMULARIO
+        let ifrmSrc = 'https://forms.zohopublic.com/agtcompany/form/Ohmyfi1/formperma/0rJHGnpWoWWO_ZTPqJY6VkqHBOFDwHby0_r7tdjoi-o?zf_rszfm=1';
+
+        // Añade los resultados limpios como parámetros.
+        ifrmSrc += `&Ahorro_Publicidad_Calculado=${ahorroPublicidadNumero}`;
+        ifrmSrc += `&Payback_Calculado=${encodeURIComponent(payback)}`;
+        ifrmSrc += `&ROI_Calculado=${roiNumero}`;
+        ifrmSrc += `&Beneficio_Neto_Calculado=${beneficioNetoNumero}`;
+
+        // 4. INYECTA EL FORMULARIO EN EL CONTENEDOR
+        try {
+            const container = document.getElementById("contenedor-formulario-zoho");
+            if (!container) return; 
+            container.innerHTML = '';
+
+            const f = document.createElement("iframe");
+            f.src = ifrmSrc;
+            f.style.border = "none";
+            f.style.height = "700px";
+            f.style.width = "100%";
+            f.style.transition = "all 0.5s ease";
+            f.setAttribute("aria-label", 'Ohmyfi');
+
+            container.appendChild(f);
+
+            window.addEventListener('message', function (event){
+                const evntData = event.data;
+                if( evntData && typeof evntData === 'string' ){
+                    const zf_ifrm_data = evntData.split("|");
+                    if ( zf_ifrm_data.length >= 2 ) {
+                        const zf_perma = zf_ifrm_data[0];
+                        const zf_ifrm_ht_nw = ( parseInt(zf_ifrm_data[1], 10) + 15 ) + "px";
+                        if (f.src.includes(zf_perma) ) {
+                            f.style.height = zf_ifrm_ht_nw;
+                        }
+                    }
+                }
+            }, false);
+
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        } catch(e) {
+            console.error("Error al inyectar el formulario de Zoho:", e);
+        }
+    }
+
+})(); // <-- FIN DEL SCRIPT PRINCIPAL DEL SIMULADOR
+
 </script>
 <script>
-// Comunicación con iframe padre
+// Comunicación con iframe padre y inicialización de iconos
 window.addEventListener('load', function() {
     function notifyHeight() {
         const height = document.documentElement.scrollHeight;
-        window.parent.postMessage({
-            type: 'resize',
-            frame: 'simulator',
-            height: height
-        }, '*');
+        if (window.parent) {
+            window.parent.postMessage({
+                type: 'resize',
+                frame: 'simulator',
+                height: height
+            }, '*');
+        }
     }
     notifyHeight();
     setInterval(notifyHeight, 2000);
@@ -1563,4 +1639,3 @@ window.addEventListener('load', function() {
 </script>
 </body>
 </html>
-
