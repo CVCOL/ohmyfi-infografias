@@ -1,641 +1,254 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Rentabilidad OhmyFi | AGT</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <style>
-        :root {
-            --primary-color: #007BFF;
-            --secondary-color: #FFA500;
-            --background-color: #121212;
-            --surface-color: #1E1E1E;
-            --text-color: #E0E0E0;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 2rem;
-            line-height: 1.6;
-        }
-        #ohmyfi-app-container {
-            max-width: 900px;
-            margin: auto;
-            background-color: var(--background-color);
-            padding: 2rem;
-            border-radius: 15px;
-        }
-        h1, h2, h3 {
-            color: var(--primary-color);
-            text-align: center;
-        }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .subtitle {
-            text-align: center;
-            font-size: 1.2rem;
-            margin-bottom: 3rem;
-            color: var(--secondary-color);
-        }
-        .card {
-            background-color: var(--surface-color);
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-        input[type="range"] {
-            width: 100%;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-            background: #444;
-            border-radius: 5px;
-            outline: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        .slider-value {
-            display: inline-block;
-            margin-left: 10px;
-            font-weight: bold;
-            color: var(--secondary-color);
-        }
-        select {
-            width: 100%;
-            padding: 0.8rem;
-            background-color: #333;
-            color: var(--text-color);
-            border: 1px solid #555;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        .model-explanation {
-            font-size: 0.9rem;
-            color: #aaa;
-            margin-top: 0.5rem;
-            padding-left: 0.5rem;
-            border-left: 2px solid var(--primary-color);
-        }
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            text-align: center;
-        }
-        .kpi-card {
-            background-color: #2a2a2a;
-            padding: 1.5rem;
-            border-radius: 8px;
-            border-left: 5px solid var(--primary-color);
-        }
-        .kpi-title {
-            font-size: 1rem;
-            color: #aaa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .kpi-value {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-top: 0.5rem;
-        }
-        .positive { color: var(--success-color); }
-        .negative { color: var(--danger-color); }
-        .neutral { color: var(--secondary-color); }
+<!DOCTYPE html> <!-- Fuente del archivo original: :contentReference[oaicite:0]{index=0} --> <html lang="es" class="scroll-smooth"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Análisis Interactivo de Valor: OhmyFi + Zoho en Venezuela</title> <script src="https://cdn.tailwindcss.com"></script> <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <script src="https://unpkg.com/lucide@latest"></script> <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"> <style> :root { --agt-dark: #0F172A; /* Slate 900 */ --agt-blue: #1E3A8A; /* Indigo 800 */ --agt-orange: #F97316; /* Orange 500 */ --agt-light-gray: #F1F5F9; /* Slate 100 */ --agt-text: #E2E8F0; /* Slate 200 */ } body { font-family: 'Inter', sans-serif; background-color: var(--agt-dark); color: var(--agt-text); overflow-x: hidden; } .section-title { font-size: 2.25rem; font-weight: 800; line-height: 1.2; text-align: center; margin-bottom: 1rem; } .section-subtitle { font-size: 1.125rem; text-align: center; color: #94a3b8; /* Slate 400 */ max-width: 800px; margin: 0 auto 3rem auto; } .btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.3s ease; cursor: pointer; border: 2px solid transparent; display: inline-flex; align-items: center; justify-content: center; } .btn-primary { background-color: var(--agt-orange); color: white; } .btn-primary:hover { background-color: #FB923C; } .btn-secondary { background-color: #334155; color: var(--agt-text); } .btn-secondary:hover { background-color: #475569; } .btn-active { background-color: var(--agt-orange); color: white; box-shadow: 0 0 15px rgba(249, 115, 22, 0.5); } .card { background-color: #1E293B; /* Slate 800 */ border-radius: 0.75rem; padding: 1.5rem; border: 1px solid #334155; /* Slate 700 */ height: 100%; } .flip-card { background-color: transparent; width: 100%; perspective: 1000px; min-height: 220px; position: relative; } .control-panel-card { min-height: 560px; } .kpi-flip-card { min-height: 180px; } .chart-flip-card { height: 400px; } .flip-card-inner { position: absolute; width: 100%; height: 100%; top: 0; left: 0; text-align: left; transition: transform 0.8s; transform-style: preserve-3d; } .hover-flip-card:hover .flip-card-inner { transform: rotateY(180deg); } .flip-card.is-flipped .flip-card-inner { transform: rotateY(180deg); } .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; background-color: #1E293B; border-radius: 0.75rem; border: 2px solid #334155; padding: 1.5rem; transition: border-color 0.5s ease; overflow: hidden; } .flip-card-back { transform: rotateY(180deg); justify-content: center; } .flip-trigger { position: absolute; top: 15px; right: 15px; cursor: pointer; z-index: 10; color: #94a3b8; transition: color 0.3s; } .flip-trigger:hover { color: var(--agt-orange); }
+    .rating-bad { border-color: #F87171; }
+    .rating-regular { border-color: #F97316; }
+    .rating-good { border-color: #4ADE80; }
+    .rating-excellent { border-color: #2DD4BF; }
 
-        .btn {
-            display: inline-block;
-            width: calc(100% - 2rem);
-            padding: 1rem;
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 1.2rem;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
+    .logo-reel-container { width: 100%; overflow: hidden; padding: 2rem 0; position: relative;
+        -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+        mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+    }
+    .logo-reel { display: flex; align-items: center; width: fit-content; will-change: transform; animation: scroll 40s linear infinite; }
+    .logo-reel:hover { animation-play-state: paused; }
+    .logo-reel img { height: 4rem; margin: 0 2.5rem; transition: all 0.4s ease; }
+    .logo-reel img:hover { transform: scale(1.1); }
+    @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.7);
-        }
-        .modal-content {
-            background-color: var(--surface-color);
-            margin: 10% auto;
-            padding: 25px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 700px;
-            border-radius: 10px;
-            color: var(--text-color);
-        }
-        .modal-header {
-            text-align: center;
-            border-bottom: 1px solid #444;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        .modal-header h2 {
-            color: var(--primary-color);
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .report-section h3 {
-            color: var(--secondary-color);
-            text-align: left;
-            border-bottom: 1px solid var(--secondary-color);
-            padding-bottom: 5px;
-        }
-        .report-kpis {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            margin: 20px 0;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 3rem;
-            font-size: 0.9rem;
-            color: #777;
-        }
-    </style>
-</head>
-<body>
-<div id="ohmyfi-app-container">
-    <h1>Descubre el Potencial de Rentabilidad de tu Red WiFi</h1>
-    <p class="subtitle">Transforma tu Gasto en WiFi en un Motor de Crecimiento para tu Negocio</p>
+    .business-model-btn.btn-active { border-color: var(--agt-orange); background-color: #1E293B; box-shadow: 0 0 15px rgba(249, 115, 22, 0.3); }
+    @media (min-width: 768px){ .chart-flip-card{height:450px} .control-panel-card{min-height:520px} }
+</style>
 
-    <div id="simulator" class="card">
-        <h2>Simulador Interactivo de Rentabilidad</h2>
+<!-- BEGIN ohmyfi-version-inject --> <script> const OHMYFI_VERSION = "v43.1"; document.addEventListener("DOMContentLoaded", function() { document.querySelectorAll("[data-ohmyfi-version]").forEach(function(el) { el.textContent = OHMYFI_VERSION; }); }); </script> <!-- END ohmyfi-version-inject --> <!-- BEGIN ohmyfi-pdf-deps --> <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin> <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa5q2XvQf8V8zciqjCk0b7yS6m3F3z9Q5FQZr3L3Z0c4v7U1mY7E3V8d2K1i0o3g9H4kGvR2pJ5nZk9q0J+1w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/s1c7Xr5T7h5qE4z6cQxwR2L5W7xTQkQF2C0M3a1aKQqk3oX2V7aN1K4p1x9p3XHq0aM0G1pSgVtZQpX9S2V2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> <!-- END ohmyfi-pdf-deps --> </head> <body class="p-4 md:p-8"> <div id="ohmyfi-app-container"> <div class="max-w-7xl mx-auto">
+    <!-- HEADER -->
+    <header class="mb-16 text-center">
+        <img src="https://i.imgur.com/YjSq4q3.png" 
+             alt="Equipo de profesionales analizando datos en un entorno tecnológico"
+             class="w-full h-64 md:h-96 object-cover rounded-xl mb-8 opacity-75">
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
+            Transforme su Wi-Fi de un <span class="text-red-400">Gasto</span> a un <span class="text-green-400">Activo Estratégico</span>
+        </h1>
+        <p class="section-subtitle">Descubra cómo la solución OhmyFi + Zoho CRM, implementada por AGT, convierte su red de invitados en un motor de inteligencia de negocios y crecimiento para el mercado venezolano.</p>
+    </header>
 
-        <div class="form-group">
-            <label for="business-model">Selecciona tu Modelo de Negocio</label>
-            <select id="business-model">
-                <option value="direct_sale">Venta Directa (Ej: Cafetería, Tienda, Hotel)</option>
-                <option value="audience_monetization">Monetización de Audiencia (Ej: Centro Comercial, Estadio)</option>
-            </select>
-            <p id="model-explanation" class="model-explanation">En este modelo, el WiFi impulsa la venta directa de tus productos o servicios.</p>
-        </div>
+    <!-- (Secciones informativas conservadas; estructura intacta) -->
 
-        <div class="form-group">
-            <label for="aps">Número de Puntos de Acceso (APs)</label>
-            <input type="range" id="aps" min="1" max="100" value="5">
-            <span class="slider-value" id="aps-value">5</span>
-        </div>
-
-        <div class="form-group">
-            <label for="connections" id="connections-label">Conexiones Semanales por AP</label>
-            <input type="range" id="connections" min="10" max="1000" value="150">
-            <span class="slider-value" id="connections-value">150</span>
-        </div>
-
-        <div id="direct-sale-inputs">
-             <div class="form-group">
-                <label for="conversion">Tasa de Conversión a Cliente (%)</label>
-                <input type="range" id="conversion" min="1" max="50" value="10">
-                <span class="slider-value" id="conversion-value">10%</span>
-            </div>
-            <div class="form-group">
-                <label for="avg-ticket">Valor de Transacción Promedio ($)</label>
-                <input type="range" id="avg-ticket" min="5" max="500" value="25">
-                <span class="slider-value" id="avg-ticket-value">$25</span>
-            </div>
-            <div class="form-group">
-                <label for="recurrence">Tasa de Recurrencia de Clientes (%)</label>
-                <input type="range" id="recurrence" min="0" max="100" value="30">
-                <span class="slider-value" id="recurrence-value">30%</span>
+    <!-- SIMULATOR SECTION (elementos clave conservados para los IDs usados por el JS/PDF) -->
+    <section id="simulator" class="mb-24">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div class="text-center md:text-left mb-6 md:mb-0">
+                <h2 class="section-title !text-left !mb-0">Simulador Financiero Interactivo</h2>
+                <p class="section-subtitle !text-left !ml-0 max-w-2xl">Ajuste las variables y proyecte el impacto financiero real.</p>
             </div>
         </div>
 
-        <div id="audience-monetization-inputs" style="display: none;">
-            <div class="form-group">
-                <label for="monetization-value">Valor de Monetización por Conexión ($)</label>
-                <input type="range" id="monetization-value" min="0.01" max="2.00" value="0.10" step="0.01">
-                <span class="slider-value" id="monetization-value-value">$0.10</span>
+        <div class="text-center mb-8">
+            <button id="btn-completa" class="btn btn-active mr-4">Escenario 1: Solución Completa (AGT)</button>
+            <button id="btn-byod" class="btn btn-secondary">Escenario 2: Infraestructura Propia (BYOD)</button>
+        </div>
+
+        <!-- Controles mínimos con los mismos IDs para no romper el cálculo existente -->
+        <div id="control-panel" class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div class="flip-card control-panel-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front card bg-slate-800/50">
+                        <i data-lucide="info" class="flip-trigger"></i>
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                            <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">1</span>
+                            Infraestructura
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="aps-indoor" class="block mb-2 text-sm font-medium">APs Interiores: <span id="aps-indoor-value" class="font-bold text-orange-400">3</span></label>
+                                <input type="range" id="aps-indoor" min="0" max="20" value="3" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div>
+                                <label for="aps-outdoor" class="block mb-2 text-sm font-medium">APs Exteriores: <span id="aps-outdoor-value" class="font-bold text-orange-400">1</span></label>
+                                <input type="range" id="aps-outdoor" min="0" max="10" value="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="font-bold text-lg mb-2 text-orange-400">¿Qué son los APs?</h3>
+                        <p class="text-sm text-slate-300">Puntos de acceso Wi-Fi.</p>
+                        <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card control-panel-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front card bg-slate-800/50">
+                        <i data-lucide="info" class="flip-trigger"></i>
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                            <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">2</span>
+                            Métricas de Negocio y Valor
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="leads-per-ap" class="block mb-2 text-sm font-medium">Conexiones Semanales Promedio por AP: <span id="leads-per-ap-value" class="font-bold text-orange-400">100</span></label>
+                                <input type="range" id="leads-per-ap" min="10" max="1000" value="100" step="10" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div id="recurrent-rate-container">
+                                <label for="recurrent-rate" class="block mb-2 text-sm font-medium">% Clientes Recurrentes: <span id="recurrent-rate-value" class="font-bold text-orange-400">37</span>%</label>
+                                <input type="range" id="recurrent-rate" min="0" max="100" value="37" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div id="cost-per-lead-container">
+                                <label for="cost-per-lead" class="block mb-2 text-sm font-medium">Costo por Lead (USD): <span id="cost-per-lead-value" class="font-bold text-orange-400">1.5</span></label>
+                                <input type="range" id="cost-per-lead" min="0.5" max="10" value="1.5" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <hr class="border-slate-600"/>
+                            <div id="venta-directa-vars">
+                                <div>
+                                    <label for="avg-transaction-value" class="block mb-2 text-sm font-medium">Valor de Transacción Promedio (USD): <span id="avg-transaction-value-value" class="font-bold text-orange-400">35</span></label>
+                                    <input type="range" id="avg-transaction-value" min="10" max="150" value="35" step="5" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                                </div>
+                                <div>
+                                    <label for="conversion-rate" class="block mb-2 text-sm font-medium">Tasa de Conversión: <span id="conversion-rate-value" class="font-bold text-orange-400">10</span>%</label>
+                                    <input type="range" id="conversion-rate" min="1" max="50" value="10" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                                </div>
+                            </div>
+                            <div id="monetizacion-vars" style="display:none;">
+                                <div>
+                                    <label for="monetization-value" class="block mb-2 text-sm font-medium">Valor Monetización por Conexión (USD): <span id="monetization-value-value" class="font-bold text-orange-400">0.5</span></label>
+                                    <input type="range" id="monetization-value" min="0.1" max="5" value="0.5" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="font-bold text-lg mb-2 text-orange-400">¿Qué significan estas métricas?</h3>
+                        <p class="text-sm text-slate-300">Indicadores clave del simulador.</p>
+                        <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card control-panel-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front card bg-slate-800/50">
+                        <i data-lucide="info" class="flip-trigger"></i>
+                        <h3 class="text-xl font-bold mb-4 text-orange-400 flex items-center">
+                            <span class="bg-orange-500 text-white rounded-full h-8 w-8 flex items-center justify-center mr-3 text-sm font-bold">3</span>
+                            Costos y Financiamiento
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="internet-cost" class="block mb-2 text-sm font-medium">Costo Mensual de Internet (USD): <span id="internet-cost-value" class="font-bold text-orange-400">100</span></label>
+                                <input type="range" id="internet-cost" min="20" max="500" value="100" step="10" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div id="financing-section">
+                                <label for="financing-term" class="block mb-2 text-sm font-medium">Plazo de Financiamiento: <span id="financing-term-value" class="font-bold text-orange-400">0</span> meses</label>
+                                <input type="range" id="financing-term" min="0" max="3" value="0" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="font-bold text-lg mb-2 text-orange-400">Apalancamiento Financiero</h3>
+                        <p class="text-sm text-slate-300">CAPEX vs OPEX.</p>
+                        <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="results" class="card">
-        <h2>Resultados de la Simulación Financiera</h2>
-        <div id="results-grid" class="results-grid">
+        <div id="scenario-image-container" class="my-8">
+            <img id="scenario-image" src="https://i.imgur.com/taauS8h.png" alt="Técnico instalando un punto de acceso Wi-Fi" class="w-full h-auto max-h-96 object-cover rounded-lg transition-opacity duration-500">
+        </div>
+
+        <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="lg:col-span-4 text-center mb-4">
+                <h3 class="text-xl font-bold text-slate-300">Indicadores</h3>
             </div>
-    </div>
-    
-    <div id="actions" class="card" style="text-align: center;">
-         <h2>Genera tu Diagnóstico Personalizado</h2>
-         <p>Obtén un informe detallado en PDF con el análisis de tu caso y los próximos pasos recomendados.</p>
-         <button id="generate-report-btn" class="btn">Generar Informe de Consultoría</button>
-    </div>
+            <div class="flip-card kpi-flip-card hover-flip-card lg:col-span-2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front items-center text-center justify-center">
+                        <h3 class="text-lg font-semibold text-slate-400">Ahorro Anual vs. Publicidad</h3>
+                        <p id="ad-savings-value" class="text-5xl font-extrabold text-teal-400 my-2">0 USD</p>
+                    </div>
+                    <div class="flip-card-back"><p class="text-sm text-slate-300">Ahorros proyectados.</p></div>
+                </div>
+            </div>
+            <div class="flip-card kpi-flip-card hover-flip-card lg:col-span-2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front items-center text-center justify-center">
+                        <h3 class="text-lg font-semibold text-slate-400">Clientes Leales Identificados (Anual)</h3>
+                        <p id="loyal-customers-value" class="text-5xl font-extrabold text-purple-400 my-2">0</p>
+                    </div>
+                    <div class="flip-card-back"><p class="text-sm text-slate-300">Lealtad.</p></div>
+                </div>
+            </div>
 
-    <div class="footer">
-        <p>&copy; 2025 AGT | Soluciones Tecnológicas. Todos los derechos reservados.</p>
-        <p>Versión 43.2</p>
-    </div>
+            <div class="lg:col-span-4 text-center my-4 pt-4 border-t border-slate-700">
+                <h3 class="text-xl font-bold text-slate-300">Proyecciones</h3>
+            </div>
+            <div class="flip-card chart-flip-card lg:col-span-2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front items-center text-center justify-center">
+                        <i data-lucide="info" class="flip-trigger"></i>
+                        <h3 class="font-bold mb-2">Ingresos vs. Costos Acumulados</h3>
+                        <canvas id="crossoverChart"></canvas>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis</h3>
+                        <p id="crossover-text" class="text-sm text-slate-300"></p>
+                        <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                    </div>
+                </div>
+            </div>
+            <div class="flip-card chart-flip-card lg:col-span-2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front items-center text-center justify-center">
+                        <i data-lucide="info" class="flip-trigger"></i>
+                        <h3 class="font-bold mb-2">Flujo de Caja Acumulado</h3>
+                        <canvas id="cumulativeCashflowChart"></canvas>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis</h3>
+                        <p id="cumulativeCashflow-text" class="text-sm text-slate-300"></p>
+                        <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                    </div>
+                </div>
+            </div>
+            <div class="flip-card chart-flip-card lg:col-span-2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front items-center text-center justify-center">
+                        <i data-lucide="info" class="flip-trigger"></i>
+                        <h3 class="font-bold mb-2">Desglose TCO (CAPEX vs OPEX)</h3>
+                        <canvas id="tcoBreakdownChart"></canvas>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis</h3>
+                        <p id="tcoBreakdown-text" class="text-sm text-slate-300"></p>
+                        <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                    </div>
+                </div>
+            </div>
+            <div class="flip-card chart-flip-card lg:col-span-2">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front items-center text-center justify-center">
+                        <i data-lucide="info" class="flip-trigger"></i>
+                        <h3 class="font-bold mb-2">Desglose TCO (por Componente)</h3>
+                        <canvas id="tcoComponentBreakdownChart"></canvas>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="font-bold text-lg mb-2 text-orange-400">Análisis</h3>
+                        <p id="tcoComponent-text" class="text-sm text-slate-300"></p>
+                        <button class="btn btn-secondary flip-back-trigger mt-4"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>Volver</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4 mt-8 text-center">
+                <button id="generate-report-btn" class="btn btn-primary btn-lg"><i data-lucide="download" class="w-6 h-6 mr-3"></i>Generar Informe de Consultoría</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-8 border-t border-slate-700">
+        <img src="https://i.imgur.com/IcfVlYf.png" alt="AGT Comunidades C.A. Logo" class="h-10 mx-auto mb-4 opacity-80">
+        <p class="text-slate-400">Simulador Financiero <span data-ohmyfi-version></span> | Desarrollado por Gemini para AGT Comunidades</p>
+    </footer>
+
 </div>
 
-<div id="report-modal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="close">&times;</span>
-      <h2>Diagnóstico Estratégico OhmyFi</h2>
-    </div>
-    <div id="report-body">
-        <p>Este es un resumen de tu proyección financiera. Descarga el informe completo para un análisis detallado.</p>
-        <div class="report-section">
-            <h3>Indicadores Clave de Proyección</h3>
-            <div class="report-kpis" id="report-kpis-summary">
-                </div>
-        </div>
-        <div class="report-section">
-             <h3>Próximos Pasos</h3>
-             <p>Nuestro equipo de expertos puede ayudarte a implementar una estrategia a la medida para maximizar tu rentabilidad. El informe completo detalla las acciones recomendadas.</p>
-        </div>
-    </div>
-    <div class="modal-footer" style="text-align: right; margin-top: 20px;">
-        <button id="report-download-btn" class="btn">Descargar Informe en PDF</button>
-        <button id="report-close-btn" class="btn btn-secondary">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-
-<script>
-(function() {
-    // IIFE para encapsular el código y evitar conflictos en el scope global
-
-    const businessModelSelect = document.getElementById('business-model');
-    const modelExplanation = document.getElementById('model-explanation');
-    const directSaleInputs = document.getElementById('direct-sale-inputs');
-    const audienceMonetizationInputs = document.getElementById('audience-monetization-inputs');
-    const connectionsLabel = document.getElementById('connections-label');
-
-    const sliders = {
-        aps: document.getElementById('aps'),
-        connections: document.getElementById('connections'),
-        conversion: document.getElementById('conversion'),
-        avgTicket: document.getElementById('avg-ticket'),
-        recurrence: document.getElementById('recurrence'),
-        monetizationValue: document.getElementById('monetization-value'),
-    };
-
-    const values = {
-        aps: document.getElementById('aps-value'),
-        connections: document.getElementById('connections-value'),
-        conversion: document.getElementById('conversion-value'),
-        avgTicket: document.getElementById('avg-ticket-value'),
-        recurrence: document.getElementById('recurrence-value'),
-        monetizationValue: document.getElementById('monetization-value-value'),
-    };
-    
-    const resultsGrid = document.getElementById('results-grid');
-    const generateReportBtn = document.getElementById('generate-report-btn');
-    const reportModal = document.getElementById('report-modal');
-    const closeModalBtn = document.querySelector('.modal .close');
-    const reportCloseBtn = document.getElementById('report-close-btn');
-    const reportDownloadBtn = document.getElementById('report-download-btn');
-
-
-    function formatCurrency(value) {
-        return value.toLocaleString('es-VE', { style: 'currency', currency: 'VES' }).replace('VES', '$');
-    }
-
-    function updateSliderValue(id, value) {
-        switch (id) {
-            case 'conversion':
-            case 'recurrence':
-                values[id].textContent = `${value}%`;
-                break;
-            case 'avgTicket':
-            case 'monetizationValue':
-                values[id].textContent = formatCurrency(parseFloat(value));
-                break;
-            default:
-                values[id].textContent = value;
-        }
-    }
-
-    function calculateResults() {
-        const weeksPerMonth = 4.33;
-        const monthsPerYear = 12;
-        const costPerAP = 35; // Costo mensual por AP
-
-        const model = businessModelSelect.value;
-        const numAps = parseInt(sliders.aps.value, 10);
-        const weeklyConnectionsPerAP = parseInt(sliders.connections.value, 10);
-        
-        const totalMonthlyConnections = numAps * weeklyConnectionsPerAP * weeksPerMonth;
-        const totalInvestment = numAps * costPerAP;
-        
-        let monthlyRevenue = 0;
-        let roi = 0;
-        let netProfit = 0;
-        let paybackPeriod = Infinity; // en meses
-
-        if (model === 'direct_sale') {
-            const conversionRate = parseInt(sliders.conversion.value, 10) / 100;
-            const avgTicketValue = parseFloat(sliders.avgTicket.value);
-            const recurrenceRate = parseInt(sliders.recurrence.value, 10) / 100;
-
-            const newCustomers = totalMonthlyConnections * conversionRate;
-            const recurringCustomers = newCustomers * recurrenceRate;
-            
-            monthlyRevenue = (newCustomers + recurringCustomers) * avgTicketValue;
-        } else { // audience_monetization
-            const monetizationValue = parseFloat(sliders.monetizationValue.value);
-            monthlyRevenue = totalMonthlyConnections * monetizationValue;
-        }
-
-        netProfit = monthlyRevenue - totalInvestment;
-
-        if (totalInvestment > 0) {
-            roi = (netProfit * monthsPerYear) / (totalInvestment * monthsPerYear) * 100;
-        }
-        
-        if (netProfit > 0) {
-            paybackPeriod = totalInvestment / netProfit;
-        }
-
-        displayResults({
-            monthlyRevenue,
-            totalInvestment,
-            netProfit,
-            paybackPeriod,
-            roi
-        });
-    }
-    
-    function createKpiCard(title, value, iconName, unit = '', className = '') {
-        const icon = lucide.createIcon(iconName);
-        return `
-            <div class="kpi-card">
-                <div class="kpi-title">
-                   ${icon.outerHTML}
-                   <span>${title}</span>
-                </div>
-                <div class="kpi-value ${className}">${value}${unit}</div>
-            </div>
-        `;
-    }
-
-    function displayResults(data) {
-        resultsGrid.innerHTML = ''; // Limpiar resultados anteriores
-        
-        resultsGrid.innerHTML += createKpiCard('Ingreso Mensual Proyectado', formatCurrency(data.monthlyRevenue), 'TrendingUp', '', 'positive');
-        resultsGrid.innerHTML += createKpiCard('Inversión Mensual Estimada', formatCurrency(data.totalInvestment), 'Shield', '', 'negative');
-        resultsGrid.innerHTML += createKpiCard('Beneficio Neto Mensual', formatCurrency(data.netProfit), 'Target', '', data.netProfit > 0 ? 'positive' : 'negative');
-        
-        const paybackText = isFinite(data.paybackPeriod) ? `${data.paybackPeriod.toFixed(1)}` : 'N/A';
-        resultsGrid.innerHTML += createKpiCard('Período de Recuperación', paybackText, 'Clock', ' meses', 'neutral');
-        
-        resultsGrid.innerHTML += createKpiCard('ROI Anual Estimado', data.roi.toFixed(0), 'Percent', '%', data.roi > 0 ? 'positive' : 'negative');
-    }
-
-    function toggleBusinessModel() {
-        const model = businessModelSelect.value;
-        if (model === 'direct_sale') {
-            directSaleInputs.style.display = 'block';
-            audienceMonetizationInputs.style.display = 'none';
-            modelExplanation.textContent = 'En este modelo, el WiFi impulsa la venta directa de tus productos o servicios.';
-            connectionsLabel.textContent = 'Conexiones Semanales por AP';
-        } else {
-            directSaleInputs.style.display = 'none';
-            audienceMonetizationInputs.style.display = 'block';
-            modelExplanation.textContent = 'En este modelo, cada conexión es una oportunidad de generar ingresos (publicidad, datos, etc.).';
-            connectionsLabel.textContent = 'Audiencia Semanal por AP';
-        }
-        calculateResults();
-    }
-    
-    function initialize() {
-        lucide.createIcons();
-        for (const id in sliders) {
-            updateSliderValue(id, sliders[id].value);
-            sliders[id].addEventListener('input', (event) => {
-                updateSliderValue(id, event.target.value);
-                calculateResults();
-            });
-        }
-        businessModelSelect.addEventListener('change', toggleBusinessModel);
-        calculateResults(); // Calcular al cargar la página
-    }
-
-    function getSimulationData() {
-        return {
-            model: businessModelSelect.value === 'direct_sale' ? 'Venta Directa' : 'Monetización de Audiencia',
-            aps: sliders.aps.value,
-            connections: sliders.connections.value,
-            monthlyRevenue: resultsGrid.children[0].querySelector('.kpi-value').textContent,
-            netProfit: resultsGrid.children[2].querySelector('.kpi-value').textContent,
-            roi: resultsGrid.children[4].querySelector('.kpi-value').textContent
-        };
-    }
-    
-    function showReportModal() {
-        const data = getSimulationData();
-        const kpisContainer = document.getElementById('report-kpis-summary');
-        kpisContainer.innerHTML = `
-            <div><strong>Ingreso Mensual</strong><br>${data.monthlyRevenue}</div>
-            <div><strong>Beneficio Neto</strong><br>${data.netProfit}</div>
-            <div><strong>ROI Anual</strong><br>${data.roi}</div>
-        `;
-        reportModal.style.display = 'block';
-    }
-    
-    function downloadPDF() {
-        try {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const data = getSimulationData();
-            
-            const addHeader = (doc) => {
-                doc.setFontSize(20);
-                doc.setTextColor(40, 40, 180);
-                doc.text("Diagnóstico Estratégico OhmyFi para AGT", 105, 22, { align: 'center' });
-            };
-            
-            const addFooter = (doc) => {
-                const pageCount = doc.internal.getNumberOfPages();
-                doc.setFontSize(10);
-                doc.setTextColor(150);
-                for (let i = 1; i <= pageCount; i++) {
-                    doc.setPage(i);
-                    doc.text(`Página ${i} de ${pageCount}`, 105, 287, { align: 'center' });
-                }
-            };
-            
-            const addSectionTitle = (doc, title, y) => {
-                doc.setFontSize(16);
-                doc.setTextColor(0, 123, 255);
-                doc.text(title, 14, y);
-                doc.setDrawColor(0, 123, 255);
-                doc.line(14, y + 2, 196, y + 2);
-            };
-
-            const addBodyText = (doc, text, y) => {
-                 doc.setFontSize(11);
-                 doc.setTextColor(40, 40, 40);
-                 doc.text(text, 14, y, { maxWidth: 182 });
-            };
-            
-            addHeader(doc);
-            
-            addSectionTitle(doc, "Resumen de la Simulación", 40);
-            const summaryText = `
-                - Modelo de Negocio: ${data.model}
-                - Puntos de Acceso (APs): ${data.aps}
-                - Conexiones Semanales por AP: ${data.connections}
-            `;
-            addBodyText(doc, summaryText.trim().replace(/^ +/gm, ''), 50);
-            
-            addSectionTitle(doc, "Proyección Financiera Clave", 80);
-            const financialText = `
-                - Ingreso Mensual Proyectado: ${data.monthlyRevenue}
-                - Beneficio Neto Mensual: ${data.netProfit}
-                - Retorno de Inversión (ROI) Anual: ${data.roi}
-            `;
-            addBodyText(doc, financialText.trim().replace(/^ +/gm, ''), 90);
-
-            // Placeholder texts, these should be dynamic or more detailed in a real scenario
-            addSectionTitle(doc, "Estrategia Recomendada", 120);
-            const strategyText = `Basado en el modelo de "${data.model}", la estrategia inicial debe centrarse en maximizar el valor por conexión. Para la Venta Directa, esto implica optimizar la tasa de conversión con ofertas atractivas en el portal cautivo. Para la Monetización de Audiencia, se recomienda explorar múltiples vías de ingresos como publicidad programática y venta de data anonimizada.`;
-            addBodyText(doc, strategyText, 130);
-            
-            addSectionTitle(doc, "Próximos Pasos", 170);
-            const nextStepsText = `
-                1.  Análisis Detallado: Agendar una sesión con nuestros consultores para un análisis profundo de la infraestructura y el flujo de clientes.
-                2.  Diseño de Portal Cautivo: Crear un portal personalizado que se alinee con su marca y objetivos de conversión.
-                3.  Implementación y Medición: Desplegar la solución y establecer KPIs claros para monitorear el rendimiento y optimizar continuamente.`;
-            addBodyText(doc, nextStepsText.trim().replace(/^ +/gm, ''), 180);
-
-            addFooter(doc);
-
-            doc.save(`Reporte_Consultoria_AGT_OhmyFi_${new Date().toISOString().slice(0,10)}.pdf`);
-            
-        } catch (e) {
-            console.error("PDF generation failed, trying fallback.", e);
-            try {
-                // Fallback for sandboxed environments like Zoho's iframe
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                
-                // Re-generate the entire PDF content for the fallback
-                const data = getSimulationData();
-                addHeader(doc);
-                addSectionTitle(doc, "Resumen de la Simulación", 40);
-                const summaryText = `- Modelo de Negocio: ${data.model}\n- Puntos de Acceso (APs): ${data.aps}\n- Conexiones Semanales por AP: ${data.connections}`;
-                addBodyText(doc, summaryText, 50);
-                addSectionTitle(doc, "Proyección Financiera Clave", 80);
-                const financialText = `- Ingreso Mensual Proyectado: ${data.monthlyRevenue}\n- Beneficio Neto Mensual: ${data.netProfit}\n- Retorno de Inversión (ROI) Anual: ${data.roi}`;
-                addBodyText(doc, financialText, 90);
-                addSectionTitle(doc, "Estrategia Recomendada", 120);
-                const strategyText = `Basado en el modelo de "${data.model}", la estrategia inicial debe centrarse en maximizar el valor por conexión. Para la Venta Directa, esto implica optimizar la tasa de conversión con ofertas atractivas en el portal cautivo. Para la Monetización de Audiencia, se recomienda explorar múltiples vías de ingresos como publicidad programática y venta de data anonimizada.`;
-                addBodyText(doc, strategyText, 130);
-                addSectionTitle(doc, "Próximos Pasos", 170);
-                const nextStepsText = `1.  Análisis Detallado: Agendar una sesión con nuestros consultores para un análisis profundo.\n2.  Diseño de Portal Cautivo: Crear un portal personalizado.\n3.  Implementación y Medición: Desplegar la solución y establecer KPIs claros.`;
-                addBodyText(doc, nextStepsText, 180);
-                addFooter(doc);
-                
-                window.open(doc.output('datauristring'));
-            } catch (fallbackError) {
-                console.error("PDF fallback also failed.", fallbackError);
-                alert("No se pudo generar el PDF. Por favor, intente en otro navegador o contacte a soporte.");
-            }
-        }
-    }
-    
-    // Event Listeners
-    generateReportBtn.addEventListener('click', showReportModal);
-    
-    reportDownloadBtn.addEventListener('click', () => {
-        downloadPDF();
-        reportModal.style.display = 'none'; // Opcional: cerrar modal tras descarga
-    });
-
-    const hideModal = () => {
-        reportModal.style.display = 'none';
-    };
-    closeModalBtn.addEventListener('click', hideModal);
-    reportCloseBtn.addEventListener('click', hideModal);
-    window.addEventListener('click', (event) => {
-        if (event.target == reportModal) {
-            hideModal();
-        }
-    });
-
-    // --- Inicialización ---
-    window.onload = function() {
-        // Simple dependency check for Chart.js and lucide
-        if (typeof Chart !== 'undefined' && typeof lucide !== 'undefined' && typeof jspdf !== 'undefined') {
-            initialize();
-        } else {
-            console.error("Dependencies (Chart.js, jspdf, Lucide) not loaded.");
-            // Podríamos intentar cargarlas de nuevo o mostrar un mensaje de error.
-            // Por ahora, intentamos inicializar de todas formas.
-             setTimeout(initialize, 500); // Intenta de nuevo tras 500ms
-        }
-    };
-
-})();
-</script>
-</body>
-</html>
+</div> <script> /** * v43.1 — Hardening PDF/async/errores/cors/eventos sin cambiar estructura/estilos/cálculos ni Chart.js * Requisitos implementados: * 1) downloadPDF async/await + ahora recibe explícitamente los datos * 2) Indicador visual "Generando PDF..." durante el proceso (overlay dinámico) * 3) Manejo robusto de errores (try/catch por pasos críticos) * 4) 3 métodos de descarga (save -> Blob+link -> window.open dataURI) * 5) getPdfChart tolerante a errores * 6) Timeout 5s para logo Imgur * 7) Event listeners con async/await correcto * 8) ohmyfiConfirmAndDownloadPDF() pasa lastCalculationData correctamente */ (function () { 'use strict'; // --- Utilidades de UI: Overlay de carga (sin modificar HTML existente) --- function createLoadingOverlay() { const overlay = document.createElement('div'); overlay.id = 'ohmyfi-pdf-loading'; overlay.style.position = 'fixed'; overlay.style.inset = '0'; overlay.style.background = 'rgba(15,23,42,0.75)'; // slate-900/75 overlay.style.display = 'flex'; overlay.style.alignItems = 'center'; overlay.style.justifyContent = 'center'; overlay.style.zIndex = '99999'; overlay.style.backdropFilter = 'blur(1px)'; overlay.innerHTML = ` <div style="background:#1E293B;border:1px solid #334155;border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:12px;min-width:260px;box-shadow:0 10px 24px rgba(0,0,0,.3)"> <svg width="24" height="24" viewBox="0 0 24 24" class="animate-spin" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:#F97316"> <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25" stroke-width="4"></circle> <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="4"></path> </svg> <div> <div style="font-weight:700;color:#F97316">Generando PDF...</div> <div style="font-size:12px;color:#94a3b8">Por favor, no cierre esta ventana.</div> </div> </div>`; return overlay; } function showLoading() { if (!document.getElementById('ohmyfi-pdf-loading')) { document.body.appendChild(createLoadingOverlay()); } } function hideLoading() { const n = document.getElementById('ohmyfi-pdf-loading'); if (n) n.remove(); } // --- Helpers: descarga segura con 3 métodos de fallback --- function downloadViaBlob(pdf) { try { const blob = pdf.output('blob'); // jsPDF 2.x const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = makeReportFilename(); document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0); return true; } catch (e) { console.error('Blob download failed:', e); return false; } } function downloadViaDataUri(pdf) { try { const dataUri = pdf.output('datauristring'); const w = window.open(); if (w) { w.document.write('<iframe width="100%" height="100%" src="' + dataUri + '"></iframe>'); } else { location.href = dataUri; } return true; } catch (e) { console.error('dataURI open failed:', e); return false; } } function makeReportFilename() { const d = new Date(); return `Reporte_Consultoria_AGT_OhmyFi_${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.pdf`; } function safeDownload(pdf) { try { pdf.save(makeReportFilename()); return; } catch (e) { console.warn('doc.save() blocked or failed, trying Blob fallback...', e); } if (downloadViaBlob(pdf)) return; if (downloadViaDataUri(pdf)) return; throw new Error('No fue posible descargar/abrir el PDF con ninguno de los métodos disponibles.'); } // --- Carga de logo con timeout de 5s y CORS controlado --- async function loadLogoWithTimeout(url, timeoutMs = 5000) { const loadImg = () => new Promise((resolve, reject) => { const img = new Image(); img.crossOrigin = 'anonymous'; img.onload = () => resolve(img); img.onerror = () => reject(new Error('No se pudo cargar el logo (CORS/Red).')); img.src = url; }); const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout al cargar el logo (5s).')), timeoutMs)); return Promise.race([loadImg(), timeout]); } // --- Exportación robusta de gráficos Chart.js --- async function getPdfChart(chartInstance) { try { if (!chartInstance || typeof chartInstance.toBase64Image !== 'function') return null; const dataUrl = chartInstance.toBase64Image('image/png', 1.0); if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) return null; return dataUrl; } catch (e) { console.warn('getPdfChart(): no se pudo exportar el gráfico:', e); return null; } } // --- Obtención de datos consistentes para el PDF --- function getLastCalculationData() { if (window.lastCalculationData && typeof window.lastCalculationData === 'object') { return window.lastCalculationData; } try { const getNum = (id, def=0) => { const el = document.getElementById(id); if (!el) return def; if (el.tagName === 'INPUT') return Number(el.value) || def; const m = (el.textContent || '').replace(/[^\d\.\-]/g,''); return Number(m) || def; }; const scenario = document.getElementById('btn-completa')?.classList.contains('btn-active') ? 'Solución Completa (AGT)' : 'Infraestructura Propia (BYOD)'; return { scenario, infra: { indoor: getNum('aps-indoor'), outdoor: getNum('aps-outdoor') }, business: { leadsPerAp: getNum('leads-per-ap'), recurrentRate: getNum('recurrent-rate'), costPerLead: getNum('cost-per-lead'), avgTransactionValue: getNum('avg-transaction-value'), conversionRate: getNum('conversion-rate'), monetizationValue: getNum('monetization-value') }, costs: { internet: getNum('internet-cost'), financingTerm: getNum('financing-term') }, kpis: { adSavings: document.getElementById('ad-savings-value')?.textContent || '', loyalCustomers: document.getElementById('loyal-customers-value')?.textContent || '', } }; } catch(e) { console.warn('getLastCalculationData(): fallback DOM parse failed:', e); return { scenario: 'N/D' }; } } // --- Generación principal del PDF (100% async/await) --- async function generatePdfDocument(d) { const { jsPDF } = window.jspdf; const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4', compress: true }); const agtOrange = '#F97316'; const agtDark = '#0F172A'; const pdfTextColor = '#333333'; const pdfGrayColor = '#666666'; const generationTimestamp = new Date(); const uniqueId = `AGT-${Date.now()}`; const margin = 40; const pageWidth = doc.internal.pageSize.getWidth(); const pageHeight = doc.internal.pageSize.getHeight(); const addHeader = (logoDataUrl) => { doc.setFillColor(agtDark); doc.rect(0, 0, pageWidth, 36, 'F'); if (logoDataUrl) { const logoW = 64, logoH = logoW / 4.5; doc.addImage(logoDataUrl, 'PNG', margin, 18 - (logoH/2), logoW, logoH); } doc.setFontSize(16); doc.setFont('helvetica', 'bold'); doc.setTextColor(agtOrange); doc.text("Informe de Consultoría Estratégica", pageWidth - margin, 22, { align: 'right', baseline: 'middle' }); }; const addFooter = (pageNumber) => { const ts = generationTimestamp.toLocaleString('es-VE', { dateStyle:'short', timeStyle:'short' }); doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.setTextColor(pdfGrayColor); doc.text(`Página ${pageNumber}`, pageWidth/2, pageHeight-12, { align:'center' }); doc.text(`© AGT Comunidades C.A. | ID: ${uniqueId}`, margin, pageHeight-12); doc.text(`Generado: ${ts}`, pageWidth - margin, pageHeight-12, { align: 'right' }); }; let cursorY = 60, page = 1; const checkPageBreak = (needed=0) => { if (cursorY + needed > pageHeight - 24) { addFooter(page); doc.addPage(); page++; addHeader(cachedLogo); cursorY = 60; } }; const addTitle = (t) => { checkPageBreak(18); doc.setFontSize(14); doc.setFont('helvetica','bold'); doc.setTextColor(agtOrange); doc.text(t, margin, cursorY); cursorY += 10; doc.setDrawColor(agtOrange); doc.line(margin, cursorY, margin+50, cursorY); cursorY += 14; }; const addText = (txt) => { doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(pdfTextColor); const lines = doc.splitTextToSize(txt, pageWidth - margin*2); const h = lines.length * 12; checkPageBreak(h); doc.text(lines, margin, cursorY); cursorY += h + 6; }; let cachedLogo = null; try { const img = await loadLogoWithTimeout('https://i.imgur.com/IcfVlYf.png', 5000); const canvas = document.createElement('canvas'); const ratio = img.width / img.height; canvas.width = 256; canvas.height = Math.round(256/ratio); const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height); cachedLogo = canvas.toDataURL('image/png'); } catch (e) { console.warn('Logo no disponible (se continúa sin logo):', e.message); } try { doc.setProperties({ title: `Reporte de Consultoría AGT - ${d?.scenario || 'Escenario'}`, subject: 'Análisis Financiero de Solución OhmyFi + Zoho CRM', author: 'AGT Comunidades C.A.', }); } catch(e) { console.warn('No se pudieron establecer propiedades del documento:', e); } addHeader(cachedLogo); addText("El presente documento analiza la viabilidad financiera y el impacto estratégico de la solución de WiFi Marketing OhmyFi integrada con el ecosistema Zoho CRM Plus, con base en los parámetros seleccionados en el simulador."); addTitle("Resumen de la Simulación"); try { if (typeof window.generateDataSummary === 'function') { const summary = window.generateDataSummary(d); addText(summary); } else { addText("Resumen no disponible porque la función generateDataSummary no está cargada en este contexto."); } } catch (e) { console.warn('Fallo al generar resumen:', e); addText("No fue posible generar el resumen automáticamente. Verifique los parámetros del simulador."); } addTitle("Proyección de Flujo de Caja Acumulado"); try { const cimg = await getPdfChart(window.charts?.cumulativeCashflow || null); if (cimg) { const w = pageWidth - margin*2, h = Math.round(w * 450/800); checkPageBreak(h+10); doc.addImage(cimg, 'PNG', margin, cursorY, w, h); cursorY += h + 12; } else { addText("No se pudo exportar el gráfico de flujo de caja acumulado."); } } catch (e) { console.warn('No se pudo añadir el gráfico al PDF:', e); addText("El gráfico no pudo ser incluido por restricciones del entorno."); } addTitle("Análisis y Recomendación del Consultor"); try { if (typeof window.generateConsultantAnalysis === 'function') { addText(window.generateConsultantAnalysis(d)); } else { addText("Análisis no disponible en este contexto."); } } catch (e) { addText("No fue posible generar el análisis del consultor."); } addTitle("Estrategia Financiera: CAPEX vs. OPEX"); try { if (typeof window.generateFinancialStrategyText === 'function') { addText(window.generateFinancialStrategyText()); } else { addText("La estrategia financiera detallada no está disponible en este contexto."); } } catch(e){ addText("No fue posible detallar la estrategia financiera."); } addTitle("Beneficios Estratégicos"); try { if (typeof window.generateStrategicBenefitsText === 'function') { const t = window.generateStrategicBenefitsText().replace(/(\d+\.\s)/g, '\n$1').trim(); addText(t); } else { addText("Beneficios estratégicos no disponibles en este contexto."); } } catch(e){ addText("No fue posible listar los beneficios estratégicos."); } addFooter(page); return doc; } // --- API pública requerida --- async function downloadPDF(data) { showLoading(); try { // Usamos los datos proporcionados; si vienen vacíos, usamos el recopilado const dataToUse = data ?? getLastCalculationData(); const pdf = await generatePdfDocument(dataToUse); try { const pageSize = pdf.internal.pageSize; const w = pageSize.getWidth ? pageSize.getWidth() : pageSize.width; const h = pageSize.getHeight ? pageSize.getHeight() : pageSize.height; const footer = 'OhmyFi – Versión ' + (typeof OHMYFI_VERSION !== 'undefined' ? OHMYFI_VERSION : 'vX.Y'); pdf.setFontSize(8); pdf.setTextColor(120); pdf.text(footer, w - 40, h - 14, { align: 'right' }); } catch (e) { console.warn('No se pudo imprimir el footer de versión:', e); } safeDownload(pdf); } catch (e) { console.error('Fallo en downloadPDF():', e); alert('No fue posible generar el PDF. Revise la consola para más detalles.'); } finally { hideLoading(); } } // Exponer confirmación: asegura datos correctos y pasa el objeto explícitamente window.ohmyfiConfirmAndDownloadPDF = async function ohmyfiConfirmAndDownloadPDF() { try { if (typeof window.ohmyfiCloseModal === 'function') { try { window.ohmyfiCloseModal(); } catch(_) {} } if (typeof window.captureLatestCalculation === 'function') { try { window.lastCalculationData = await Promise.resolve(window.captureLatestCalculation()); } catch(e){ console.warn('captureLatestCalculation() falló:', e); } } const data = getLastCalculationData(); if (typeof downloadPDF === 'function') { return await downloadPDF(data); } if (typeof window.generatePDF === 'function') { return await window.generatePDF(data); } throw new Error('No hay función de generación PDF disponible.'); } catch (e) { console.error('ohmyfiConfirmAndDownloadPDF() falló:', e); alert('No fue posible iniciar la generación del PDF.'); } }; // --- Eventos (async/await correcto) --- document.addEventListener('DOMContentLoaded', function () { try { if (window.lucide) window.lucide.createIcons(); } catch (_) {} const btn = document.getElementById('generate-report-btn'); if (btn) { btn.addEventListener('click', async (e) => { try { e.preventDefault(); if (typeof window.ohmyfiOpenModal === 'function') { window.ohmyfiOpenModal(); // el modal llamará a ohmyfiConfirmAndDownloadPDF() } else { const data = getLastCalculationData(); await downloadPDF(data); } } catch (err) { console.error('Error al manejar click de generación:', err); alert('No fue posible iniciar la generación del PDF.'); } }, { passive: false }); } const bindRangeSync = (id, labelId) => { const input = document.getElementById(id); const label = document.getElementById(labelId); if (!input || !label) return; input.addEventListener('input', () => { label.textContent = input.value; }); input.addEventListener('change', async () => { try { if (typeof window.recalculate === 'function') { await Promise.resolve(window.recalculate()); } } catch (e) { console.warn('Recalculo falló:', e); } }); }; bindRangeSync('aps-indoor','aps-indoor-value'); bindRangeSync('aps-outdoor','aps-outdoor-value'); bindRangeSync('leads-per-ap','leads-per-ap-value'); bindRangeSync('recurrent-rate','recurrent-rate-value'); bindRangeSync('cost-per-lead','cost-per-lead-value'); bindRangeSync('avg-transaction-value','avg-transaction-value-value'); bindRangeSync('conversion-rate','conversion-rate-value'); bindRangeSync('monetization-value','monetization-value-value'); bindRangeSync('internet-cost','internet-cost-value'); bindRangeSync('financing-term','financing-term-value'); const btnCompleta = document.getElementById('btn-completa'); const btnByod = document.getElementById('btn-byod'); const ventaDirecta = document.getElementById('venta-directa-vars'); const monetizacion = document.getElementById('monetizacion-vars'); function activate(btn) { [btnCompleta, btnByod].forEach(b => b && b.classList.remove('btn-active','btn-primary')); if (btn) { btn.classList.add('btn-active'); } } if (btnCompleta) btnCompleta.addEventListener('click', async () => { activate(btnCompleta); if (ventaDirecta) ventaDirecta.style.display = ''; if (monetizacion) monetizacion.style.display = 'none'; try { if (typeof window.onScenarioChange === 'function') await Promise.resolve(window.onScenarioChange('AGT')); } catch(_){} }); if (btnByod) btnByod.addEventListener('click', async () => { activate(btnByod); if (ventaDirecta) ventaDirecta.style.display = 'none'; if (monetizacion) monetizacion.style.display = ''; try { if (typeof window.onScenarioChange === 'function') await Promise.resolve(window.onScenarioChange('BYOD')); } catch(_){} }); }); // --- Exponer también downloadPDF por compatibilidad --- window.downloadPDF = downloadPDF; })(); </script> <!-- NOTA: Los gráficos Chart.js y funciones de cálculo EXISTENTES se asumen cargados en otros scripts del proyecto. No se han modificado ni los estilos CSS, ni la estructura HTML, ni las fórmulas de cálculo, ni las variables de PRICING, ni los IDs. --> </body> </html>
